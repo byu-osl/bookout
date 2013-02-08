@@ -1,0 +1,24 @@
+# Set up the application. This file is required by
+# google app engine so it can find the app to run
+
+application: bookout
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+inbound_services:
+- warmup
+
+libraries:
+- name: jinja2
+  version: "2.6"
+- name: markupsafe
+  version: "0.15"
+
+handlers:
+- url: /static
+  static_dir: src/static
+
+- url: .*
+  script: bookout.app
