@@ -22,6 +22,9 @@ app.add_url_rule('/_ah/warmup',view_func=views.warmup)
 # Home page
 app.add_url_rule('/',view_func=views.index)
 
+# Lookup a book
+app.add_url_rule('/book/<ISBN>',view_func=views.lookup_book)
+
 
 ## Error Handlers
 @app.errorhandler(404)
