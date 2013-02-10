@@ -21,6 +21,9 @@ def get_book(ISBN):
 		
 ################################ Private Methods #################################
 
+def external_book_search(ISBN):
+	return search_google_books(ISBN)
+
 #Calls the appropriate api then stores the data in the cache
 def update_book_cache(ISBN):
 	book = search_google_books(ISBN)
