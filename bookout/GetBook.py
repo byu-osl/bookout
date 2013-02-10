@@ -1,5 +1,6 @@
+from google.appengine.api import urlfetch
 from flask import jsonify
-import urllib2, json
+import json
 
 ################################ Public Methods #################################
 
@@ -41,17 +42,17 @@ def search_google_books(ISBN):
 	#Search to get volumes associated with this isbn.
 	# There should only ever really be one returned, but if there are more than one, this returns the first
 	url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN + "&key=" + apiKey
-	response = urllib2.urlopen(url)
-	if response.getcode() == 200:
-		json_response = response.read()
+	response = urlfetch.fetch(url)
+	if response.status_code == 200:
+		json_response = response.content
 		data = json.loads(json_response)
 		for volume in data["items"]:
 			volumeID = volume["id"]
 			#For each volume returned, get the data on that book
 			url = "https://www.googleapis.com/books/v1/volumes/" + volumeID + "?key=" + apiKey
-			response = urllib2.urlopen(url)
-			if response.getcode() == 200:
-				book_json = json.loads(response.read())
+			response = urlfetch.fetch(url)
+			if response.status_code == 200:
+				book_json = json.loads(response.content)
 				break;
 	
 	return book_json
