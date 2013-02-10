@@ -1,5 +1,4 @@
 # Views
-from flask import jsonify
 from GetBook import get_book
 
 def warmup():
@@ -12,5 +11,5 @@ def index():
 	return "Hello world!<br/><a href=/book/0671027360>Look up: Angels and Demons</a>"
 	
 def lookup_book(ISBN):
-	return jsonify(get_book(ISBN))
+	return get_book(ISBN)
 	

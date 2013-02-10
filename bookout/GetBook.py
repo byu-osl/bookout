@@ -1,3 +1,4 @@
+from flask import jsonify
 import urllib2, json
 
 ################################ Public Methods #################################
@@ -15,7 +16,7 @@ def get_book(ISBN):
 		update_book_cache(ISBN)
 	
 	#Get book from cache
-	return get_book_from_cache(ISBN)
+	return jsonify(get_book_from_cache(ISBN))
 		
 ################################ Private Methods #################################
 
