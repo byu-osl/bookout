@@ -1,5 +1,5 @@
 from google.appengine.ext import ndb
-from bookout.GetBook import external_book_search
+from GetBook import external_book_search
 from datetime import datetime
 
 class Book(ndb.Model):
@@ -9,7 +9,6 @@ class Book(ndb.Model):
 
 	title = ndb.StringProperty(required=True)
 	author = ndb.StringProperty(required=True)
-
 
 
 def isbn_lookup(isbn):
@@ -24,16 +23,19 @@ def isbn_lookup(isbn):
 	
 	Return value:
 	An instance of a Book object which represents the book associated with the provided ISBN; else
-	None if the ISBN could not be resolved to a Book object.
+	False if the ISBN could not be resolved to a Book object.
 	"""
 	book = Book.query(Book.isbn==isbn).get()
 	if book:
 		pass
 	else:
 		book_data = external_book_search(isbn)
-		print "book not in datastore, but i got the book title from google: %s" %(book_data['volumeInfo']['title'])    #book_data['title'])
-		book = Book(isbn=isbn,title=book_data['volumeInfo']['title'],author=book_data['volumeInfo']['authors'][0],last_update=datetime.now())
-		book.put()
+		if book_data == False:
+			book = False
+		else:
+			print "book not in datastore, but i got the book title from google: %s" %(book_data['volumeInfo']['title'])    #book_data['title'])
+			book = Book(isbn=isbn,title=book_data['volumeInfo']['title'],author=book_data['volumeInfo']['authors'][0],last_update=datetime.now())
+			book.put()
 	return book
 
 

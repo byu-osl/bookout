@@ -14,7 +14,7 @@
 # Warmup info: http://stackoverflow.com/questions/8235716/how-does-the-warmup-service-work-in-python-google-app-engine
 
 from flask import Flask
-from bookout import app, views, GetBook
+from bookout import app, views
 
 # Warmup
 app.add_url_rule('/_ah/warmup',view_func=views.warmup)
@@ -26,7 +26,7 @@ app.add_url_rule('/',view_func=views.index)
 app.add_url_rule('/book/<ISBN>',view_func=views.lookup_book)
 
 # Lookup a book from app
-app.add_url_rule('/app/book/<ISBN>', view_func=GetBook.get_book)
+app.add_url_rule('/api/v1/book/<ISBN>', view_func=views.get_book)
 
 ## Error Handlers
 @app.errorhandler(404)
