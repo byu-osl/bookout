@@ -19,15 +19,22 @@ from bookout import app, views
 # Warmup
 app.add_url_rule('/_ah/warmup',view_func=views.warmup)
 
+################################ Website landing pages ##################################
 # Home page
 app.add_url_rule('/',view_func=views.index)
 
+# Lookup book
+app.add_url_rule('/search',view_func=views.search)
+
+######################## Internal calls (to be called by ajax) ##########################
 # Lookup a book
 app.add_url_rule('/book/<ISBN>',view_func=views.lookup_book)
 
+################################### Web service calls ###################################
 # Lookup a book from app
 app.add_url_rule('/api/v1/book/<ISBN>', view_func=views.get_book)
 
+##################################### Error Handling ####################################
 ## Error Handlers
 @app.errorhandler(404)
 def page_not_found(e):
