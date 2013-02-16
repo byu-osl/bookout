@@ -30,9 +30,18 @@ app.add_url_rule('/search',view_func=views.search)
 # Lookup a book
 app.add_url_rule('/book/<ISBN>',view_func=views.lookup_book)
 
+# Altering or accessing a user's personaly library
+#	the user will be passed in as a header in the HTTP call.  The header is 'USER'
+#	the following http types should be sent to do their corresponding functions
+#		GET - check to see if the given user has the given book
+#		POST - add the given book to the user's library
+#		DELETE - remove the book from the user's library
+app.add_url_rule('/library/<ISBN>', methods = ['GET', 'POST', 'DELETE'], view_func=views.library_requests)
+
 ################################### Web service calls ###################################
 # Lookup a book from app
 app.add_url_rule('/api/v1/book/<ISBN>', view_func=views.get_book)
+
 
 ##################################### Error Handling ####################################
 ## Error Handlers
