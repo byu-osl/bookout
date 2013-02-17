@@ -15,6 +15,9 @@ def index():
 def search():
 	return render_template('search.html')
 
+def manage_library():
+	return "This is where we will view, add, and delete books from a person's library"
+
 ######################## Internal calls (to be called by ajax) ##########################
 def lookup_book(ISBN):
 	book = isbn_lookup(ISBN)
@@ -33,6 +36,7 @@ def library_requests(ISBN):
 		return "Book " + ISBN + " was in " + user + "'s library"
 	elif request.method == 'POST':
 		#add the book to the user's library
+		#If not found, add it to the cache, then to the user's library
 		return "Book " + ISBN + " was added to " + user + "'s library"
 	elif request.method == 'DELETE':	
 		#remove the book from the user's library
@@ -40,11 +44,3 @@ def library_requests(ISBN):
 	else:
 		#this should never be reached
 		return "Error: http request was invalid"
-
-################################### Web service calls ###################################
-def get_book(ISBN):
-	book = isbn_lookup(ISBN)
-	if book == False:
-		return "<b>Book Not Found!</b>"
-	else:
-		return book.title
