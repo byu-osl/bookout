@@ -34,3 +34,7 @@ nosetests.xml
 
 # Python extensions
 *.pyc
+*.py~
+
+#Config files
+bookout/config.py
