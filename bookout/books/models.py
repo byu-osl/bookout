@@ -2,6 +2,8 @@ from google.appengine.ext import ndb
 from GetBook import external_book_search
 from datetime import datetime,timedelta
 import logging
+from bookout.accounts.models import UserAccount
+
 
 class Book(ndb.Model):
 	"""Cached representation of a book"""
@@ -81,6 +83,39 @@ class Book(ndb.Model):
 			if not book.update_cache():
 				book = None
 		return book
+
+
+class BookCopy(ndb.Model):
+	"""A model for linking User to Books
+	
+	This method was chosen over a List object on the User Account because this allows more 
+	flexibility for adding additional information about a particular copy of a Book
+	
+	"""
+	
+	book = ndb.KeyProperty(kind=Book)
+	account = ndb.KeyProperty(kind=UserAccount)
+
+	def display(self):
+		return Book.query(Book.key == self.book).get().title
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

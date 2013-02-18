@@ -1,6 +1,9 @@
 # Views
+from google.appengine.api import users
 from flask import Response, jsonify, render_template, request
 from books.models import Book
+from accounts.models import UserAccount
+import logging
 
 def warmup():
 	# https://developers.google.com/appengine/docs/python/config/appconfig#Warmup_Requests
@@ -16,10 +19,24 @@ def search():
 	return render_template('search.html')
 
 def manage_library():
-	return "This is where we will view, add, and delete books from a person's library"
+	useraccount = UserAccount.get_current()
+	if not useraccount:
+		logging.info("there is not a user logged in")
+		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url="/search")
+	#useraccount.add_book(Book.get_by_isbn("9788420637747"))
+	retstring = "Hello, %s" %users.get_current_user().nickname() + "<br>"
+	for copy in useraccount.get_library():
+		retstring += copy.display() + "<br>"
+	retstring += "DONE"
+	return  retstring
 
 ######################## Internal calls (to be called by ajax) ##########################
 def lookup_book(ISBN):
+	useraccount = UserAccount.get_current()
+	if not useraccount:
+		logging.info("there is not a user logged in")
+		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url="/search")
+	
 	book = Book.get_by_isbn(ISBN)
 	if not book:
 		return "<b>Book Not Found!</b>"
@@ -44,3 +61,10 @@ def library_requests(ISBN):
 	else:
 		#this should never be reached
 		return "Error: http request was invalid"
+
+
+
+
+
+
+
