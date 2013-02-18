@@ -1,11 +1,11 @@
 ################################### Web service calls ###################################
 # Views
 from flask import Response, jsonify, request
-from books.models import isbn_lookup
+from books.models import Book
 
 def get_book(ISBN):
-	book = isbn_lookup(ISBN)
-	if book == False:
+	book = Book.get_by_isbn(ISBN)
+	if not book:
 		return "<b>Book Not Found!</b>"
 	else:
 		return book.title

@@ -1,6 +1,6 @@
 # Views
 from flask import Response, jsonify, render_template, request
-from books.models import isbn_lookup
+from books.models import Book
 
 def warmup():
 	# https://developers.google.com/appengine/docs/python/config/appconfig#Warmup_Requests
@@ -20,8 +20,8 @@ def manage_library():
 
 ######################## Internal calls (to be called by ajax) ##########################
 def lookup_book(ISBN):
-	book = isbn_lookup(ISBN)
-	if book == False:
+	book = Book.get_by_isbn(ISBN)
+	if not book:
 		return "<b>Book Not Found!</b>"
 	else:
 		return Response(book.title)
