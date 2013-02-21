@@ -34,7 +34,6 @@ app.add_url_rule('/library',view_func=views.manage_library)
 app.add_url_rule('/book/<ISBN>',view_func=views.lookup_book)
 
 # Altering or accessing a user's personal library
-#	the user will be passed in as a header in the HTTP call.  The header is 'USER'
 #	the following http types should be sent to do their corresponding functions
 #		GET - check to see if the given user has the given book
 #		POST - add the given book to the user's library

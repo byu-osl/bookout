@@ -44,20 +44,22 @@ def lookup_book(ISBN):
 		return Response(book.title)
 		
 def library_requests(ISBN):
-	headers = request.headers
-	if 'USER' not in headers:
-		return "please include the user in the headers from your request"
-	user = headers['USER']
+	useraccount = UserAccount.get_current()
+	if not useraccount:
+		logging.info("there is not a user logged in")
+		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url="/search")
+		
 	if request.method == 'GET':
 		#check the database to see if the book is in the user's library
-		return "Book " + ISBN + " was in " + user + "'s library"
+		return "You sent a GET request.  If you want to add a book to your library, send a POST"
 	elif request.method == 'POST':
 		#add the book to the user's library
 		#If not found, add it to the cache, then to the user's library
-		return "Book " + ISBN + " was added to " + user + "'s library"
+		useraccount.add_book(Book.get_by_isbn(ISBN))
+		return "Book " + ISBN + " was added to " + users.get_current_user().nickname() + "'s library"
 	elif request.method == 'DELETE':	
 		#remove the book from the user's library
-		return "Book " + ISBN + " was removed from " + user + "'s library"
+		return "This will removed the book from your library, but it doesn't right now."
 	else:
 		#this should never be reached
 		return "Error: http request was invalid"
