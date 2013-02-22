@@ -8,6 +8,18 @@ class UserAccount(ndb.Model):
 	"""Stored information about a User"""
 	
 	googleid = ndb.StringProperty(required=True)
+	
+	def is_authenticated(self):
+		return False
+
+	def is_active(self):
+		return True
+
+	def is_anonymous(self):
+		return False
+
+	def get_id(self):
+		return self.key()
 
 	@classmethod
 	def get_current(cls):
