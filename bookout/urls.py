@@ -23,15 +23,15 @@ app.add_url_rule('/_ah/warmup',view_func=views.warmup)
 # Home page
 app.add_url_rule('/',view_func=views.index)
 
-# Lookup book
-app.add_url_rule('/search',view_func=views.search)
-
 # Manager user's library
 app.add_url_rule('/library',view_func=views.manage_library)
 
 ######################## Internal calls (to be called by ajax) ##########################
 # Lookup a book
 app.add_url_rule('/book/<ISBN>',view_func=views.lookup_book)
+
+# Get book list
+app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
 
 # Altering or accessing a user's personal library
 #	the following http types should be sent to do their corresponding functions
