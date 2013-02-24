@@ -37,26 +37,54 @@ class UserAccount(ndb.Model):
 			return None
 
 	def get_library(self):
+		"""retrieve the user's library
+		
+		Return value:
+		list of BookCopy objects owned by the user
+		"""
 		from bookout.books.models import BookCopy
-		return BookCopy.query(BookCopy.account==self.key).fetch(20)
+		return BookCopy.query(BookCopy.account==self.key).fetch()
 	
 	def get_book(self,book):
+		"""retrieve the user's copy of a particular book
+		
+		Arguments:
+		book - the Book being retrieved
+
+		Return value:
+		the user's BookCOpy object associated with the provided Book; None if the user does not own book
+		"""
 		from bookout.books.models import BookCopy
-		book = BookCopy.query(BookCopy.book==book.key,BookCopy.account==self.key).get()
-		if book:
-			return book
-		else:
-			return None
+		mybook = BookCopy.query(BookCopy.book==book.key,BookCopy.account==self.key).get()
+		return mybook
 	
 	def add_book(self,book):
+		"""add a personal copy of a book to a user's account
+		
+		Arguments:
+		book - Book object being attached to the User
+
+		Return Value:
+		a BookCopy instance that links the User to the Book; None if the Book could not be linked
+		"""
 		from bookout.books.models import BookCopy
 		bookcopy = BookCopy(book=book.key,account=self.key)
 		bookcopy.put()
 		return bookcopy
 		
 	def remove_book(self,book):
+		"""delete a user's copy of a book
+		
+		Arguments:
+		book - Book object that is to be removed
+
+		Return value:
+		the BookCopy instance that was just deleted; None if the BookCopy was not found
+		"""
 		from bookout.books.models import BookCopy
 		bookcopy = BookCopy.query(BookCopy.book==book.key,BookCopy.account==self.key).get()
-		bookcopy.key.delete()
+		if bookcopy:
+			bookcopy.key.delete()
+		return bookcopy
 	
 

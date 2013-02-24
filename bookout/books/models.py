@@ -60,7 +60,7 @@ class Book(ndb.Model):
 		This is a factory method that converts an ISBN into a Book object (if possible),
 		abstracting away any caching/external APIs necessary to the Book's use
 		
-		Keyword arguments:
+		Arguments:
 		isbn -- the ISBN being searched
 		
 		Return value:
