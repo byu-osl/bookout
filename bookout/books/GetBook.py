@@ -1,7 +1,7 @@
 from google.appengine.api import urlfetch
 from flask import jsonify
 import json
-from books.config import google_api_key
+from bookout.config import google_api_key
 
 def external_book_search(ISBN):
 	book = search_google_books(ISBN)
