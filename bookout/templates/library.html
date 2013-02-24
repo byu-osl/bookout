@@ -8,11 +8,20 @@
 				url:"{{ url_for('library_requests',ISBN='') }}" + isbn,
 				success:function(result){
 							alert(result);
-							reload_booklist()
+							reload_booklist();
 						}
 				});
 	}
-	function reload_booklist(){
+	function remove_book(isbn){
+		$.ajax({type:"DELETE",
+			url:"{{ url_for('library_requests',ISBN='') }}" + isbn,
+			success:function(result){
+						alert(result);
+						reload_booklist();
+					}
+			});
+	}
+	function reload_booklist(isbn){
 			$.ajax({url:"{{ url_for('get_my_book_list') }}",
 			success:function(result){
 						$("#booklist").html(result);
@@ -27,7 +36,7 @@
 <hr/>
 Add books to your library
 <input id="isbn" type="text"/>
-<button onclick="add_book();">Search</button>
+<button onclick="add_book();">Add</button>
 <hr/>
 <b>Your books</b>
 <br/>

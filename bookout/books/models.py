@@ -97,26 +97,7 @@ class BookCopy(ndb.Model):
 	account = ndb.KeyProperty(kind=UserAccount)
 
 	def display(self):
-		return Book.query(Book.key == self.book).get().title
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		book = Book.query(Book.key == self.book).get()
+		return book.title
 
 

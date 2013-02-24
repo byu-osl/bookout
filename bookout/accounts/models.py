@@ -40,9 +40,23 @@ class UserAccount(ndb.Model):
 		from bookout.books.models import BookCopy
 		return BookCopy.query().fetch(20)
 	
+	def get_book(self,book):
+		from bookout.books.models import BookCopy
+		book = BookCopy.query(BookCopy.book==book.key,BookCopy.account==self.key).get()
+		if book:
+			return book
+		else:
+			return None
+	
 	def add_book(self,book):
 		from bookout.books.models import BookCopy
 		bookcopy = BookCopy(book=book.key,account=self.key)
 		bookcopy.put()
 		return bookcopy
+		
+	def remove_book(self,book):
+		from bookout.books.models import BookCopy
+		bookcopy = BookCopy.query(BookCopy.book==book.key,BookCopy.account==self.key).get()
+		bookcopy.key.delete()
+	
 
