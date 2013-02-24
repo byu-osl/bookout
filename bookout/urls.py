@@ -14,7 +14,7 @@
 # Warmup info: http://stackoverflow.com/questions/8235716/how-does-the-warmup-service-work-in-python-google-app-engine
 
 from flask import Flask
-from bookout import app, views
+from bookout import app, views, api
 
 # Warmup
 app.add_url_rule('/_ah/warmup',view_func=views.warmup)
@@ -23,15 +23,14 @@ app.add_url_rule('/_ah/warmup',view_func=views.warmup)
 # Home page
 app.add_url_rule('/',view_func=views.index)
 
-# Lookup book
-app.add_url_rule('/search',view_func=views.search)
+# Manager user's library
+app.add_url_rule('/library',view_func=views.manage_library)
 
 ######################## Internal calls (to be called by ajax) ##########################
-# Lookup a book
-app.add_url_rule('/book/<ISBN>',view_func=views.lookup_book)
+# Get book list
+app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
 
-# Altering or accessing a user's personaly library
-#	the user will be passed in as a header in the HTTP call.  The header is 'USER'
+# Altering or accessing a user's personal library
 #	the following http types should be sent to do their corresponding functions
 #		GET - check to see if the given user has the given book
 #		POST - add the given book to the user's library
@@ -40,8 +39,16 @@ app.add_url_rule('/library/<ISBN>', methods = ['GET', 'POST', 'DELETE'], view_fu
 
 ################################### Web service calls ###################################
 # Lookup a book from app
-app.add_url_rule('/api/v1/book/<ISBN>', view_func=views.get_book)
+app.add_url_rule('/api/v1/book/<ISBN>', view_func=api.get_book)
 
+# Returns all the books in a person's library
+app.add_url_rule('/api/v1/library',view_func=api.view_library)
+
+# Alters books in a person's library
+#		GET - Get a particular book
+#		POST - Add a book to the library
+#		DELETE - Deletes a book from a person's library
+app.add_url_rule('/api/v1/library/<ISBN>', methods = ['GET','POST','DELETE'], view_func=api.library_book)
 
 ##################################### Error Handling ####################################
 ## Error Handlers
