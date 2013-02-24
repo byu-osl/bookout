@@ -27,9 +27,6 @@ app.add_url_rule('/',view_func=views.index)
 app.add_url_rule('/library',view_func=views.manage_library)
 
 ######################## Internal calls (to be called by ajax) ##########################
-# Lookup a book
-app.add_url_rule('/book/<ISBN>',view_func=views.lookup_book)
-
 # Get book list
 app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
 

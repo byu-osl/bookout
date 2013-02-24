@@ -24,22 +24,12 @@ def manage_library():
 	retstring = ""
 	for copy in useraccount.get_library():
 		retstring += copy.display() + "<br>"
-	return  render_template('library.html',username=users.get_current_user().nickname(),books=get_my_book_list())
-
+	return  render_template('library.html',username=users.get_current_user().nickname(),books=get_my_book_list(),logout_url=logout_url())
+	
+def logout_url():
+	return users.create_logout_url(url_for('index'))
 
 ######################## Internal calls (to be called by ajax) ##########################
-def lookup_book(ISBN):
-	useraccount = UserAccount.get_current()
-	if not useraccount:
-		logging.info("there is not a user logged in")
-		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url="/search")
-	
-	book = Book.get_by_isbn(ISBN)
-	if not book:
-		return "<b>Book Not Found!</b>"
-	else:
-		return Response(book.title)
-		
 def library_requests(ISBN):
 	useraccount = UserAccount.get_current()
 	if not useraccount:
@@ -87,10 +77,10 @@ def get_my_book_list():
 		logging.info("there is not a user logged in")
 		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('manage_library'))
 
-	retstring = "<table border='1'>"
+	retstring = "<table>"
 	for copy in useraccount.get_library():
 		book = Book.query(Book.key == copy.book).get()
-		retstring += "<tr><td>" + book.isbn + "</td><td>" + book.title + "</td><td><button onclick=\"remove_book('" + book.isbn + "');\">Remove</button></td></tr>"
+		retstring += "<tr><td>" + book.title + "</td><td><button onclick=\"remove_book('" + book.isbn + "');\">Remove</button></td></tr>"
 	retstring += "</table>"
 	return retstring
 

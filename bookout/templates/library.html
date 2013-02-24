@@ -31,7 +31,8 @@
 	</script>
 </head>
 <body>
-<a href="{{url_for('index') }}">&lt;&lt;&lt; Home</a><br/><br/>
+<a href="{{ url_for('index') }}">&lt;&lt;&lt; Home</a><br/>
+<a href="{{ logout_url }}">Logout</a><br/><br/>
 <b>Hello, {{ username }}</b>
 <hr/>
 Add books to your library

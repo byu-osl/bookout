@@ -38,7 +38,7 @@ class UserAccount(ndb.Model):
 
 	def get_library(self):
 		from bookout.books.models import BookCopy
-		return BookCopy.query().fetch(20)
+		return BookCopy.query(BookCopy.account==self.key).fetch(20)
 	
 	def get_book(self,book):
 		from bookout.books.models import BookCopy
