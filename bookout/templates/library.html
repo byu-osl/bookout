@@ -12,6 +12,16 @@
 						}
 				});
 	}
+	function search_for_book(){
+		title = $("#title").val();
+		$.ajax({type:"POST",
+				url:"{{ url_for('get_book_by_attribute',attribute='title',value='') }}" + title,
+				success:function(result){
+							alert(result);
+							reload_booklist();
+						}
+				});
+	}
 	function remove_book(isbn){
 		$.ajax({type:"DELETE",
 			url:"{{ url_for('library_requests',ISBN='') }}" + isbn,
@@ -38,6 +48,11 @@
 Add books to your library
 <input id="isbn" type="text"/>
 <button onclick="add_book();">Add</button>
+<hr/>
+<hr/>
+Search for a book by title
+<input id="title" type="text"/>
+<button onclick="search_for_book();">Search</button>
 <hr/>
 <b>Your books</b>
 <br/>

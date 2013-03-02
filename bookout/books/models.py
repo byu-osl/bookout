@@ -1,5 +1,5 @@
 from google.appengine.ext import ndb
-from GetBook import external_book_search
+from GetBook import external_book_search,external_book_search_by_attribute
 from datetime import datetime,timedelta
 import logging
 from bookout.accounts.models import UserAccount
@@ -83,6 +83,52 @@ class Book(ndb.Model):
 			if not book.update_cache():
 				book = None
 		return book
+	
+	
+	@classmethod
+	def get_by_attribute(cls,attribute=None,value=None):
+		"""Convert an ISBN to a Book object
+		
+		This is a factory method that converts an ISBN into a Book object (if possible),
+		abstracting away any caching/external APIs necessary to the Book's use
+		
+		Arguments:
+		isbn -- the ISBN being searched
+		
+		Return value:
+		An instance of a Book object with the given ISBN; if the ISBN could not be resolved
+		to a Book object, returns None
+		
+		"""
+		if not attribute:
+			logging.error("Book.get_by_attribute() called without an attribute")
+			return None
+		if not value:
+			logging.error("Book.get_by_attribute() called without an value")
+			return None
+		if(attribute != "ISBN" and attribute != "title" and attribute != "author"):
+			logging.debug("Book.get_by_attribute() was called with an invalid attribute: %s" %attribute)
+			return None
+		book = None
+
+		book_data = external_book_search_by_attribute(attribute, value)
+		if book_data:
+			books = []
+			for book in book_data['items']:
+				curBook = Book(isbn="None")
+				curBook.isbn = book['volumeInfo']['industryIdentifiers'][0]['identifier']
+				curBook.title = book['volumeInfo']['title']
+				if 'authors' in book['volumeInfo']:
+					curBook.author = book['volumeInfo']['authors'][0]
+				else:
+					curBook.author = "None"
+				curBook.last_update = datetime.now()
+				books.append(curBook)
+			return books
+		else:
+			logging.debug("No books were found in external databases")
+
+		return False
 
 
 class BookCopy(ndb.Model):

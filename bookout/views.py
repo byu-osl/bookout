@@ -84,6 +84,16 @@ def get_my_book_list():
 	retstring += "</table>"
 	return retstring
 
-
-
-
+def get_book_by_attribute(attribute, value):
+	html = "<html><body>"
+	books = Book.get_by_attribute(attribute, value)
+	# return books
+	if books == False:
+		return "No books found"
+	for book in books:
+		html += "<div>Title: " + book.title
+		html += "<br>Author: " + book.author
+		html += "<br>ISBN: " + book.isbn
+		html += "<br></div>"
+	html += "</body></html>"
+	return html

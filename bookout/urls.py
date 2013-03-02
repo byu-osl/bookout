@@ -30,6 +30,11 @@ app.add_url_rule('/library',view_func=views.manage_library)
 # Get book list
 app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
 
+# Look up a book by the given attribute
+#	The attribute is what part of the book you will search with (isbn, title, auther, etc.)
+#	The value is the value that should be used in the search
+app.add_url_rule('/book/<attribute>/<value>', view_func=views.get_book_by_attribute)
+
 # Altering or accessing a user's personal library
 #	the following http types should be sent to do their corresponding functions
 #		GET - check to see if the given user has the given book
@@ -42,7 +47,7 @@ app.add_url_rule('/library/<ISBN>', methods = ['GET', 'POST', 'DELETE'], view_fu
 app.add_url_rule('/api/v1/book/<ISBN>', view_func=api.get_book)
 
 # Returns all the books in a person's library
-app.add_url_rule('/api/v1/library',view_func=api.view_library)
+app.add_url_rule('/api/v1/library', view_func=api.view_library)
 
 # Alters books in a person's library
 #		GET - Get a particular book
