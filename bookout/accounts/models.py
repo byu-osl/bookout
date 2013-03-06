@@ -9,8 +9,8 @@ import logging
 class UserAccount(ndb.Model):
 	"""Stored information about a User"""
 	
-	googleid = ndb.StringProperty(required=True)
-	username = ndb.StringProperty()
+	googleid = ndb.StringProperty()
+	username = ndb.StringProperty(required=True)
 	
 	def is_authenticated(self):
 		return True

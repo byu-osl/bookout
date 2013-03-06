@@ -26,7 +26,6 @@ def login():
 		user = UserAccount.get_by_username(username)
 		if user:
 			if login_user(user, remember=False):
-				flash("Logged in!")
 				return redirect(request.args.get("next") or url_for("library"))
 			else:
 				flash("Sorry, but you could not log in.")
@@ -34,7 +33,9 @@ def login():
 			flash(u"Invalid username.")
 	return render_template("login.html")
 
-
+def logout():
+	logout_user()
+	return redirect("/")
 
 
 
@@ -49,27 +50,20 @@ def index():
 
 @login_required
 def manage_library():
-	useraccount = UserAccount.get_current()
-	#useraccount.username = "bryangwilliam"
-	#useraccount.put()
-	if not useraccount:
-		logging.info("there is not a user logged in")
-		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('manage_library'))
-
 	retstring = ""
-	for copy in useraccount.get_library():
+	for copy in flaskext.login.current_user.get_library():
 		retstring += copy.display() + "<br>"
-	return  render_template('library.html',username=users.get_current_user().nickname(),books=get_my_book_list(),logout_url=logout_url())
+	return  render_template('library.html',username=flaskext.login.current_user.username,books=get_my_book_list(),logout_url="/logout")
 	
 def logout_url():
 	return users.create_logout_url(url_for('index'))
 
 ######################## Internal calls (to be called by ajax) ##########################
 def library_requests(ISBN):
-	useraccount = UserAccount.get_current()
-	if not useraccount:
-		logging.info("there is not a user logged in")
-		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('library_requests',ISBN=ISBN))
+	useraccount = flaskext.login.current_user
+	#if not useraccount:
+	#	logging.info("there is not a user logged in")
+	#	return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('library_requests',ISBN=ISBN))
 		
 	if request.method == 'GET':
 		#check the database to see if the book is in the user's library
@@ -107,10 +101,10 @@ def library_requests(ISBN):
 		return "Error: http request was invalid"
 
 def get_my_book_list():
-	useraccount = UserAccount.get_current()
-	if not useraccount:
-		logging.info("there is not a user logged in")
-		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('manage_library'))
+	useraccount = flaskext.login.current_user
+	#if not useraccount:
+	#	logging.info("there is not a user logged in")
+	#	return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('manage_library'))
 
 	retstring = "<table>"
 	for copy in useraccount.get_library():
