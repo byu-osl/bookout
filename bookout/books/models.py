@@ -86,7 +86,7 @@ class Book(ndb.Model):
 	
 	
 	@classmethod
-	def get_by_attribute(cls,attribute=None,value=None):
+	def search_by_attribute(cls,attribute=None,value=None):
 		"""Convert an ISBN to a Book object
 		
 		This is a factory method that converts an ISBN into a Book object (if possible),
@@ -101,13 +101,10 @@ class Book(ndb.Model):
 		
 		"""
 		if not attribute:
-			logging.error("Book.get_by_attribute() called without an attribute")
+			logging.error("Book.search_by_attribute() called without an attribute")
 			return None
 		if not value:
-			logging.error("Book.get_by_attribute() called without an value")
-			return None
-		if(attribute != "ISBN" and attribute != "title" and attribute != "author"):
-			logging.debug("Book.get_by_attribute() was called with an invalid attribute: %s" %attribute)
+			logging.error("Book.search_by_attribute() called without an value")
 			return None
 		book = None
 
@@ -120,6 +117,8 @@ class Book(ndb.Model):
 				curBook.title = book['volumeInfo']['title']
 				if 'authors' in book['volumeInfo']:
 					curBook.author = book['volumeInfo']['authors'][0]
+					for i in range(1, len(book['volumeInfo']['authors'])):
+						curBook.author += ", " + book['volumeInfo']['authors'][i]
 				else:
 					curBook.author = "None"
 				curBook.last_update = datetime.now()

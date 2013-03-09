@@ -32,8 +32,9 @@ app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
 
 # Look up a book by the given attribute
 #	The attribute is what part of the book you will search with (isbn, title, auther, etc.)
+#		If you want to search for a book generically use "all"
 #	The value is the value that should be used in the search
-app.add_url_rule('/book/<attribute>/<value>', view_func=views.get_book_by_attribute)
+app.add_url_rule('/search/<attribute>/<value>', view_func=views.search_for_book)
 
 # Altering or accessing a user's personal library
 #	the following http types should be sent to do their corresponding functions

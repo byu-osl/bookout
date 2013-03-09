@@ -43,7 +43,9 @@ def external_book_search_by_attribute(attribute, value):
 def search_google_books_by_attribute(attribute, value):	
 	#Search to get volumes associated with this isbn.
 	# There should only ever really be one returned, but if there are more than one, this returns the first
-	if(attribute == "ISBN"):
+	if(attribute == "all"):
+		query = value
+	elif(attribute == "ISBN"):
 		query = "isbn:" + value
 	elif(attribute == "title"):
 		query = "intitle:" + value

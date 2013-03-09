@@ -84,10 +84,9 @@ def get_my_book_list():
 	retstring += "</table>"
 	return retstring
 
-def get_book_by_attribute(attribute, value):
+def search_for_book(attribute, value):
 	html = "<html><body>"
-	books = Book.get_by_attribute(attribute, value)
-	# return books
+	books = Book.search_by_attribute(attribute, value)
 	if books == False:
 		return "No books found"
 	for book in books:
