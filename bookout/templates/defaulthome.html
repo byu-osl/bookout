@@ -1,0 +1,28 @@
+
+{% extends "maintemplate.html" %}
+
+{% block title %}Welcome to BookOut - Sign In, Sign Up or Learn More{% endblock %}
+
+{% block content %}
+<div class="row">
+
+	<h3>BookOut: The Place to Share Books</h3>
+
+	<p>BookOut is a personal library network, built to help users share physical books between friends. 
+	With BookOut you can create an index, or library, of all your personal books, browse your friends' 
+	libraries, and request to loan books from your friends. BookOut tracks the books you are loaning 
+	and borrowing, and notifies you when items are due. <a href="#join">Join today!</a></p>
+
+</div>
+
+<div class="row">
+
+	<h3>Discover books already on BookOut</h3>
+	
+	<div id="searchBar">
+		<input type="text" class="input-xxlarge search-query" placeholder="Enter ISBN, Title, or Author...">
+		<button type="submit" class="btn">Search</button>
+	</div>
+
+</div>
+{% endblock %}

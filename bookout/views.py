@@ -13,7 +13,22 @@ def warmup():
 
 ################################ Website landing pages ##################################
 def index():
-	return "Welcome to Bookout!<br/><a href='/library'>View My Library</a><br/>"
+	return render_template('defaulthome.html', loggedin=False)
+	
+def about():
+	return render_template('aboutbookout.html', loggedin=False)
+	
+def login():
+	return render_template('join.html', loggedin=False)
+	
+def sign_up():
+	return render_template('join.html', loggedin=False)
+	
+def mobile_app():
+	return render_template('mobileapp.html', loggedin=False)
+	
+def donate():
+	return render_template('donate.html', loggedin=False)
 
 def manage_library():
 	useraccount = UserAccount.get_current()

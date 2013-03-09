@@ -1,0 +1,43 @@
+
+{% extends "maintemplate.html" %}
+
+{% block title %}BookOut - Home{% endblock %}
+
+{% block content %}
+<div class="row">
+
+	<h3>Search to Find or Add Books</h3>
+
+	<p>Search to find books available within your network or to add books to your library that you own and are willing to share.</p>
+
+	<div id="searchBar">
+		<input type="text" class="input-xxlarge search-query" placeholder="Enter Title, Author, or ISBN...">
+		<button type="submit" class="btn">Search</button>
+	</div>
+	
+</div>
+
+<div class="row">
+
+	<h3>Pending Requests</h3>
+	
+	...The table of pending requests (if any) will go here...
+
+</div>
+
+<div class="row">
+
+	<h3>Books You Are Borrowing</h3>
+	
+	...The table of books you are borrowing will go here...
+
+</div>
+
+<div class="row">
+
+	<h3>Books You Are Lending</h3>
+	
+	...The table of books you are lending will go here...
+
+</div>
+{% endblock %}

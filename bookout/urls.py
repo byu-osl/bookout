@@ -26,6 +26,21 @@ app.add_url_rule('/',view_func=views.index)
 # Manager user's library
 app.add_url_rule('/library',view_func=views.manage_library)
 
+# About
+app.add_url_rule('/about',view_func=views.about)
+
+# Login
+app.add_url_rule('/login',view_func=views.login)
+
+# Sign Up
+app.add_url_rule('/signup',view_func=views.sign_up)
+
+# Mobile App
+app.add_url_rule('/mobileapp',view_func=views.mobile_app)
+
+# Donate
+app.add_url_rule('/donate',view_func=views.donate)
+
 ######################## Internal calls (to be called by ajax) ##########################
 # Get book list
 app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)

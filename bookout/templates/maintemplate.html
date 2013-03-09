@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <title>{% block title %}{% endblock %} | BookOut</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/maintemplate.css') }}"/>
+  
+</head>
+
+
+<body>
+
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="{{ url_for('index') }}">BookOut</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav">
+						<li><a href="{{ url_for('about') }}">About</a></li>
+						<li><a href="{{ url_for('login') }}">Login</a></li>
+						<li><a href="{{ url_for('sign_up') }}">Sign Up</a></li>
+					</ul>
+				</div>
+				
+				{% if loggedin %}
+				<form class="navbar-search pull-right" action="">
+					<input type="text" class="search-query span4" placeholder="Search books by title, author, or ISBN">
+				</form>
+				{% endif %}
+				
+	<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+	
+	<div class="container">
+		
+		{% block content %}
+		{% endblock %}
+		
+		<div class="row">
+		<footer id="footer">
+			<div class="links">
+				<ul>
+					<li><a href="{{ url_for('mobile_app') }}">Mobile App</a>
+					<li><a href="http://github.com/byu-osl/bookout">GitHub Project Page</a>
+					<li><a href="{{ url_for('donate') }}">Donate</a>
+					<li><a href="{{ url_for('about') }}">Terms of Use</a>
+					<li><a href="{{ url_for('about') }}">About</a>
+					<li><a href="{{ url_for('about') }}">Contact Us</a>
+				</ul>
+			</div>
+		</footer>
+		</div>
+	</div>
+
+	<script src="http://code.jquery.com/jquery.js"></script>
+
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,27 @@
+
+/*****CSS for the Main Template*****/
+
+body {
+    padding-top: 75px;
+}
+    
+#footer	{
+	float: left;
+	width: 960px;
+	margin-top: 45px;
+	line-height: 80px;
+	border-top: 1px solid #f5f5f5;
+}
+
+#footer ul {
+	margin: 0;
+	padding: 0;
+}
+
+#footer li {
+	display: inline-block;
+	margin-right: 25px;
+	line-height: 50px;
+	float: left;
+	list-style: none;
+}
