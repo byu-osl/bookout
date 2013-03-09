@@ -84,9 +84,9 @@ def get_my_book_list():
 	retstring += "</table>"
 	return retstring
 
-def search_for_book(attribute, value):
+def search_for_book(attribute, value, page = 0, per_page=10):
 	html = "<html><body>"
-	books = Book.search_by_attribute(attribute, value)
+	books = Book.search_by_attribute(int(page), int(per_page), attribute, value)
 	if books == False:
 		return "No books found"
 	for book in books:
@@ -94,5 +94,6 @@ def search_for_book(attribute, value):
 		html += "<br>Author: " + book.author
 		html += "<br>ISBN: " + book.isbn
 		html += "<br></div>"
+	html += "<form type=\"hidden\" name=\"pageNumber\" value=\"" + str(page) + "\">"
 	html += "</body></html>"
 	return html

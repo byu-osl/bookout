@@ -36,6 +36,13 @@ app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
 #	The value is the value that should be used in the search
 app.add_url_rule('/search/<attribute>/<value>', view_func=views.search_for_book)
 
+# Search for more books
+#	the current page you are viewing of search results is stored in a hidden form returned by
+#		the search urls
+#	per_page is the number of books you want on the pages, this is not required (default is 10)
+app.add_url_rule('/search/<attribute>/<value>/<page>', view_func=views.search_for_book)
+app.add_url_rule('/search/<attribute>/<value>/<page>/<per_page>', view_func=views.search_for_book)
+
 # Altering or accessing a user's personal library
 #	the following http types should be sent to do their corresponding functions
 #		GET - check to see if the given user has the given book

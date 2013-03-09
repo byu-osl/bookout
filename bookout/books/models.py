@@ -86,7 +86,7 @@ class Book(ndb.Model):
 	
 	
 	@classmethod
-	def search_by_attribute(cls,attribute=None,value=None):
+	def search_by_attribute(cls, page, per_page=10, attribute=None, value=None):
 		"""Convert an ISBN to a Book object
 		
 		This is a factory method that converts an ISBN into a Book object (if possible),
@@ -108,7 +108,7 @@ class Book(ndb.Model):
 			return None
 		book = None
 
-		book_data = external_book_search_by_attribute(attribute, value)
+		book_data = external_book_search_by_attribute(attribute, value, page, per_page)
 		if book_data:
 			books = []
 			for book in book_data['items']:
