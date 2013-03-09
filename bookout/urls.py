@@ -30,16 +30,15 @@ app.add_url_rule('/library',view_func=views.manage_library)
 # Get book list
 app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
 
-# Look up a book by the given attribute
+# Search for a book
 #	The attribute is what part of the book you will search with (isbn, title, auther, etc.)
-#		If you want to search for a book generically use "all"
+#		If you want to search for a book disregarding these use "all"
 #	The value is the value that should be used in the search
+#	The page is which page of results you want to recieve
+#	the current page of search results you are viewing is stored in a hidden form called "pageNumber" 
+#		returned by the search urls (if none is given, 0 is used)
+#	per_page is the number of books you want on each page (if none is given, 10 is used)
 app.add_url_rule('/search/<attribute>/<value>', view_func=views.search_for_book)
-
-# Search for more books
-#	the current page you are viewing of search results is stored in a hidden form returned by
-#		the search urls
-#	per_page is the number of books you want on the pages, this is not required (default is 10)
 app.add_url_rule('/search/<attribute>/<value>/<page>', view_func=views.search_for_book)
 app.add_url_rule('/search/<attribute>/<value>/<page>/<per_page>', view_func=views.search_for_book)
 
