@@ -28,7 +28,7 @@ def settings():
 	return render_template('settings.html', loggedin=True)
 	
 def login():
-	return render_template('join.html', loggedin=False)
+	return render_template('signin.html', loggedin=False)
 	
 def sign_up():
 	return render_template('join.html', loggedin=False)

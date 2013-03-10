@@ -4,11 +4,18 @@
 {% block title %}BookOut - Sign In{% endblock %}
 
 {% block content %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/signin-buttons.css') }}"/>
+<div class="row">
 <div class="row">
 
 	<h3>Sign In</h3>
 
-	<p>Sign In with ...The Google button/link will go here...</p>
+	<p>Use the button below to sign into BookOut with your Google Account.
+</div>
+<br>
+<div class="row">
+	
+	<a href="/" class="zocial google">Sign in with Google</a>
 
 </div>
 {% endblock %}
