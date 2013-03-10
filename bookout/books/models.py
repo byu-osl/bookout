@@ -50,7 +50,7 @@ class Book(ndb.Model):
 		"""determine if the cached information in the database needs to be refreshed
 		
 		"""
-		return (datetime.now() - self.last_update) > timedelta(minutes=1)
+		return (datetime.now() - self.last_update) > timedelta(minutes=10)
 	
 	
 	@classmethod

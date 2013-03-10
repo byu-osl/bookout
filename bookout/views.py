@@ -1,15 +1,52 @@
 # Views
 from google.appengine.api import users
-from flask import Response, jsonify, render_template, request, url_for
+from flask import Response, jsonify, render_template, request, url_for, redirect, flash
+from flaskext.login import login_required,login_user,logout_user
+import flaskext
 from books.models import Book
 from accounts.models import UserAccount
 import logging
+from decorators import crossdomain
+from bookout import app
 
 def warmup():
 	# https://developers.google.com/appengine/docs/python/config/appconfig#Warmup_Requests
 	# This function loads the views into the new instance when
 	# one has to start up due to load increases on the app
 	return ''
+
+
+
+
+
+def login():
+	#if flaskext.login.current_user.is_authenticated():
+	#	# user is already logged in, redirect 
+	#	return redirect(request.args.get("next") or url_for("library"))
+	if request.method == "POST" and "username" in request.form:
+		username = request.form["username"]
+		user = UserAccount.get_by_username(username)
+		if user:
+			if login_user(user, remember=False):
+				return redirect(request.args.get("next") or url_for("library"))
+			else:
+				flash("Sorry, but you could not log in.")
+		else:
+			flash(u"Invalid username.")
+	return render_template("login.html")
+
+def logout():
+	logout_user()
+	return redirect("/")
+
+
+
+@app.route("/crossdomain")
+@crossdomain(origin='*')
+def test_view():
+	return "this is a response"
+
+
 
 ################################ Website landing pages ##################################
 def index():
@@ -42,26 +79,22 @@ def mobile_app():
 def donate():
 	return render_template('donate.html', loggedin=False)
 
+@login_required
 def manage_library():
-	useraccount = UserAccount.get_current()
-	if not useraccount:
-		logging.info("there is not a user logged in")
-		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('manage_library'))
-
 	retstring = ""
-	for copy in useraccount.get_library():
+	for copy in flaskext.login.current_user.get_library():
 		retstring += copy.display() + "<br>"
-	return  render_template('library.html',username=users.get_current_user().nickname(),books=get_my_book_list(),logout_url=logout_url())
+	return  render_template('library.html',username=flaskext.login.current_user.username,books=get_my_book_list(),logout_url="/logout")
 	
 def logout_url():
 	return users.create_logout_url(url_for('index'))
 
 ######################## Internal calls (to be called by ajax) ##########################
 def library_requests(ISBN):
-	useraccount = UserAccount.get_current()
-	if not useraccount:
-		logging.info("there is not a user logged in")
-		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('library_requests',ISBN=ISBN))
+	useraccount = flaskext.login.current_user
+	#if not useraccount:
+	#	logging.info("there is not a user logged in")
+	#	return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('library_requests',ISBN=ISBN))
 		
 	if request.method == 'GET':
 		#check the database to see if the book is in the user's library
@@ -99,10 +132,10 @@ def library_requests(ISBN):
 		return "Error: http request was invalid"
 
 def get_my_book_list():
-	useraccount = UserAccount.get_current()
-	if not useraccount:
-		logging.info("there is not a user logged in")
-		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('manage_library'))
+	useraccount = flaskext.login.current_user
+	#if not useraccount:
+	#	logging.info("there is not a user logged in")
+	#	return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('manage_library'))
 
 	retstring = "<table>"
 	for copy in useraccount.get_library():

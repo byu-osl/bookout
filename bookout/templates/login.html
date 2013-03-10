@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<title>Login</title>
+	</head>
+	<body>
+		{% for message in get_flashed_messages() %}
+			<div class=flash>{{ message }}</div>
+		{% endfor %}
+		<p>Please enter your username:</p>
+		<form method="POST">
+			<input type="text" name="username" />
+			<input type="submit" value="Login" />
+		</form>
+	</body>
+</html>

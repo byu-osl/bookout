@@ -1,25 +1,85 @@
 from google.appengine.ext import ndb
 from google.appengine.api import users
+from google.appengine.api.datastore import Key
 from datetime import datetime,timedelta
+from flaskext.login import AnonymousUser
 import logging
 
 
 class UserAccount(ndb.Model):
 	"""Stored information about a User"""
 	
-	googleid = ndb.StringProperty(required=True)
+	username = ndb.StringProperty(required=True)
+	name = ndb.StringProperty(required=True)
+	email = ndb.StringProperty(required=True)
+	password = ndb.StringProperty(required=True)
 	
 	def is_authenticated(self):
-		return False
+		"""determine whether the UserAccount is authenticated
+		
+		This method is required by the flask-login library
+		
+		Return value:
+		True (note: the AnonymousUser object returns False for this method)
+		
+		"""
+		return True
 
 	def is_active(self):
+		"""determine whether the UserAccount is active or not
+		
+		This method is required by the flask-login library
+		
+		Return value:
+		True if the account is active; False otherwise
+		
+		"""
 		return True
 
 	def is_anonymous(self):
+		"""determine whether the UserAccount is anonymous
+		
+		This method is required by the flask-login library
+		
+		Return value:
+		False (note: the AnonymousUser object returns True for this method)
+		
+		"""
 		return False
 
 	def get_id(self):
-		return self.key()
+		"""get the id for this UserAccount
+		
+		This method is required by the flask-login library
+		
+		Return value:
+		Integer that represents the unique ID of this UserAccount
+		
+		"""
+		return self.key.id()
+
+	@classmethod
+	def createuser(cls,username,name,email,password):
+		if UserAccount.get_by_username(username):
+			return None
+		if UserAccount.get_by_email(email):
+			return None
+		user = UserAccount(username=username,name=name,email=email,password=password)
+		return user
+
+	@classmethod
+	def getuser(cls,id):
+		return UserAccount.get_by_id(id)
+
+	@classmethod
+	def get_by_username(cls,username):
+		user = cls.query(cls.username==username).get()
+		return user
+	
+	@classmethod
+	def get_by_email(cls,email):
+		user = cls.query(cls.email==email).get()
+		return user
 
 	@classmethod
 	def get_current(cls):
@@ -87,4 +147,7 @@ class UserAccount(ndb.Model):
 			bookcopy.key.delete()
 		return bookcopy
 	
+
+class Anonymous(AnonymousUser):
+	name = u"Anonymous"
 

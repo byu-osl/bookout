@@ -39,7 +39,7 @@ app.add_url_rule('/discover',view_func=views.discover)
 app.add_url_rule('/settings',view_func=views.settings)
 
 # Login
-app.add_url_rule('/login',view_func=views.login)
+app.add_url_rule('/login',view_func=views.login,methods=["GET","POST"])
 
 # Sign Up
 app.add_url_rule('/signup',view_func=views.sign_up)
@@ -52,6 +52,10 @@ app.add_url_rule('/mobileapp',view_func=views.mobile_app)
 
 # Donate
 app.add_url_rule('/donate',view_func=views.donate)
+
+# Logout
+app.add_url_rule('/logout',view_func=views.logout)
+
 
 ######################## Internal calls (to be called by ajax) ##########################
 # Get book list
