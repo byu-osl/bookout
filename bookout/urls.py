@@ -24,16 +24,28 @@ app.add_url_rule('/_ah/warmup',view_func=views.warmup)
 app.add_url_rule('/',view_func=views.index)
 
 # Manager user's library
-app.add_url_rule('/library',view_func=views.manage_library)
+#app.add_url_rule('/library',view_func=views.manage_library)
 
-# About
-app.add_url_rule('/about',view_func=views.about)
+# Library
+app.add_url_rule('/library',view_func=views.library)
+
+# Network
+app.add_url_rule('/network',view_func=views.network)
+
+# Discover
+app.add_url_rule('/discover',view_func=views.discover)
+
+# Settings
+app.add_url_rule('/settings',view_func=views.settings)
 
 # Login
 app.add_url_rule('/login',view_func=views.login)
 
 # Sign Up
 app.add_url_rule('/signup',view_func=views.sign_up)
+
+# About
+app.add_url_rule('/about',view_func=views.about)
 
 # Mobile App
 app.add_url_rule('/mobileapp',view_func=views.mobile_app)

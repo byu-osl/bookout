@@ -13,16 +13,28 @@ def warmup():
 
 ################################ Website landing pages ##################################
 def index():
-	return render_template('defaulthome.html', loggedin=False)
+	return render_template('home.html', loggedin=True)
 	
-def about():
-	return render_template('aboutbookout.html', loggedin=False)
+def library():
+	return render_template('managelibrary.html', loggedin=True)
+	
+def network():
+	return render_template('managenetworkconnections.html', loggedin=True)
+	
+def discover():
+	return render_template('discover.html', loggedin=True)
+	
+def settings():
+	return render_template('settings.html', loggedin=True)
 	
 def login():
 	return render_template('join.html', loggedin=False)
 	
 def sign_up():
 	return render_template('join.html', loggedin=False)
+	
+def about():
+	return render_template('aboutbookout.html', loggedin=False)
 	
 def mobile_app():
 	return render_template('mobileapp.html', loggedin=False)

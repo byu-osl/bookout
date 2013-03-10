@@ -27,9 +27,16 @@
 				<a class="brand" href="{{ url_for('index') }}">BookOut</a>
 				<div class="nav-collapse collapse">
 					<ul class="nav">
+						{% if loggedin %}
+						<li><a href="{{ url_for('library') }}">Library</a></li>
+						<li><a href="{{ url_for('network') }}">Network</a></li>
+						<li><a href="{{ url_for('discover') }}">Discover</a></li>
+						<li><a href="{{ url_for('settings') }}">Settings</a></li>
+						{% else %}
 						<li><a href="{{ url_for('about') }}">About</a></li>
 						<li><a href="{{ url_for('login') }}">Login</a></li>
 						<li><a href="{{ url_for('sign_up') }}">Sign Up</a></li>
+						{% endif %}
 					</ul>
 				</div>
 				
