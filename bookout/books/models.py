@@ -13,6 +13,8 @@ class Book(ndb.Model):
 	title = ndb.StringProperty(required=True)
 	author = ndb.StringProperty(required=True)
 	
+	thumbnail_link = ndb.StringProperty(required=True)
+	
 	
 	def update_cache(self):
 		"""update cached information about the book using the external book apis
@@ -32,6 +34,10 @@ class Book(ndb.Model):
 					if self.author:
 						logging.info("Title for %s changed from '%s' to '%s'" %(self.isbn,self.author,book_data['volumeInfo']['authors'][0]))
 					self.author = book_data['volumeInfo']['authors'][0]
+				if self.thumbnail_link != book_data['volumeInfo']['imageLinks']['thumbnail']:
+					if self.thumbnail_link:
+						logging.info("Thumbnail link for %s changed from '%s' to '%s'" %(self.isbn,self.thumbnail_link,book_data['volumeInfo']['imageLinks']['thumbnail']))
+					self.thumbnail_link = book_data['volumeInfo']['imageLinks']['thumbnail']
 				if not self.last_update:
 					logging.info("ISBN:%s successfully resolved and added to cache" %self.isbn)
 				self.last_update = datetime.now()
@@ -112,17 +118,21 @@ class Book(ndb.Model):
 		if book_data:
 			books = []
 			for book in book_data['items']:
-				curBook = Book(isbn="None")
-				curBook.isbn = book['volumeInfo']['industryIdentifiers'][0]['identifier']
-				curBook.title = book['volumeInfo']['title']
-				if 'authors' in book['volumeInfo']:
-					curBook.author = book['volumeInfo']['authors'][0]
-					for i in range(1, len(book['volumeInfo']['authors'])):
-						curBook.author += ", " + book['volumeInfo']['authors'][i]
-				else:
-					curBook.author = "None"
-				curBook.last_update = datetime.now()
-				books.append(curBook)
+				try:
+					curBook = Book(isbn="None")
+					curBook.isbn = book['volumeInfo']['industryIdentifiers'][0]['identifier']
+					curBook.title = book['volumeInfo']['title']
+					if 'authors' in book['volumeInfo']:
+						curBook.author = book['volumeInfo']['authors'][0]
+						for i in range(1, len(book['volumeInfo']['authors'])):
+							curBook.author += ", " + book['volumeInfo']['authors'][i]
+					else:
+						curBook.author = "None"
+					curBook.thumbnail_link = book['volumeInfo']['imageLinks']['thumbnail']
+					curBook.last_update = datetime.now()
+					books.append(curBook)
+				except:
+					pass
 			return books
 		else:
 			logging.debug("No books were found in external databases")

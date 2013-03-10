@@ -153,6 +153,7 @@ def search_for_book(attribute, value, page = 0, per_page=10):
 		html += "<div>Title: " + book.title
 		html += "<br>Author: " + book.author
 		html += "<br>ISBN: " + book.isbn
+		html += "<br>thumbnail: " + book.thumbnail_link
 		html += "<br></div>"
 	html += "<form type=\"hidden\" name=\"pageNumber\" value=\"" + str(page) + "\">"
 	html += "</body></html>"

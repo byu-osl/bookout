@@ -4,6 +4,7 @@ from flask import Response, jsonify, request
 from books.models import Book
 from accounts.models import UserAccount
 from utilities.JsonIterable import *
+import flaskext
 
 def get_book(ISBN):
 	book = Book.get_by_isbn(ISBN)
@@ -13,7 +14,7 @@ def get_book(ISBN):
 		return jsonify(JsonIterable.dictionary(book.to_dict()))
 		
 def view_library():
-	useraccount = UserAccount.get_current()
+	useraccount = flaskext.login.current_user
 	if not useraccount:
 		return jsonify({"Error":"User not signed in"})
 
@@ -26,7 +27,7 @@ def view_library():
 	return jsonify(JsonIterable.dict_of_dict(books))
 	
 def library_book(ISBN):
-	useraccount = UserAccount.get_current()
+	useraccount = flaskext.login.current_user
 	if not useraccount:
 		return jsonify({"Error":"User not signed in"})
 		
