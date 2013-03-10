@@ -6,6 +6,8 @@ import flaskext
 from books.models import Book
 from accounts.models import UserAccount
 import logging
+from decorators import crossdomain
+from bookout import app
 
 def warmup():
 	# https://developers.google.com/appengine/docs/python/config/appconfig#Warmup_Requests
@@ -39,8 +41,10 @@ def logout():
 
 
 
-
-
+@app.route("/crossdomain")
+@crossdomain(origin='*')
+def test_view():
+	return "this is a response"
 
 
 
