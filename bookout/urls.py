@@ -24,7 +24,7 @@ app.add_url_rule('/_ah/warmup',view_func=views.warmup)
 app.add_url_rule('/',view_func=views.index)
 
 # Manager user's library
-#app.add_url_rule('/library',view_func=views.manage_library)
+app.add_url_rule('/old-library',view_func=views.manage_library)
 
 # Library
 app.add_url_rule('/library',view_func=views.library)
