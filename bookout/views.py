@@ -23,14 +23,18 @@ def login():
 	#if flaskext.login.current_user.is_authenticated():
 	#	# user is already logged in, redirect 
 	#	return redirect(request.args.get("next") or url_for("library"))
-	if request.method == "POST" and "username" in request.form:
+	if request.method == "POST" and "username" in request.form and "password" in request.form:
 		username = request.form["username"]
+		password = request.form["password"]
 		user = UserAccount.get_by_username(username)
 		if user:
-			if login_user(user, remember=False):
-				return redirect(request.args.get("next") or url_for("library"))
+			if user.check_password(password):
+				if login_user(user, remember=False):
+					return redirect(request.args.get("next") or url_for("library"))
+				else:
+					flash("Sorry, but you could not log in.")
 			else:
-				flash("Sorry, but you could not log in.")
+				flash(u"Invalid password")
 		else:
 			flash(u"Invalid username.")
 	return render_template("login.html")
