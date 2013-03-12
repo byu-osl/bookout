@@ -69,6 +69,7 @@ app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
 #	the current page of search results you are viewing is stored in a hidden form called "pageNumber" 
 #		returned by the search urls (if none is given, 0 is used)
 #	per_page is the number of books you want on each page (if none is given, 10 is used)
+app.add_url_rule('/search/<value>', view_func=views.search_for_book)
 app.add_url_rule('/search/<attribute>/<value>', view_func=views.search_for_book)
 app.add_url_rule('/search/<attribute>/<value>/<page>', view_func=views.search_for_book)
 app.add_url_rule('/search/<attribute>/<value>/<page>/<per_page>', view_func=views.search_for_book)

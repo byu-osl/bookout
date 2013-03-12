@@ -106,17 +106,16 @@ class Book(ndb.Model):
 		to a Book object, returns None
 		
 		"""
-		if not attribute:
-			logging.error("Book.search_by_attribute() called without an attribute")
-			return None
+		
 		if not value:
 			logging.error("Book.search_by_attribute() called without an value")
-			return None
+			return False
 		book = None
 
 		book_data = external_book_search_by_attribute(attribute, value, page, per_page)
 		if book_data:
-			books = []
+			books = {}
+			counter = 0
 			for book in book_data['items']:
 				try:
 					curBook = Book(isbn="None")
@@ -130,7 +129,8 @@ class Book(ndb.Model):
 						curBook.author = "None"
 					curBook.thumbnail_link = book['volumeInfo']['imageLinks']['thumbnail']
 					curBook.last_update = datetime.now()
-					books.append(curBook)
+					books[counter] = curBook.to_dict()
+					counter += 1
 				except:
 					pass
 			return books

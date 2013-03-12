@@ -3,6 +3,7 @@ from flask import jsonify
 import json
 from bookout.config import google_api_key
 import logging
+import urllib
 
 def external_book_search(ISBN):
 	book = search_google_books(ISBN)
@@ -43,7 +44,7 @@ def external_book_search_by_attribute(attribute, value, page, per_page=10):
 def search_google_books_by_attribute(attribute, value, page, per_page=10):	
 	#Search to get volumes associated with this isbn.
 	# There should only ever really be one returned, but if there are more than one, this returns the first
-	if(attribute == "all"):
+	if(attribute == None):
 		query = value
 	elif(attribute == "ISBN"):
 		query = "isbn:" + value
@@ -55,7 +56,7 @@ def search_google_books_by_attribute(attribute, value, page, per_page=10):
 		logging.debug("GetBook.search_google_books_by_attribute() was called with an invalid attribute: %s" %attribute)
 		return None
 	startIndex = "&startIndex=" + str(page * per_page)
-	url = "https://www.googleapis.com/books/v1/volumes?q=" + query + startIndex + "&key=" + google_api_key
+	url = "https://www.googleapis.com/books/v1/volumes?q=" + urllib.quote(query) + startIndex + "&key=" + google_api_key
 	response = urlfetch.fetch(url)
 	try:
 		if response.status_code == 200:

@@ -8,6 +8,7 @@ from accounts.models import UserAccount
 import logging
 from decorators import crossdomain
 from bookout import app
+from utilities.JsonIterable import *
 
 def warmup():
 	# https://developers.google.com/appengine/docs/python/config/appconfig#Warmup_Requests
@@ -144,17 +145,10 @@ def get_my_book_list():
 	retstring += "</table>"
 	return retstring
 
-def search_for_book(attribute, value, page = 0, per_page=10):
-	html = "<html><body>"
+def search_for_book(value, attribute=None, page = 0, per_page=10):
 	books = Book.search_by_attribute(int(page), int(per_page), attribute, value)
 	if books == False:
-		return "No books found"
-	for book in books:
-		html += "<div>Title: " + book.title
-		html += "<br>Author: " + book.author
-		html += "<br>ISBN: " + book.isbn
-		html += "<br>thumbnail: " + book.thumbnail_link
-		html += "<br></div>"
-	html += "<form type=\"hidden\" name=\"pageNumber\" value=\"" + str(page) + "\">"
-	html += "</body></html>"
-	return html
+		return jsonify({"Message":"No books found"})
+	else:
+		return jsonify(JsonIterable.dict_of_dict(books))
+
