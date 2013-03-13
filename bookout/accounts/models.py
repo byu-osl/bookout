@@ -18,8 +18,11 @@ class UserAccount(ndb.Model):
 	email = ndb.StringProperty(required=True)
 	password = ndb.StringProperty(required=True)
 
-	connections = ndb.StructuredProperty(Connection,repeated=True)
+	connected_accounts = ndb.StructuredProperty(Connection,repeated=True)
 	
+	@property
+	def connections(self):
+		return self._connections
 
 	def get_network_books(self):
 		from bookout.books.models import BookCopy

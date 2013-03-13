@@ -18,24 +18,6 @@ def warmup():
 
 
 
-
-
-def login():
-	#if flaskext.login.current_user.is_authenticated():
-	#	# user is already logged in, redirect 
-	#	return redirect(request.args.get("next") or url_for("library"))
-	if request.method == "POST" and "username" in request.form:
-		username = request.form["username"]
-		user = UserAccount.get_by_username(username)
-		if user:
-			if login_user(user, remember=False):
-				return redirect(request.args.get("next") or url_for("library"))
-			else:
-				flash("Sorry, but you could not log in.")
-		else:
-			flash(u"Invalid username.")
-	return render_template("login.html")
-
 def logout():
 	logout_user()
 	return redirect("/")
@@ -49,36 +31,49 @@ def test_view():
 
 
 
+def render_response(template, *args, **kwargs):
+	return render_template(template, *args, user=flaskext.login.current_user, **kwargs)
+
 ################################ Website landing pages ##################################
 def index():
-	return render_template('home.html', loggedin=True)
+	return render_response('home.html')
 	
 def library():
-	return render_template('managelibrary.html', loggedin=True)
+	return render_response('managelibrary.html')
 	
 def network():
-	return render_template('managenetworkconnections.html', loggedin=True)
+	return render_response('managenetworkconnections.html')
 	
 def discover():
-	return render_template('discover.html', loggedin=True)
+	return render_response('discover.html')
 	
 def settings():
-	return render_template('settings.html', loggedin=True)
+	return render_response('settings.html')
 	
-#def login():
-#	return render_template('signin.html', loggedin=False)
+def login():
+	if request.method == "POST" and "username" in request.form:
+		username = request.form["username"]
+		user = UserAccount.get_by_username(username)
+		if user:
+			if login_user(user, remember=False):
+				return redirect(request.args.get("next") or url_for("library"))
+			else:
+				pass
+		else:
+			pass
+	return render_response('signin.html')
 	
 def sign_up():
-	return render_template('join.html', loggedin=False)
+	return render_response('join.html')
 	
 def about():
-	return render_template('aboutbookout.html', loggedin=False)
+	return render_response('aboutbookout.html')
 	
 def mobile_app():
-	return render_template('mobileapp.html', loggedin=False)
+	return render_response('mobileapp.html')
 	
 def donate():
-	return render_template('donate.html', loggedin=False)
+	return render_response('donate.html')
 
 @login_required
 def manage_library():
