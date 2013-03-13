@@ -1,14 +1,13 @@
 # Views
 from google.appengine.api import users
 from flask import Response, jsonify, render_template, request, url_for, redirect, flash
-from flaskext.login import login_required,login_user,logout_user
-import flaskext
 from books.models import Book
-from accounts.models import UserAccount
 import logging
 from decorators import crossdomain
 from bookout import app
 from utilities.JsonIterable import *
+from accounts import authenticate as authenticate_account, login as login_account, logout as logout_account, current_user, login_required
+from accounts.models import UserAccount
 
 def warmup():
 	# https://developers.google.com/appengine/docs/python/config/appconfig#Warmup_Requests
@@ -16,23 +15,19 @@ def warmup():
 	# one has to start up due to load increases on the app
 	return ''
 
-
-
-def logout():
-	logout_user()
-	return redirect("/")
-
-
-
 @app.route("/crossdomain")
 @crossdomain(origin='*')
 def test_view():
+	"""test view for checking accessibility of cross-domain ajax requests
+	
+	"""
 	return "this is a response"
 
-
-
 def render_response(template, *args, **kwargs):
-	return render_template(template, *args, user=flaskext.login.current_user, **kwargs)
+	"""helper function for adding variables for the template processor
+	
+	"""
+	return render_template(template, *args, user=current_user(), **kwargs)
 
 ################################ Website landing pages ##################################
 def index():
@@ -50,19 +45,6 @@ def discover():
 def settings():
 	return render_response('settings.html')
 	
-def login():
-	if request.method == "POST" and "username" in request.form:
-		username = request.form["username"]
-		user = UserAccount.get_by_username(username)
-		if user:
-			if login_user(user, remember=False):
-				return redirect(request.args.get("next") or url_for("library"))
-			else:
-				pass
-		else:
-			pass
-	return render_response('signin.html')
-	
 def sign_up():
 	return render_response('join.html')
 	
@@ -75,19 +57,46 @@ def mobile_app():
 def donate():
 	return render_response('donate.html')
 
+def login():
+	"""view for handling authentication requests
+	
+	"""
+	if request.method == "POST" and "username" in request.form:
+		# get the username from the form
+		username = request.form["username"]
+		account = authenticate_account(username=username)
+		if account:
+			if login_account(account):
+				return redirect(request.args.get("next") or url_for("library"))
+			else:
+				pass
+		else:
+			pass
+	return render_response('signin.html')
+
+def logout():
+	logout_account()
+	return redirect("/")
+
+
+
+
+
+
+
 @login_required
 def manage_library():
 	retstring = ""
-	for copy in flaskext.login.current_user.get_library():
+	for copy in current_user().get_library():
 		retstring += copy.display() + "<br>"
-	return  render_template('library.html',username=flaskext.login.current_user.username,books=get_my_book_list(),logout_url="/logout")
+	return  render_template('library.html',username=current_user().username,books=get_my_book_list(),logout_url="/logout")
 	
 def logout_url():
 	return users.create_logout_url(url_for('index'))
 
 ######################## Internal calls (to be called by ajax) ##########################
 def library_requests(ISBN):
-	useraccount = flaskext.login.current_user
+	useraccount = current_user()
 	#if not useraccount:
 	#	logging.info("there is not a user logged in")
 	#	return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('library_requests',ISBN=ISBN))
@@ -128,7 +137,7 @@ def library_requests(ISBN):
 		return "Error: http request was invalid"
 
 def get_my_book_list():
-	useraccount = flaskext.login.current_user
+	useraccount = current_user()
 	#if not useraccount:
 	#	logging.info("there is not a user logged in")
 	#	return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('manage_library'))
