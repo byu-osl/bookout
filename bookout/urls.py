@@ -15,6 +15,7 @@
 
 from flask import Flask
 from bookout import app, views, api
+import accounts.views
 
 # Warmup
 app.add_url_rule('/_ah/warmup',view_func=views.warmup)

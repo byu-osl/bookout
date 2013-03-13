@@ -6,6 +6,10 @@ from flaskext.login import AnonymousUser
 import logging
 
 
+class Connection(ndb.Model): 
+	user = ndb.KeyProperty(kind="UserAccount")
+
+
 class UserAccount(ndb.Model):
 	"""Stored information about a User"""
 	
@@ -13,6 +17,16 @@ class UserAccount(ndb.Model):
 	name = ndb.StringProperty(required=True)
 	email = ndb.StringProperty(required=True)
 	password = ndb.StringProperty(required=True)
+
+	connections = ndb.StructuredProperty(Connection,repeated=True)
+	
+
+	def get_network_books(self):
+		from bookout.books.models import BookCopy
+		return BookCopy.query(BookCopy.account.IN(self.get_connections())).fetch()
+	
+	def get_connections(self):
+		return UserAccount.query(UserAccount.connections.user == self.key).fetch(keys_only=True)
 	
 	def is_authenticated(self):
 		"""determine whether the UserAccount is authenticated
@@ -146,8 +160,35 @@ class UserAccount(ndb.Model):
 		if bookcopy:
 			bookcopy.key.delete()
 		return bookcopy
-	
+		
+
+
+
+
+
 
 class Anonymous(AnonymousUser):
 	name = u"Anonymous"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
