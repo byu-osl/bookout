@@ -11,64 +11,71 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
   <link href="{{ url_for('static', filename='css/bootstrap-responsive.css') }}" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/maintemplate.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootswatch.css') }}"/>
   
 </head>
 
 
 <body>
-
-	<div class="navbar navbar-inverse navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container">
-				<a class="brand pull-left" href="{{ url_for('index') }}">BookOut</a>
-				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="float:left;">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<div class="btn-group pull-right" id="settings_button_div">
-	                <button class="btn btn-primary dropdown-toggle" id="settings_button" data-toggle="dropdown">
-	                	<img src="{{ url_for('static', filename='img/white-cog-md.png') }}" id="settings_img" />
-	                	<span class="caret"></span></button>
-	                <ul class="dropdown-menu">
-	                  <li><a href="#">Username</a></li>
-	                  <li class="divider"></li>
-	                  <li><a href="{{ url_for('settings') }}">Settings</a></li>
-					  <li><a href="{{ logout_url }}">Sign Out</a></li>
-	                </ul>
-	              </div>
-				{% if loggedin %}
-				<form class="navbar-search pull-right" action="">
-					<input type="text" class="search-query span4" placeholder="Search books by title, author, or ISBN">
-				</form>
-				{% endif %}
-				<div class="nav-collapse collapse">
-					<ul class="nav">
-						{% if user.is_authenticated() %}
-						<li><a href="{{ url_for('library') }}">Library</a></li>
-						<li><a href="{{ url_for('network') }}">Network</a></li>
-						<li><a href="{{ url_for('discover') }}">Discover</a></li>
-						{% else %}
-						<li><a href="{{ url_for('about') }}">About</a></li>
-						<li><a href="{{ url_for('login') }}">Login</a></li>
-						<li><a href="{{ url_for('sign_up') }}">Sign Up</a></li>
-						{% endif %}
-					</ul>
+	<div id="wrap">
+		<div class="navbar navbar-inverse navbar-fixed-top main_nav">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="brand pull-left" href="{{ url_for('index') }}">BookOut</a>
+					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="float:left;">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					{% if True %}
+					<div class="btn-group pull-right" id="settings_button_div">
+		                <button class="btn btn-primary dropdown-toggle" id="settings_button" data-toggle="dropdown">
+		                	<img src="{{ url_for('static', filename='img/white-cog-md.png') }}" id="settings_img" />
+		                	<span class="caret"></span></button>
+		                <ul class="dropdown-menu">
+		                  <li><a href="#">Username</a></li>
+		                  <li class="divider"></li>
+		                  <li><a href="{{ url_for('settings') }}">Settings</a></li>
+						  <li><a href="{{ logout_url }}">Sign Out</a></li>
+		                </ul>
+		              </div>
+					<form class="navbar-search pull-right" action="">
+						<span id="search_input_holder">
+							<input type="text" class="search-query span4" placeholder="Search books by title, author, or ISBN" id="nav_search_input" />
+							<input type="button" value="" />
+						</span>
+					</form>
+					{% endif %}
+					<div class="nav-collapse collapse">
+						<ul class="nav">
+							{% if user.is_authenticated() %}
+							<li><a href="{{ url_for('library') }}">Library</a></li>
+							<li><a href="{{ url_for('network') }}">Network</a></li>
+							<li><a href="{{ url_for('discover') }}">Discover</a></li>
+							{% else %}
+							<li><a href="{{ url_for('about') }}">About</a></li>
+							<li><a href="{{ url_for('login') }}">Login</a></li>
+							<li><a href="{{ url_for('sign_up') }}">Sign Up</a></li>
+							{% endif %}
+						</ul>
+					</div>
+					
+		<!--/.nav-collapse -->
 				</div>
-				
-	<!--/.nav-collapse -->
 			</div>
 		</div>
+		<div class="container content">
+			
+			{% block content %}
+			{% endblock %}
+			
+		</div>
+		<div id="push"></div>
 	</div>
 	
-	<div class="container">
-		
-		{% block content %}
-		{% endblock %}
-		
-		<div class="row">
-		<footer id="footer">
-			<div class="links">
+	<div id="footer">
+		<div class="container">
+			<!-- <div class="links"> -->
 				<ul>
 					<li><a href="{{ url_for('mobile_app') }}">Mobile App</a></li>
 					<li><a href="http://github.com/byu-osl/bookout">GitHub Project Page</a></li>
@@ -77,8 +84,7 @@
 					<li><a href="{{ url_for('about') }}">About</a></li>
 					<li><a href="{{ url_for('about') }}">Contact Us</a></li>
 				</ul>
-			</div>
-		</footer>
+			<!-- </div> -->
 		</div>
 	</div>
 
