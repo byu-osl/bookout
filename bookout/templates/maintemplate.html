@@ -8,7 +8,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+  <link href="{{ url_for('static', filename='css/bootstrap-responsive.css') }}" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/maintemplate.css') }}"/>
   
 </head>
@@ -19,20 +20,34 @@
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
-				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<a class="brand pull-left" href="{{ url_for('index') }}">BookOut</a>
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="float:left;">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="brand" href="{{ url_for('index') }}">BookOut</a>
+				<div class="btn-group pull-right" id="settings_button_div">
+	                <button class="btn btn-primary dropdown-toggle" id="settings_button" data-toggle="dropdown">
+	                	<img src="{{ url_for('static', filename='img/white-cog-md.png') }}" id="settings_img" />
+	                	<span class="caret"></span></button>
+	                <ul class="dropdown-menu">
+	                  <li><a href="#">Username</a></li>
+	                  <li class="divider"></li>
+	                  <li><a href="{{ url_for('settings') }}">Settings</a></li>
+					  <li><a href="{{ logout_url }}">Sign Out</a></li>
+	                </ul>
+	              </div>
+				{% if loggedin %}
+				<form class="navbar-search pull-right" action="">
+					<input type="text" class="search-query span4" placeholder="Search books by title, author, or ISBN">
+				</form>
+				{% endif %}
 				<div class="nav-collapse collapse">
-					<ul class="nav">
+					<ul class="nav pull-left">
 						{% if loggedin %}
 						<li><a href="{{ url_for('library') }}">Library</a></li>
 						<li><a href="{{ url_for('network') }}">Network</a></li>
 						<li><a href="{{ url_for('discover') }}">Discover</a></li>
-						<li><a href="{{ url_for('settings') }}">Settings</a></li>
-						<li><a href="{{ logout_url }}">Sign Out</a></li>
 						{% else %}
 						<li><a href="{{ url_for('about') }}">About</a></li>
 						<li><a href="{{ url_for('login') }}">Login</a></li>
@@ -40,12 +55,6 @@
 						{% endif %}
 					</ul>
 				</div>
-				
-				{% if loggedin %}
-				<form class="navbar-search pull-right" action="">
-					<input type="text" class="search-query span4" placeholder="Search books by title, author, or ISBN">
-				</form>
-				{% endif %}
 				
 	<!--/.nav-collapse -->
 			</div>
@@ -61,12 +70,12 @@
 		<footer id="footer">
 			<div class="links">
 				<ul>
-					<li><a href="{{ url_for('mobile_app') }}">Mobile App</a>
-					<li><a href="http://github.com/byu-osl/bookout">GitHub Project Page</a>
-					<li><a href="{{ url_for('donate') }}">Donate</a>
-					<li><a href="{{ url_for('about') }}">Terms of Use</a>
-					<li><a href="{{ url_for('about') }}">About</a>
-					<li><a href="{{ url_for('about') }}">Contact Us</a>
+					<li><a href="{{ url_for('mobile_app') }}">Mobile App</a></li>
+					<li><a href="http://github.com/byu-osl/bookout">GitHub Project Page</a></li>
+					<li><a href="{{ url_for('donate') }}">Donate</a></li>
+					<li><a href="{{ url_for('about') }}">Terms of Use</a></li>
+					<li><a href="{{ url_for('about') }}">About</a></li>
+					<li><a href="{{ url_for('about') }}">Contact Us</a></li>
 				</ul>
 			</div>
 		</footer>
