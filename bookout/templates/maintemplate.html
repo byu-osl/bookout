@@ -43,8 +43,8 @@
 				</form>
 				{% endif %}
 				<div class="nav-collapse collapse">
-					<ul class="nav pull-left">
-						{% if loggedin %}
+					<ul class="nav">
+						{% if user.is_authenticated() %}
 						<li><a href="{{ url_for('library') }}">Library</a></li>
 						<li><a href="{{ url_for('network') }}">Network</a></li>
 						<li><a href="{{ url_for('discover') }}">Discover</a></li>

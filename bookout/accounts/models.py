@@ -3,7 +3,12 @@ from google.appengine.api import users
 from google.appengine.api.datastore import Key
 from datetime import datetime,timedelta
 from flaskext.login import AnonymousUser
+from werkzeug.security import generate_password_hash, check_password_hash
 import logging
+
+
+class Connection(ndb.Model): 
+	user = ndb.KeyProperty(kind="UserAccount")
 
 
 class UserAccount(ndb.Model):
@@ -13,6 +18,19 @@ class UserAccount(ndb.Model):
 	name = ndb.StringProperty(required=True)
 	email = ndb.StringProperty(required=True)
 	password = ndb.StringProperty(required=True)
+
+	connected_accounts = ndb.StructuredProperty(Connection,repeated=True)
+	
+	@property
+	def connections(self):
+		return self.connected_accounts
+
+	def get_network_books(self):
+		from bookout.books.models import BookCopy
+		return BookCopy.query(BookCopy.account.IN(self.get_connections())).fetch()
+	
+	def get_connections(self):
+		return UserAccount.query(UserAccount.connections.user == self.key).fetch(keys_only=True)
 	
 	def is_authenticated(self):
 		"""determine whether the UserAccount is authenticated
@@ -58,13 +76,20 @@ class UserAccount(ndb.Model):
 		"""
 		return self.key.id()
 
+	def set_password(self, pw):
+		self.password = generate_password_hash(pw)
+
+	def check_password(self, pw):
+#		return pw == self.password
+		return check_password_hash(self.password, pw)
+
 	@classmethod
 	def createuser(cls,username,name,email,password):
 		if UserAccount.get_by_username(username):
 			return None
 		if UserAccount.get_by_email(email):
 			return None
-		user = UserAccount(username=username,name=name,email=email,password=password)
+		user = UserAccount(username=username,name=name,email=email,password=generate_password_hash(password))
 		return user
 
 	@classmethod
@@ -146,8 +171,35 @@ class UserAccount(ndb.Model):
 		if bookcopy:
 			bookcopy.key.delete()
 		return bookcopy
-	
+		
+
+
+
+
+
 
 class Anonymous(AnonymousUser):
 	name = u"Anonymous"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
