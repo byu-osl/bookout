@@ -22,7 +22,7 @@ class UserAccount(ndb.Model):
 	
 	@property
 	def connections(self):
-		return self._connections
+		return self.connected_accounts
 
 	def get_network_books(self):
 		from bookout.books.models import BookCopy

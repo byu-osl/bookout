@@ -1,8 +1,16 @@
 from models import UserAccount
 from flaskext import login as flasklogin
+import logging
 
 def authenticate(username=None,password=None):
-	return  UserAccount.get_by_username(username)
+	account = UserAccount.get_by_username(username)
+	if account: 
+		logging.debug("AUTHENTICAION ATTEMPT: valid username provided (%s)" %(username))
+	else:
+		if not username:
+			username = "no username provided"
+		logging.info("AUTHENTICATION ATTEMPT: invalid username (%s)" %(username))
+	return account
 
 def login(account, remember=False):
 	if flasklogin.login_user(account, remember):
