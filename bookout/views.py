@@ -61,17 +61,14 @@ def login():
 	"""view for handling authentication requests
 	
 	"""
-	if request.method == "POST" and "username" in request.form:
+	if request.method == "POST" and "username" in request.form and "password" in request.form:
 		# get the username from the form
 		username = request.form["username"]
-		account = authenticate_account(username=username)
+		password = request.form["password"]
+		account = authenticate_account(username=username,password=password)
 		if account:
 			if login_account(account):
 				return redirect(request.args.get("next") or url_for("library"))
-			else:
-				pass
-		else:
-			pass
 	return render_response('signin.html')
 
 def logout():
