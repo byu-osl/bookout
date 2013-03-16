@@ -71,13 +71,12 @@ def register():
 			password = request.form["password"]
 			email = request.form["email"]
 			#check email
-			user = UserAccount.create_user(name, username, password, email)
-			if user:
-				if user.check_password(password):
-					if login_user(user, remember=False):
-						return redirect(request.args.get("next") or url_for("index"))
-					else:
-						flash("Could not log in")
+			account = UserAccount.create_user(name, username, password, email)
+			if account:
+				if login_account(account):
+					return redirect(request.args.get("next") or url_for("index"))
+				else:
+					flash("Could not log in")
 			else:
 				flash("User could not be created")
 	return render_template("register.html")
