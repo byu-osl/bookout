@@ -67,13 +67,17 @@ class UserAccount(ndb.Model):
 		return check_password_hash(self.password, pw)
 
 	@classmethod
-	def createuser(cls,username,name,email,password):
+	def create_user(cls,name,username,password,email):
 		if UserAccount.get_by_username(username):
 			return None
 		if UserAccount.get_by_email(email):
 			return None
 		user = UserAccount(username=username,name=name,email=email,password=generate_password_hash(password))
-		return user
+		if user:
+			user.put()
+			return user
+		else:
+			return None
 
 	@classmethod
 	def getuser(cls,id):

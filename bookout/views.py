@@ -16,7 +16,27 @@ def warmup():
 	return ''
 
 
-
+def register():
+	if request.method == "POST" and "name" in request.form and "username" in request.form and "password" in request.form and "email" in request.form:
+		name = request.form["name"]
+		username = request.form["username"]
+		if UserAccount.get_by_username(username):
+			flash("Invalid username. Please choose another.")
+		else:
+			password = request.form["password"]
+			email = request.form["email"]
+			#check email
+			user = UserAccount.create_user(name, username, password, email)
+			if user:
+				if user.check_password(password):
+					if login_user(user, remember=False):
+						return redirect(request.args.get("next") or url_for("index"))
+					else:
+						flash("Could not log in")
+			else:
+				flash("User could not be created")
+	return render_template("register.html")
+		
 
 
 def login():
@@ -30,7 +50,7 @@ def login():
 		if user:
 			if user.check_password(password):
 				if login_user(user, remember=False):
-					return redirect(request.args.get("next") or url_for("library"))
+					return redirect(request.args.get("next") or url_for("index"))
 				else:
 					flash("Sorry, but you could not log in.")
 			else:
