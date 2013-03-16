@@ -72,8 +72,6 @@ app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
 #	per_page is the number of books you want on each page (if none is given, 10 is used)
 app.add_url_rule('/search/<value>', view_func=views.search_for_book)
 app.add_url_rule('/search/<attribute>/<value>', view_func=views.search_for_book)
-app.add_url_rule('/search/<attribute>/<value>/<page>', view_func=views.search_for_book)
-app.add_url_rule('/search/<attribute>/<value>/<page>/<per_page>', view_func=views.search_for_book)
 
 # Altering or accessing a user's personal library
 #	the following http types should be sent to do their corresponding functions

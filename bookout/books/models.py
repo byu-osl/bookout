@@ -1,20 +1,18 @@
 from google.appengine.ext import ndb
-from GetBook import external_book_search,external_book_search_by_attribute
 from datetime import datetime,timedelta
 import logging
 from bookout.accounts.models import UserAccount
-
+import urllib
+from google.appengine.api import urlfetch
+import json
 
 class Book(ndb.Model):
 	"""Cached representation of a book"""
 	isbn = ndb.StringProperty(required=True)
 	last_update = ndb.DateTimeProperty()
-	
 	title = ndb.StringProperty(required=True)
 	author = ndb.StringProperty(required=True)
-	
 	thumbnail_link = ndb.StringProperty(required=True)
-	
 	
 	def update_cache(self):
 		"""update cached information about the book using the external book apis
@@ -24,40 +22,13 @@ class Book(ndb.Model):
 		"""
 		if self.isbn:
 			logging.debug("update_cache(%s)" %self.isbn)
-			book_data = external_book_search(self.isbn)
-			if book_data:
-				if self.title != book_data['volumeInfo']['title']:
-					if self.title:
-						logging.info("Title for %s changed from '%s' to '%s'" %(self.isbn,self.title,book_data['volumeInfo']['title']))
-					self.title = book_data['volumeInfo']['title']
-				if self.author != book_data['volumeInfo']['authors'][0]:
-					if self.author:
-						logging.info("Title for %s changed from '%s' to '%s'" %(self.isbn,self.author,book_data['volumeInfo']['authors'][0]))
-					self.author = book_data['volumeInfo']['authors'][0]
-				if self.thumbnail_link != book_data['volumeInfo']['imageLinks']['thumbnail']:
-					if self.thumbnail_link:
-						logging.info("Thumbnail link for %s changed from '%s' to '%s'" %(self.isbn,self.thumbnail_link,book_data['volumeInfo']['imageLinks']['thumbnail']))
-					self.thumbnail_link = book_data['volumeInfo']['imageLinks']['thumbnail']
-				if not self.last_update:
-					logging.info("ISBN:%s successfully resolved and added to cache" %self.isbn)
-				self.last_update = datetime.now()
-				self.put()
-				return True
-			else:
-				# TODO: if there is already an object but the search failed, that is an error
-				logging.debug("ISBN:%s was not found in external databases" %self.isbn)
+			book_data = search_books_by_attribute("isbn",self.isbn)
 				
-		else:
-			logging.error("update_cache() called on a Book without an ISBN")
-		return False
-
-	
 	def cache_expired(self):
 		"""determine if the cached information in the database needs to be refreshed
 		
 		"""
 		return (datetime.now() - self.last_update) > timedelta(minutes=10)
-	
 	
 	@classmethod
 	def get_by_isbn(cls,isbn=None):
@@ -90,55 +61,46 @@ class Book(ndb.Model):
 				book = None
 		return book
 	
-	
 	@classmethod
-	def search_by_attribute(cls, page, per_page=10, attribute=None, value=None):
-		"""Convert an ISBN to a Book object
-		
-		This is a factory method that converts an ISBN into a Book object (if possible),
-		abstracting away any caching/external APIs necessary to the Book's use
-		
-		Arguments:
-		isbn -- the ISBN being searched
-		
-		Return value:
-		An instance of a Book object with the given ISBN; if the ISBN could not be resolved
-		to a Book object, returns None
-		
-		"""
-		
-		if not value:
-			logging.error("Book.search_by_attribute() called without an value")
-			return False
-		book = None
-
-		book_data = external_book_search_by_attribute(attribute, value, page, per_page)
-		if book_data:
-			books = {}
-			counter = 0
-			for book in book_data['items']:
-				try:
-					curBook = Book(isbn="None")
-					curBook.isbn = book['volumeInfo']['industryIdentifiers'][0]['identifier']
-					curBook.title = book['volumeInfo']['title']
-					if 'authors' in book['volumeInfo']:
-						curBook.author = book['volumeInfo']['authors'][0]
-						for i in range(1, len(book['volumeInfo']['authors'])):
-							curBook.author += ", " + book['volumeInfo']['authors'][i]
-					else:
-						curBook.author = "None"
-					curBook.thumbnail_link = book['volumeInfo']['imageLinks']['thumbnail']
-					curBook.last_update = datetime.now()
-					books[counter] = curBook.to_dict()
-					counter += 1
-				except:
-					pass
-			return books
+	def search_books_by_attribute(self, value, attribute = None):
+		value = urllib.quote(value)
+		books = {}
+		if(attribute == None):
+			query = "q=" + value
+		elif(attribute == "ISBN"):
+			query = "isbn=" + value
+		elif(attribute == "title"):
+			query = "title=" + value
+		elif(attribute == "author"):
+			query = "author=" + value
 		else:
-			logging.debug("No books were found in external databases")
-
-		return False
-
+			logging.debug("GetBook.search_books_by_attribute() was called with an invalid attribute: %s" %attribute)
+			return books
+		url = "http://openlibrary.org/search.json?" + query
+		response = urlfetch.fetch(url)
+		counter = 0
+		try:
+			if response.status_code == 200:
+				json_response = response.content
+				data = json.loads(json_response)
+				for book in data['docs']:
+					try:
+						curBook = Book(isbn=None)
+						curBook.isbn = book['isbn'][0]
+						curBook.title = book['title']
+						curBook.author = book['author_name'][0]
+						for i in range(1, len(book['author_name'])):
+							curBook.author += ", " + book['author_name'][i]
+						curBook.thumbnail_link = "http://covers.openlibrary.org/b/id/" + str(book['cover_i']) + "-M.jpg"
+						curBook.last_update = datetime.now()
+						curBook.put()
+						books[counter] = curBook.to_dict()
+						counter += 1
+					except:
+						pass
+		except:
+			pass
+		return books
 
 class BookCopy(ndb.Model):
 	"""A model for linking User to Books

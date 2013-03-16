@@ -75,12 +75,6 @@ def logout():
 	logout_account()
 	return redirect("/")
 
-
-
-
-
-
-
 @login_required
 def manage_library():
 	retstring = ""
@@ -146,9 +140,9 @@ def get_my_book_list():
 	retstring += "</table>"
 	return retstring
 
-def search_for_book(value, attribute=None, page = 0, per_page=10):
-	books = Book.search_by_attribute(int(page), int(per_page), attribute, value)
-	if books == False:
+def search_for_book(value, attribute=None):
+	books = Book.search_books_by_attribute(value,attribute)
+	if len(books) == 0:
 		return jsonify({"Message":"No books found"})
 	else:
 		return jsonify(JsonIterable.dict_of_dict(books))
