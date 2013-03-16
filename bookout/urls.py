@@ -61,6 +61,12 @@ app.add_url_rule('/donate',view_func=views.donate)
 app.add_url_rule('/logout',view_func=views.logout)
 
 
+
+# Register (needs to be tied to signup)
+app.add_url_rule('/register',view_func=views.register,methods=["GET", "POST"])
+
+
+
 ######################## Internal calls (to be called by ajax) ##########################
 # Get book list
 app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
