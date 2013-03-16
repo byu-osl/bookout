@@ -36,6 +36,9 @@ app.add_url_rule('/network',view_func=views.network)
 # Discover
 app.add_url_rule('/discover',view_func=views.discover)
 
+# Search
+app.add_url_rule('/searchbooks/<searchterm>', view_func=views.searchbooks)
+
 # Settings
 app.add_url_rule('/settings',view_func=views.settings)
 
@@ -56,6 +59,12 @@ app.add_url_rule('/donate',view_func=views.donate)
 
 # Logout
 app.add_url_rule('/logout',view_func=views.logout)
+
+
+
+# Register (needs to be tied to signup)
+app.add_url_rule('/register',view_func=views.register,methods=["GET", "POST"])
+
 
 
 ######################## Internal calls (to be called by ajax) ##########################
