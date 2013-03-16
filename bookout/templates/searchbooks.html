@@ -4,6 +4,17 @@
 {% block title %}BookOut - Search Books{% endblock %}
 
 {% block content %}
+
+<script type="text/javascript">
+
+	/*function searchBooks() {
+		$.getJSON(url_for('/search), {}, function(data) {
+			alert("We found some books! " + data);
+		})
+	}*/
+
+</script>
+
 <div class="row">
 
 	<h3>Search to Find or Add Books</h3>
@@ -23,6 +34,21 @@
 	...Box to Filter Results will be bottom left...
 	...Link to "Hide books not available within you network" will be along top...
 	...Table displaying books found from search will be below link...
+	
+	{% if books == False %}
+	{% else %}
+		<table>
+		{% for attr in books %}
+			<tr>
+				<td><img src="{{ books[attr].thumbnail_link }}"/></td>
+				<td>Title: {{ books[attr].title }}<br/>
+					Author: {{ books[attr].author }}</td>
+				<td>buttons</td>
+			<tr>
+		
+		{% endfor %}
+		</table>
+	{% endif %}
 
 </div>
 {% endblock %}

@@ -42,6 +42,10 @@ def network():
 def discover():
 	return render_response('discover.html')
 	
+def searchbooks(searchterm, attribute=None, page=0, per_page=10):
+	bookList = Book.search_by_attribute(int(page), int(per_page), attribute, searchterm)
+	return render_response('searchbooks.html', books=bookList)
+	
 def settings():
 	return render_response('settings.html')
 	

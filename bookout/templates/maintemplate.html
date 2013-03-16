@@ -4,14 +4,14 @@
 
 <head>
 
-  <title>{% block title %}{% endblock %} | BookOut</title>
+	<title>{% block title %}{% endblock %} | BookOut</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
-  <link href="{{ url_for('static', filename='css/bootstrap-responsive.css') }}" rel="stylesheet" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/maintemplate.css') }}"/>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootswatch.css') }}"/>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+	<link href="{{ url_for('static', filename='css/bootstrap-responsive.css') }}" rel="stylesheet" />
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/maintemplate.css') }}"/>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootswatch.css') }}"/>
   
 </head>
 
@@ -42,7 +42,7 @@
 					<form class="navbar-search pull-right" action="">
 						<span id="search_input_holder">
 							<input type="text" class="search-query span4" placeholder="Search books by title, author, or ISBN" id="nav_search_input" />
-							<input type="button" value="" />
+							<input type="button" value="" onclick="searchBooks()" />
 						</span>
 					</form>
 					{% endif %}
