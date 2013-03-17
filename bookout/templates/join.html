@@ -1,21 +1,22 @@
 
 {% extends "maintemplate.html" %}
 
-{% block title %}BookOut - Join{% endblock %}
+{% block title %}Join{% endblock %}
 
 {% block content %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/signin-buttons.css') }}"/>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/signin-buttons.css') }}"/>
+ 
 <div class="row">
+	<div class="span13">
 
-	<h3>Join BookOut</h3>
+		<h3>Join</h3>
 
-	<p>Rather than requiring you to create yet another username and password, BookOut uses your Google Account as a login. To join BookOut, simply authorize your Google Account to access BookOut by clicking the button below:</p>
-
+		<p>Rather than requiring you to create yet another username and password, BookOut uses your Google Account as a login. To join BookOut, simply authorize your Google Account to access BookOut by clicking the button below:</p>
+		<br/><br/>
+		<a href="/library" class="zocial google">Sign up with Google</a>
+		
+	</div>
 </div>
 <br>
-<div class="row">
-	
-	<a href="/library" class="zocial google">Sign up with Google</a>
-
-</div>
 {% endblock %}

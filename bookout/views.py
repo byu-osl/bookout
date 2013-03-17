@@ -34,17 +34,22 @@ def index():
 	return render_response('home.html')
 	
 def library():
-	return render_response('managelibrary.html')
+	bookList = []
+	useraccount = current_user()
+	#for copy in useraccount.get_library():
+	#	book = Book.query(Book.key == copy.book).get()
+	#	bookList.append(book)
+	return render_response('managelibrary.html', books=bookList)
 	
 def network():
-	return render_response('managenetworkconnections.html')
+	return render_response('network.html')
 	
 def discover():
 	return render_response('discover.html')
 	
-def searchbooks(searchterm, attribute=None, page=0, per_page=10):
-	bookList = Book.search_by_attribute(int(page), int(per_page), attribute, searchterm)
-	return render_response('searchbooks.html', books=bookList)
+def searchbooks(searchterm):
+	Book.search_books_by_attribute(searchterm)
+	return render_response('searchbooks.html')
 	
 def settings():
 	return render_response('settings.html')

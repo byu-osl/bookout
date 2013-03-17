@@ -266,8 +266,7 @@ a:focus {
 }
 
 .row {
-/*  margin-left: -20px;*/
-/* Removed margin left offset to make the page align correctly */
+  margin-left: -20px;*/
   *zoom: 1;
 }
 

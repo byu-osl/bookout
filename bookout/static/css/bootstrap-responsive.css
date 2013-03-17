@@ -110,8 +110,7 @@
 
 @media (min-width: 1200px) {
   .row {
-/*    margin-left: -30px;*/
-/* Removed margin left offset to make the page align correctly */
+	margin-left: -30px;
     *zoom: 1;
   }
   .row:before,

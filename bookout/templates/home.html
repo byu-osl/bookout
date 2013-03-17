@@ -1,73 +1,85 @@
 
 {% extends "maintemplate.html" %}
 
-{% block title %}Welcome to BookOut - Sign In, Sign Up or Learn More{% endblock %}
+{% block title %}Bookout.org - The Place to Share Books{% endblock %}
 
 {% block content %}
 
-{% if loggedin %}
+	{% if user.is_authenticated() %}
 
-<div class="row">
+		<div class="row">
+			<div class="span13">
 
-	<h3>Search to Find or Add Books</h3>
+				<h3>Search to Find or Add Books</h3>
 
-	<p>Search to find books available within your network or to add books to your library that you own and are willing to share.</p>
+				<p>Search to find books available within your network or to add books to your library that you own and are willing to share.</p>
 
-	<div id="searchBar">
-		<input type="text" class="input-xxlarge search-query" placeholder="Enter Title, Author, or ISBN...">
-		<button type="submit" class="btn">Search</button>
-	</div>
-	
-</div>
+				<div id="searchBar">
+					<input type="text" class="input-xxlarge search-query" placeholder="Enter Title, Author, or ISBN...">
+					<button type="submit" class="btn">Search</button>
+				</div>
+			
+			</div>
+		</div>
 
-<div class="row">
+		<div class="row">
+			<div class="span13">
 
-	<h3>Pending Requests</h3>
-	
-	...The table of pending requests (if any) will go here...
+				<h3>Pending Requests</h3>
+				
+				...The table of pending requests (if any) will go here...
 
-</div>
+			</div>
+		</div>
 
-<div class="row">
+		<div class="row">
+			<div class="span13">
 
-	<h3>Books You Are Borrowing</h3>
-	
-	...The table of books you are borrowing will go here...
+				<h3>Books You Are Borrowing</h3>
+				
+				...The table of books you are borrowing will go here...
 
-</div>
+			</div>
+		</div>
 
-<div class="row">
+		<div class="row">
+			<div class="span13">
 
-	<h3>Books You Are Lending</h3>
-	
-	...The table of books you are lending will go here...
+				<h3>Books You Are Lending</h3>
+				
+				...The table of books you are lending will go here...
 
-</div>
+			</div>
+		</div>
 
-{% else %}
+	{% else %}
 
-<div class="row">
+		<div class="row">
+			<div class="span13">
 
-	<h3>BookOut: The Place to Share Books</h3>
+				<h3>BookOut: The Place to Share Books</h3>
 
-	<p>BookOut is a personal library network, built to help users share physical books between friends. 
-	With BookOut you can create an index, or library, of all your personal books, browse your friends' 
-	libraries, and request to loan books from your friends. BookOut tracks the books you are loaning 
-	and borrowing, and notifies you when items are due. <a href="#join">Join today!</a></p>
+				<p>BookOut is a personal library network, built to help users share physical books between friends. 
+				With BookOut you can create an index, or library, of all your personal books, browse your friends' 
+				libraries, and request to loan books from your friends. BookOut tracks the books you are loaning 
+				and borrowing, and notifies you when items are due. <a href="#join">Join today!</a></p>
 
-</div>
+			</div>
+		</div>
 
-<div class="row">
+		<div class="row">
+			<div class="span13">
 
-	<h3>Discover books already on BookOut</h3>
-	
-	<div id="searchBar">
-		<input type="text" class="input-xxlarge search-query" placeholder="Enter ISBN, Title, or Author...">
-		<button type="submit" class="btn">Search</button>
-	</div>
+				<h3>Discover books already on BookOut</h3>
+				
+				<div id="searchBar">
+					<input type="text" class="input-xxlarge search-query" placeholder="Enter ISBN, Title, or Author...">
+					<button type="submit" class="btn">Search</button>
+				</div>
 
-</div>
+			</div>
+		</div>
 
-{% endif %}
+	{% endif %}
 
 {% endblock %}

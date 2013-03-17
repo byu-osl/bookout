@@ -1,28 +1,36 @@
 
 {% extends "maintemplate.html" %}
 
-{% block title %}BookOut - Sign In{% endblock %}
+{% block title %}Sign In{% endblock %}
 
 {% block content %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/signin-buttons.css') }}"/>
-<div class="row">
-<div class="row">
 
-	<h3>Sign In</h3>
-	<p>Please enter your username:</p>
-	<form method="POST">
-		<label for="username">Username</label><input id="username" type="text" name="username" />
-		<label for="password">Password</label><input id="password" type="password" name="password" />
-		<br />
-		<input type="submit" value="Login" />
-	</form>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/signin-buttons.css') }}"/>
+ 
+<div class="row">
+	<div class="span13">
+
+		<h3>Sign In</h3>
+		
+		<p>Please enter your username:</p>
+		<form method="POST">
+			<label for="username">Username</label><input id="username" type="text" name="username" />
+			<label for="password">Password</label><input id="password" type="password" name="password" />
+			<br />
+			<input type="submit" value="Login" />
+		</form>
+		
+		<p>Or use the button below to sign into BookOut with your Google Account.
 	
-	<p>Or use the button below to sign into BookOut with your Google Account.
+	</div>
 </div>
 <br>
-<div class="row">
-	
-	<a href="/" class="zocial google">Sign in with Google</a>
 
+<div class="row">
+	<div class="span13">
+	
+		<a href="/" class="zocial google">Sign in with Google</a>
+
+	<div class="span13">
 </div>
 {% endblock %}
