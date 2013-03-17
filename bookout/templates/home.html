@@ -1,14 +1,14 @@
 
 {% extends "maintemplate.html" %}
 
-{% block title %}Bookout.org - The Place to Share Books{% endblock %}
+{% block title %}Bookout: The Place to Share Books{% endblock %}
 
 {% block content %}
 
 	{% if user.is_authenticated() %}
 
 		<div class="row">
-			<div class="span13">
+			<div class="span12">
 
 				<h3>Search to Find or Add Books</h3>
 
@@ -23,7 +23,7 @@
 		</div>
 
 		<div class="row">
-			<div class="span13">
+			<div class="span12">
 
 				<h3>Pending Requests</h3>
 				
@@ -33,7 +33,7 @@
 		</div>
 
 		<div class="row">
-			<div class="span13">
+			<div class="span12">
 
 				<h3>Books You Are Borrowing</h3>
 				
@@ -43,7 +43,7 @@
 		</div>
 
 		<div class="row">
-			<div class="span13">
+			<div class="span12">
 
 				<h3>Books You Are Lending</h3>
 				
@@ -55,7 +55,7 @@
 	{% else %}
 
 		<div class="row">
-			<div class="span13">
+			<div class="span12">
 
 				<h3>BookOut: The Place to Share Books</h3>
 
@@ -68,7 +68,7 @@
 		</div>
 
 		<div class="row">
-			<div class="span13">
+			<div class="span12">
 
 				<h3>Discover books already on BookOut</h3>
 				

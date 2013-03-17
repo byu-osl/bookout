@@ -1,15 +1,15 @@
 
 {% extends "maintemplate.html" %}
 
-{% block title %}BookOut - Search Books{% endblock %}
+{% block title %}Search Books{% endblock %}
 
 {% block content %}
 
 <div class="row">
-	<div class="span13">
+	<div class="span12">
 	<h3>Search to Find or Add Books</h3>
 	<p>Search to find books available within your network or to add books to your library that you own and are willing to share.</p>
-	<input type="text" class="input-xxlarge search-query" placeholder="Enter Title, Author, or ISBN...">
+	<input type="text" class="input-xxlarge search-query" placeholder="Enter Title, Author, or ISBN..." value="{{ search }}">
 	<button type="submit" class="btn">Search</button>
 	</div>
 </div>
@@ -33,14 +33,14 @@
 	<div class="span10">
 		{% if books == False %}
 		{% else %}
-			<table>
+			<table class="table">
 			{% for book in books %}
 				<tr>
-					<td><img src="{{ books[book].thumbnail_link }}"/></td>
+					<td><img src="{{ books[book].thumbnail_link }}" style="height: 125px;"/></td>
 					<td>Title: {{ books[book].title }}<br/>
 						Author: {{ books[book].author }}</td>
-					<td><button>Add to Library</button><br/>
-						<button>Borrow</button></td>
+					<td><a href="#" class="btn">Add to Library</a><br/><br/>
+						<a href="#" class="btn btn-inverse">Borrow</a></td>
 				<tr>
 			
 			{% endfor %}
