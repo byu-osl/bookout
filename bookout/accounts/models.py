@@ -32,6 +32,13 @@ class UserAccount(ndb.Model):
 	def get_connections(self):
 		return UserAccount.query(UserAccount.connections.user == self.key).fetch(keys_only=True)
 	
+	def get_all_connections(self):
+		connections = []
+		for connection in self.connected_accounts:
+			connections.append(UserAccount.query(UserAccount.key==connection.user).get())
+		return connections
+	
+	
 	def is_authenticated(self):
 		"""determine whether the UserAccount is authenticated
 		
@@ -175,11 +182,48 @@ class UserAccount(ndb.Model):
 		if bookcopy:
 			bookcopy.key.delete()
 		return bookcopy
+	
+	def add_connection(self, otherUser, reciprocate = True):
+		"""add a connection with another user
+
+		Arguments:
+		otherUser - a UserAccount object representing the user the connection should be made with
+		reciprocate - whether or not the connection should also be added to the other user as well
+
+		Return value:
+		True if successfull, false if not
+		"""
+		connection = Connection(user=otherUser.key)
+		if(connection in self.connected_accounts):
+			return False
+		self.connected_accounts.append(connection)
+		self.put()
+		if reciprocate:
+			otherUser.add_connection(self, reciprocate = False)
+		return True
 		
+	def remove_connection(self, otherUser, reciprocate = True):
+		"""remove a connection with another user
 
+		Arguments:
+		otherUser - a UserAccount object representing the user with whom the connection should be removed
+		reciprocate - whether or not the connection should also be removed from the other user as well
 
+		Return value:
+		True if successfull, false if not
+		"""
+		connection = Connection(user=otherUser.key)
+		if(connection not in self.connected_accounts):
+			return False
+		self.connected_accounts.remove(connection)
+		self.put()
+		if reciprocate:
+			otherUser.remove_connection(self, reciprocate = False)
+		return True
 
-
+	def create_invitation_link(self):
+		return "manage_connections/" + str(self.get_id())
+		
 
 
 class Anonymous(AnonymousUser):

@@ -89,6 +89,13 @@ app.add_url_rule('/search/<attribute>/<value>', view_func=views.search_for_book)
 #		DELETE - remove the book from the user's library
 app.add_url_rule('/library/<ISBN>', methods = ['GET', 'POST', 'DELETE'], view_func=views.library_requests)
 
+# Altering or accessing a user's connections to other users
+#	the following http types should be sent to do their corresponding functions
+#		GET - get all the connections for the current user
+#		POST - add a connection between the current user the the given user
+#		DELETE - remove the connection between the current user the the given user
+app.add_url_rule('/manage_network/<otherUserID>', methods = ['GET', 'POST', 'DELETE'], view_func=views.manage_connections)
+
 ################################### Web service calls ###################################
 # Lookup a book from app
 app.add_url_rule('/api/v1/book/<ISBN>', view_func=api.get_book)

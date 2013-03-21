@@ -176,3 +176,36 @@ def search_for_book(value, attribute=None):
 	else:
 		return jsonify(JsonIterable.dict_of_dict(books))
 
+def manage_connections(otherUserID = None):
+	cur_user = current_user()
+
+	if request.method == 'GET':
+		connections = cur_user.get_all_connections()
+		users = []
+		result = "you have " + str(len(connections)) + " connections"
+		for connection in connections:
+			result += "<br>" + connection.name
+			user = dict()
+			user["name"] = connection.name
+			user["email"] = connection.email
+			user["username"] = connection.username
+			user["id"] = connection.get_id()
+			users.append(user)
+		return jsonify({"connectedUsers":users})
+	elif request.method == 'POST':
+		cur_user = current_user()
+		otherUser = UserAccount.getuser(int(otherUserID))
+		if cur_user.add_connection(otherUser):
+			return jsonify({"Message":"Connection successfully created"})
+		else:
+			return jsonify({"Message":"Connection already existed"})
+	elif request.method == 'DELETE':
+		cur_user = current_user()
+		otherUser = UserAccount.getuser(int(otherUserID))
+		if cur_user.remove_connection(otherUser):
+			return jsonify({"Message":"Connection successfully created"})
+		else:
+			return jsonify({"Message":"Connection didn't existed"})
+	else:
+		#this should never be reached
+		return "Error: http request was invalid"
