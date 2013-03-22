@@ -69,7 +69,34 @@
         </div>
         <div class="tab-pane" id="Email">
           <h3>Invite your Friends by Email</h3>
-          <p>Email invitation is not yet supported. We apologize for the inconvenience. Please check back later.</p>
+<!--          <p>Email invitation is not yet supported. We apologize for the inconvenience. Please check back later.</p> -->
+          <div class="row">
+            <div class="span7">
+              <p>Send your friends an email invitation to join BookOut and automatically connect with you. The email will include a button to join BookOut following your message.</p>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="span1">
+              <p>To:</p>
+            </div>
+            <div class="span8">
+              <input type="text" class="input-xxlarge" id="EmailTo" placeholder="Enter email addresses, separated by a comma...">
+            </div>
+            <div class="span1">
+              <p>Message:</p>
+            </div>
+            <div class="span8">
+              <textarea class="input-xxlarge" id="EmailBody" rows="10">Hey friend!
+
+I've discovered an awesome new app, called BookOut, that lets you build a library network between friends. You can input the books you own and find books within your friends' libraries. You can request to borrow books, check them out through the app, and receive notifications when they're due. I've added books from my personal library already and want to connect so we can share books. I hope you join!
+
+{{ user.name }}</textarea>
+              <br>
+              <br>
+              <a class="btn btn-inverse" href="#">Send Email</a>
+            </div>
+          </div>
         </div>
         <div class="tab-pane" id="Link">
           <h3>Connect with Friends by Sending a Link</h3>
