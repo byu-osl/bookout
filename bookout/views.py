@@ -213,7 +213,7 @@ def manage_connections(otherUserID = None):
 		#this should never be reached
 		return "Error: http request was invalid"
 
-def simple_add_connection(otherUser):
+def simple_add_connection(otherUserID):
 	cur_user = current_user()
 	otherUser = UserAccount.getuser(int(otherUserID))
 	if cur_user.just_add_connection(otherUser):
