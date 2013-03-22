@@ -8,7 +8,7 @@ import json
 
 class Book(ndb.Model):
 	"""Cached representation of a book"""
-	isbn = ndb.StringProperty(required=True)
+	OLKey = ndb.StringProperty(required=True)
 	last_update = ndb.DateTimeProperty()
 	title = ndb.StringProperty(required=True)
 	author = ndb.StringProperty(required=True)
@@ -17,13 +17,13 @@ class Book(ndb.Model):
 	def update_cache(self):
 		"""update cached information about the book using the external book apis
 		
-		Book must have an isbn specified or this will always return False
+		Book must have an open library key specified or this will always return False
 		
 		"""
-		if self.isbn:
-			logging.debug("update_cache(%s)" %self.isbn)
-			book_data = search_books_by_attribute("isbn",self.isbn)
-				
+		if self.OLKey:
+			logging.debug("update_cache(%s)" % self.OLKey)
+			book_data = Book.search_books_by_attribute(value=self.OLKey, attribute=None, cache=True)
+
 	def cache_expired(self):
 		"""determine if the cached information in the database needs to be refreshed
 		
@@ -31,38 +31,38 @@ class Book(ndb.Model):
 		return (datetime.now() - self.last_update) > timedelta(minutes=10)
 	
 	@classmethod
-	def get_by_isbn(cls,isbn=None):
-		"""Convert an ISBN to a Book object
+	def get_by_key(cls,key=None):
+		"""Convert an open library key to a Book object
 		
-		This is a factory method that converts an ISBN into a Book object (if possible),
+		This is a factory method that converts an open library key into a Book object (if possible),
 		abstracting away any caching/external APIs necessary to the Book's use
 		
 		Arguments:
-		isbn -- the ISBN being searched
+		key -- the key being searched
 		
 		Return value:
-		An instance of a Book object with the given ISBN; if the ISBN could not be resolved
+		An instance of a Book object with the given OL key; if the key could not be resolved
 		to a Book object, returns None
 		
 		"""
-		if not isbn:
-			logging.error("Book.get_by_isbn() called without an ISBN")
+		if not key:
+			logging.error("Book.get_by_key() called without an open library key")
 			return None
-		logging.debug("Book.get_by_isbn(%s)" %isbn)
-		book = Book.query(Book.isbn==isbn).get()
+		logging.debug("Book.get_by_key(%s)" % key)
+		book = Book.query(Book.OLKey==key).get()
 		if book:
-			logging.debug("ISBN:%s was found in the book cache" %isbn)
+			logging.debug("Key:%s was found in the book cache" % key)
 			if book.cache_expired():
 				book.update_cache()
 		else:
-			logging.debug("ISBN:%s not found in cache; performing external search" %isbn)
-			book = Book(isbn=isbn)
-			if not book.update_cache():
-				book = None
+			logging.debug("Key:%s not found in cache; performing external search" % key)
+			book = Book(OLKey=key)
+			book.update_cache()
 		return book
 	
 	@classmethod
-	def search_books_by_attribute(self, value, attribute = None):
+	def search_books_by_attribute(self, value, attribute = None, cache = False):
+		# Search with 'attribute = None' when searching for an OLID
 		value = urllib.quote(value)
 		books = {}
 		if(attribute == None):
@@ -84,20 +84,30 @@ class Book(ndb.Model):
 				json_response = response.content
 				data = json.loads(json_response)
 				for book in data['docs']:
-					try:
-						curBook = Book(isbn=None)
-						curBook.isbn = book['isbn'][0]
+					curBook = Book(OLKey=None)
+					curBook.OLKey = book['key']
+					if 'title' in book:
 						curBook.title = book['title']
+					else:
+						curBook.title = ""
+				
+					if 'author_name' in book:
 						curBook.author = book['author_name'][0]
 						for i in range(1, len(book['author_name'])):
 							curBook.author += ", " + book['author_name'][i]
+					else:
+						curBook.author = ""
+				
+					if 'cover_i' in book:
 						curBook.thumbnail_link = "http://covers.openlibrary.org/b/id/" + str(book['cover_i']) + "-M.jpg"
-						curBook.last_update = datetime.now()
+					else:
+						curBook.thumbnail_link = ""
+				
+					curBook.last_update = datetime.now()
+					if cache == True:
 						curBook.put()
-						books[counter] = curBook.to_dict()
-						counter += 1
-					except:
-						pass
+					books[counter] = curBook.to_dict()
+					counter += 1
 		except:
 			pass
 		return books

@@ -5,7 +5,7 @@
 	function add_book(){
 		isbn = $("#isbn").val();
 		$.ajax({type:"POST",
-				url:"{{ url_for('library_requests',ISBN='') }}" + isbn,
+				url:"{{ url_for('library_requests',OLKey='') }}" + isbn,
 				success:function(result){
 							alert(result);
 							reload_booklist();
@@ -14,7 +14,7 @@
 	}
 	function remove_book(isbn){
 		$.ajax({type:"DELETE",
-			url:"{{ url_for('library_requests',ISBN='') }}" + isbn,
+			url:"{{ url_for('library_requests',OLKey='') }}" + isbn,
 			success:function(result){
 						alert(result);
 						reload_booklist();

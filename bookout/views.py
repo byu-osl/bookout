@@ -115,17 +115,17 @@ def logout_url():
 	return users.create_logout_url(url_for('index'))
 
 ######################## Internal calls (to be called by ajax) ##########################
-def library_requests(ISBN):
-	useraccount = current_user()
-	#if not useraccount:
-	#	logging.info("there is not a user logged in")
-	#	return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('library_requests',ISBN=ISBN))
+def library_requests(OLKey):
+	cur_user = current_user()
+	if not cur_user:
+		logging.info("there is not a user logged in")
+		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('library_requests',ISBN=ISBN))
 		
 	if request.method == 'GET':
 		#check the database to see if the book is in the user's library
-		book = Book.get_by_isbn(ISBN)
+		book = Book.get_by_key(OLKey)
 		if book:
-			if useraccount.get_book(book):
+			if cur_user.get_book(book):
 				return book.title
 			else:
 				return "You do not have this book in your library"
@@ -134,38 +134,38 @@ def library_requests(ISBN):
 	elif request.method == 'POST':
 		#add the book to the user's library
 		#If not found, add it to the cache, then to the user's library
-		book = Book.get_by_isbn(ISBN)
+		book = Book.get_by_key(OLKey)
 
 		if not book:
-			return "Book " + ISBN + " was not found"
+			return "Book " + OLKey + " was not found"
 		else:
-			if useraccount.get_book(book):
+			if cur_user.get_book(book):
 				return "This book is already in your library"
-			useraccount.add_book(book)
-			return "Book " + ISBN + " was added to " + users.get_current_user().nickname() + "'s library"
+			cur_user.add_book(book)
+			return "Book " + OLKey + " was added to your library"
 	elif request.method == 'DELETE':	
 		#remove the book from the user's library
-		book = Book.get_by_isbn(ISBN)
+		book = Book.get_by_key(OLKey)
 		if not book:
 			return "Book not found"
 		else:
-			if useraccount.get_book(book):
-				useraccount.remove_book(book)
-			return "Successfully deleted " + ISBN + " from your library"
+			if cur_user.get_book(book):
+				cur_user.remove_book(book)
+			return "Successfully deleted " + OLKey + " from your library"
 	else:
 		#this should never be reached
 		return "Error: http request was invalid"
 
 def get_my_book_list():
-	useraccount = current_user()
-	#if not useraccount:
-	#	logging.info("there is not a user logged in")
-	#	return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('manage_library'))
+	cur_user = current_user()
+	if not cur_user:
+		logging.info("there is not a user logged in")
+		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('manage_library'))
 
 	retstring = "<table>"
-	for copy in useraccount.get_library():
+	for copy in cur_user.get_library():
 		book = Book.query(Book.key == copy.book).get()
-		retstring += "<tr><td>" + book.title + "</td><td><button onclick=\"remove_book('" + book.isbn + "');\">Remove</button></td></tr>"
+		retstring += "<tr><td>" + book.title + "</td><td><button onclick=\"remove_book('" + book.OLKey + "');\">Remove</button></td></tr>"
 	retstring += "</table>"
 	return retstring
 

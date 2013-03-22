@@ -87,7 +87,7 @@ app.add_url_rule('/search/<attribute>/<value>', view_func=views.search_for_book)
 #		GET - check to see if the given user has the given book
 #		POST - add the given book to the user's library
 #		DELETE - remove the book from the user's library
-app.add_url_rule('/library/<ISBN>', methods = ['GET', 'POST', 'DELETE'], view_func=views.library_requests)
+app.add_url_rule('/library/<OLKey>', methods = ['GET', 'POST', 'DELETE'], view_func=views.library_requests)
 
 # Altering or accessing a user's connections to other users
 #	the following http types should be sent to do their corresponding functions
