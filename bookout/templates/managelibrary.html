@@ -18,58 +18,78 @@
 	</div>
 </div>
 
-<div class="span12">
-	<h5>My books</h5>
-	<table class="table">
-		<tr>
-			<th>Book title</th>
-			<th>Author</th>
-			<th>ISBN</th>
-		</tr>
-		{% for book in myBooks %}
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		{% endfor %}
-	</table>
+<div class="row">
+  <div class="span12">
+    <div class="tabbable">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#MyBooks" data-toggle="tab">My Books</a></li>
+        <li><a href="#LendedBooks" data-toggle="tab">Lended Books</a></li>
+        <li><a href="#BorrowedBooks" data-toggle="tab">Borrowed Books</a></li>
+      </ul>
+    </div>
+      <div class="tab-content">
+        <div class="tab-pane active" id="MyBooks">
+
+          <h5>My books</h5>
+          <table class="table">
+            <tr>
+              <th>Book title</th>
+              <th>Author</th>
+              <th>ISBN</th>
+            </tr>
+            {% for book in myBooks %}
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            {% endfor %}
+          </table>
+
+        </div>
+        <div class="tab-pane" id="LendedBooks">
+
+          <h5>Lended books</h5>
+          <table class="table">
+            <tr>
+              <th>Book title</th>
+              <th>Author</th>
+              <th>ISBN</th>
+            </tr>
+            {% for book in lendedBooks %}
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            {% endfor %}
+          </table>
+
+        </div>
+        <div class="tab-pane" id="BorrowedBooks">
+
+          <h5>Borrowed books</h5>
+          <table class="table">
+            <tr>
+              <th>Book title</th>
+              <th>Author</th>
+              <th>ISBN</th>
+            </tr>
+            {% for book in borrowedBooks %}
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            {% endfor %}
+          </table>
+
+        </div>
+      </div>
+    </span>
 </div>
-<div class="span12">
-	<h5>Lended books</h5>
-	<table class="table">
-		<tr>
-			<th>Book title</th>
-			<th>Author</th>
-			<th>ISBN</th>
-		</tr>
-		{% for book in lendedBooks %}
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		{% endfor %}
-	</table>
-</div>
-<div class="span12">
-	<h5>Borrowed books</h5>
-	<table class="table">
-		<tr>
-			<th>Book title</th>
-			<th>Author</th>
-			<th>ISBN</th>
-		</tr>
-		{% for book in borrowedBooks %}
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		{% endfor %}
-	</table>
-</div>
+
 {% endblock %}
