@@ -33,25 +33,16 @@
             </thead>
             <tbody>
               <tr>
-                <td>User A</td>
+                <td>Example User 1</td>
                 <td>54 books</td>
                 <td><a href="#">View Profile</a></td>
               </tr>
               <tr>
-                <td>User B</td>
+                <td>Example User 2</td>
                 <td>5 books</td>
                 <td><a href="#">View Profile</a></td>
               </tr>
-              <tr>
-                <td>User C</td>
-                <td>27 books</td>
-                <td><a href="#">View Profile</a></td>
-              </tr>
-              <tr>
-                <td>User D</td>
-                <td>2 books</td>
-                <td><a href="#">View Profile</a></td>
-              </tr>
+              <tr><td colspan="3"><b>The remaining listed users are your connections:</b></td></tr>
 {% for connection in user.get_all_connections() %}
   <tr>
     <td>{{ connection.username }}</td>
