@@ -1,4 +1,3 @@
-
 {% extends "maintemplate.html" %}
 
 {% block title %}Library{% endblock %}
@@ -19,4 +18,58 @@
 	</div>
 </div>
 
+<div class="span12">
+	<h5>My books</h5>
+	<table class="table">
+		<tr>
+			<th>Book title</th>
+			<th>Author</th>
+			<th>ISBN</th>
+		</tr>
+		{% for book in myBooks %}
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+<div class="span12">
+	<h5>Lended books</h5>
+	<table class="table">
+		<tr>
+			<th>Book title</th>
+			<th>Author</th>
+			<th>ISBN</th>
+		</tr>
+		{% for book in lendedBooks %}
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+<div class="span12">
+	<h5>Borrowed books</h5>
+	<table class="table">
+		<tr>
+			<th>Book title</th>
+			<th>Author</th>
+			<th>ISBN</th>
+		</tr>
+		{% for book in borrowedBooks %}
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
 {% endblock %}
