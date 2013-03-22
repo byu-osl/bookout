@@ -52,6 +52,13 @@
                 <td>2 books</td>
                 <td><a href="#">View Profile</a></td>
               </tr>
+{% for connection in user.get_all_connections() %}
+  <tr>
+    <td>{{ connection.username }}</td>
+    <td>n books</td>
+    <td><a href="/user/{{ connection.get_id() }}">View Profile</a></td>
+  </tr>
+{% endfor %}
             </tbody>
           </table>
 
@@ -70,7 +77,7 @@
           <br>
           <p>
             Invitation Link:
-            <input type="text" style="margin-left:10px;margin-top:8px" class="input-xxlarge" id="input01" value="http://bookout.org/add_connection/<otherUserID>">
+            <input type="text" style="margin-left:10px;margin-top:8px" class="input-xxlarge" id="input01" value="http://bookout.org/add_connection/{{ user.get_id() }}">
           </p>
         </div>
       </div>

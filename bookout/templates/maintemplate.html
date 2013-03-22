@@ -44,7 +44,7 @@
 								<span class="caret" style="margin-left:-3px"></span>
 								</a>
 								<ul class="dropdown-menu">
-									<li><a href="#">Username</a></li>
+									<li><a href="/user/{{ user.get_id() }}">{{ user.username }}</a></li>
 									<li class="divider"></li>
 									<li><a href="/settings">Settings</a></li>
 									<li><a href="/logout">Sign Out</a></li>
