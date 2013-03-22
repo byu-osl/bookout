@@ -96,6 +96,13 @@ app.add_url_rule('/library/<ISBN>', methods = ['GET', 'POST', 'DELETE'], view_fu
 #		DELETE - remove the connection between the current user the the given user
 app.add_url_rule('/manage_network/<otherUserID>', methods = ['GET', 'POST', 'DELETE'], view_func=views.manage_connections)
 
+# temporary url - simply adds a connection to the given user
+#	The end goal is to use POST requests to user for manage_connections (that one also deals with invitations)
+app.add_url_rule('/add_connection/<otherUserID>', view_func=views.simple_add_connection)
+
+# Get a json object containing all the users that are connected to the current user
+app.add_url_rule('/invites', view_func=views.manage_invites)
+
 ################################### Web service calls ###################################
 # Lookup a book from app
 app.add_url_rule('/api/v1/book/<ISBN>', view_func=api.get_book)
