@@ -195,17 +195,45 @@ def manage_connections(otherUserID = None):
 	elif request.method == 'POST':
 		cur_user = current_user()
 		otherUser = UserAccount.getuser(int(otherUserID))
-		if cur_user.add_connection(otherUser):
+		result = cur_user.add_connection(otherUser)
+		if(result == 0):
 			return jsonify({"Message":"Connection successfully created"})
-		else:
+		elif(result == 1):
 			return jsonify({"Message":"Connection already existed"})
+		elif(result == 2):
+			return jsonify({"Message":"Cannot create a connection with yourself"})
 	elif request.method == 'DELETE':
 		cur_user = current_user()
 		otherUser = UserAccount.getuser(int(otherUserID))
 		if cur_user.remove_connection(otherUser):
-			return jsonify({"Message":"Connection successfully created"})
+			return jsonify({"Message":"Connection successfully deleted"})
 		else:
 			return jsonify({"Message":"Connection didn't existed"})
 	else:
 		#this should never be reached
 		return "Error: http request was invalid"
+
+def simple_add_connection(otherUserID):
+	cur_user = current_user()
+	otherUser = UserAccount.getuser(int(otherUserID))
+	if cur_user.just_add_connection(otherUser):
+		return jsonify({"Message":"Connection successfully created"})
+	else:
+		return jsonify({"Message":"Connection already existed"})
+
+def manage_invites():
+	cur_user = current_user()
+
+	invites = cur_user.get_all_invites()
+	users = []
+	result = "you have " + str(len(invites)) + " invites"
+	for connection in invites:
+		result += "<br>" + connection.name
+		user = dict()
+		user["name"] = connection.name
+		user["email"] = connection.email
+		user["username"] = connection.username
+		user["id"] = connection.get_id()
+		users.append(user)
+	return jsonify({"connectedUsers":users})
+

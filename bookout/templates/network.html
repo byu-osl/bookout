@@ -5,20 +5,76 @@
 
 {% block content %}
 
-<div class="row">
-	<div class="span12">
-	
-		<h3>Network</h3>
+<br>
+  <div class="row">
+    <div class="tabbable tabs-left">
+      <ul class="nav nav-tabs span2">
+        <li class="active"><a href="#Connections" data-toggle="tab">My Connections</a></li>
+        <li><a href="#Facebook" data-toggle="tab">Invite by Facebook</a></li>
+        <li><a href="#Email" data-toggle="tab">Invite by Email</a></li>
+        <li><a href="#Link" data-toggle="tab">Invite by Link</a></li>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+      </ul>
+      <div class="tab-content span9">
+        <div class="tab-pane active" id="Connections">
+          <h3>My Connections</h3>
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Library Size</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>User A</td>
+                <td>54 books</td>
+                <td><a href="#">View Profile</a></td>
+              </tr>
+              <tr>
+                <td>User B</td>
+                <td>5 books</td>
+                <td><a href="#">View Profile</a></td>
+              </tr>
+              <tr>
+                <td>User C</td>
+                <td>27 books</td>
+                <td><a href="#">View Profile</a></td>
+              </tr>
+              <tr>
+                <td>User D</td>
+                <td>2 books</td>
+                <td><a href="#">View Profile</a></td>
+              </tr>
+            </tbody>
+          </table>
 
-		<p>...Table for "My Connections" tab, listing all current connections, will go here...</p>
-		
-		<p>...Table for "Invite by E-mail" tab, displaying message to send, will go here...</p>
-		
-		<p>...Table for "Connect with Facebook" tab, listing all Facebook friends, will go here...</p>
-		
-		<p>...Table for "Invite by Link" tab, displaying invitation link, will go here...</p>
-	
-	</div>
-</div>
+        </div>
+        <div class="tab-pane" id="Facebook">
+          <h3>Connect with your Facebook Friends</h3>
+          <p>Facebook connections are not yet supported. We apologize for the inconvenience. Please check back later.</p>
+        </div>
+        <div class="tab-pane" id="Email">
+          <h3>Invite your Friends by Email</h3>
+          <p>Email invitation is not yet supported. We apologize for the inconvenience. Please check back later.</p>
+        </div>
+        <div class="tab-pane" id="Link">
+          <h3>Connect with Friends by Sending a Link</h3>
+          <p>Use your personal invitation link to invite your friends to join BookOut and automatically connect with you.</p>
+          <br>
+          <p>
+            Invitation Link:
+            <input type="text" style="margin-left:10px;margin-top:8px" class="input-xlarge" id="input01" value="http://connect.bookout.org/[UserID]">
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {% endblock %}

@@ -20,6 +20,7 @@ class UserAccount(ndb.Model):
 	password = ndb.StringProperty(required=True)
 
 	connected_accounts = ndb.StructuredProperty(Connection,repeated=True)
+	invites_recieved = ndb.StructuredProperty(Connection,repeated=True)
 	
 	@property
 	def connections(self):
@@ -35,6 +36,12 @@ class UserAccount(ndb.Model):
 	def get_all_connections(self):
 		connections = []
 		for connection in self.connected_accounts:
+			connections.append(UserAccount.query(UserAccount.key==connection.user).get())
+		return connections
+	
+	def get_all_invites(self):
+		connections = []
+		for connection in self.invites_recieved:
 			connections.append(UserAccount.query(UserAccount.key==connection.user).get())
 		return connections
 	
@@ -183,7 +190,7 @@ class UserAccount(ndb.Model):
 			bookcopy.key.delete()
 		return bookcopy
 	
-	def add_connection(self, otherUser, reciprocate = True):
+	def add_connection(self, otherUser, reciprocate = True, confirmInvite = False):
 		"""add a connection with another user
 
 		Arguments:
@@ -195,11 +202,31 @@ class UserAccount(ndb.Model):
 		"""
 		connection = Connection(user=otherUser.key)
 		if(connection in self.connected_accounts):
+			return 1
+		if(otherUser.get_id() == self.get_id()):
+			return 2
+		if(connection in self.invites_recieved or confirmInvite):
+			self.connected_accounts.append(connection)
+			if(connection in self.invites_recieved):
+				self.invites_recieved.remove(connection)
+			self.put()
+			if reciprocate:
+				otherUser.add_connection(self, reciprocate = False, confirmInvite = True)
+		else:
+			otherUser.add_invite(self)
+		return 0
+
+	def just_add_connection(self, otherUser, reciprocate = True):
+		"""add a connection with another user without worrying about invites and such
+		(parameters and return values are the same as the previous method)
+		"""
+		connection = Connection(user=otherUser.key)
+		if(connection in self.connected_accounts):
 			return False
 		self.connected_accounts.append(connection)
 		self.put()
 		if reciprocate:
-			otherUser.add_connection(self, reciprocate = False)
+			otherUser.add_connection(self, reciprocate = False, confirmInvite = True)
 		return True
 		
 	def remove_connection(self, otherUser, reciprocate = True):
@@ -223,6 +250,12 @@ class UserAccount(ndb.Model):
 
 	def create_invitation_link(self):
 		return "manage_connections/" + str(self.get_id())
+
+	def add_invite(self, inviter):
+		connection = Connection(user=inviter.key)
+		if(connection not in self.invites_recieved):
+			self.invites_recieved.append(connection)
+			self.put()
 		
 
 
