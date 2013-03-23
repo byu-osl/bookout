@@ -8,12 +8,6 @@
 	<div class="span12">
 	
 		<h3>Library</h3>
-		
-		<table>
-		{% for book in books %}
-			<tr><td> {{ book.title }} </td><td><button>Remove</button></td></tr>
-		{% endfor %}
-		</table>
 	
 	</div>
 </div>
@@ -35,14 +29,15 @@
             <tr>
               <th>Book title</th>
               <th>Author</th>
-              <th>ISBN</th>
+              <th>Open Libary ID</th>
+              <th></th>
             </tr>
             {% for book in myBooks %}
               <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{book.title}}</td>
+                <td>{{book.author}}</td>
+                <td>{{book.OLKey}}</td>
+                <td><button>Remove</button></td>
               </tr>
             {% endfor %}
           </table>

@@ -39,7 +39,7 @@ def library():
 	for copy in useraccount.get_library():
 		book = Book.query(Book.key == copy.book).get()
 		booklist.append(book)
-	return render_response('managelibrary.html', books=booklist)
+	return render_response('managelibrary.html', myBooks=booklist)
 	
 def network():
 	return render_response('network.html')
@@ -171,9 +171,9 @@ def get_my_book_list():
 	counter = 0
 	for copy in cur_user.get_library():
 		book = Book.query(Book.key == copy.book).get()
-		books[counter] = book
+		books[counter] = book.to_dict()
 		counter += 1
-	return jsonify(JsonIterable.dictionary(books))
+	return jsonify(JsonIterable.dict_of_dict(books))
 
 def search_for_book(value, attribute=None):
 	books = Book.search_books_by_attribute(value,attribute)
