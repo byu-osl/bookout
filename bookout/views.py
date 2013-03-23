@@ -15,7 +15,6 @@ def warmup():
 	# one has to start up due to load increases on the app
 	return ''
 
-
 def register():
 	if request.method == "POST" and "name" in request.form and "username" in request.form and "password" in request.form and "email" in request.form:
 		name = request.form["name"]
@@ -37,33 +36,26 @@ def register():
 				flash("User could not be created")
 	return render_template("register.html")
 		
-
-
 def login():
-	#if flaskext.login.current_user.is_authenticated():
-	#	# user is already logged in, redirect 
-	#	return redirect(request.args.get("next") or url_for("library"))
-	if request.method == "POST" and "username" in request.form and "password" in request.form:
-		username = request.form["username"]
-		password = request.form["password"]
-		user = UserAccount.get_by_username(username)
-		if user:
-			if user.check_password(password):
-				if login_user(user, remember=False):
-					return redirect(request.args.get("next") or url_for("index"))
-				else:
-					flash("Sorry, but you could not log in.")
-			else:
-				flash(u"Invalid password")
+	user = users.get_current_user()
+	if user:
+		email = user.email()
+		bookout_user = UserAccount.get_by_email(email)
+		if not bookout_user:
+			name = user.nickname()
+			username = name
+			password = "test"
+			bookout_user = UserAccount.create_user(name,username,password,email)
+			flash("Account created")
+		if login_user(bookout_user, remember=False):
+			return redirect(request.args.get("next") or url_for("index"))
 		else:
-			flash(u"Invalid username.")
-	return render_template("login.html")
+			flash("Sorry, you could not log in.")
+	return redirect(users.create_login_url("/"))
 
 def logout():
 	logout_user()
-	return redirect("/")
-
-
+	return redirect(users.create_logout_url("/"))
 
 @app.route("/crossdomain")
 @crossdomain(origin='*')
@@ -78,10 +70,11 @@ def index():
 
 @login_required
 def manage_library():
+	useraccount = flaskext.login.current_user
 	retstring = ""
-	for copy in flaskext.login.current_user.get_library():
+	for copy in useraccount.get_library():
 		retstring += copy.display() + "<br>"
-	return  render_template('library.html',username=flaskext.login.current_user.username,books=get_my_book_list(),logout_url="/logout")
+	return  render_template('library.html',username=useraccount.name,books=get_my_book_list(),logout_url="/logout")
 	
 def logout_url():
 	return users.create_logout_url(url_for('index'))
@@ -114,7 +107,7 @@ def library_requests(ISBN):
 			if useraccount.get_book(book):
 				return "This book is already in your library"
 			useraccount.add_book(book)
-			return "Book " + ISBN + " was added to " + users.get_current_user().nickname() + "'s library"
+			return "Book " + ISBN + " was added to " + useraccount.name() + "'s library"
 	elif request.method == 'DELETE':	
 		#remove the book from the user's library
 		book = Book.get_by_isbn(ISBN)

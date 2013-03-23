@@ -3,17 +3,13 @@ from google.appengine.api import users
 from google.appengine.api.datastore import Key
 from datetime import datetime,timedelta
 from flaskext.login import AnonymousUser
-from werkzeug.security import generate_password_hash, check_password_hash
 import logging
 
 
 class UserAccount(ndb.Model):
 	"""Stored information about a User"""
-	
-	username = ndb.StringProperty(required=True)
 	name = ndb.StringProperty(required=True)
 	email = ndb.StringProperty(required=True)
-	password = ndb.StringProperty(required=True)
 
 	def is_authenticated(self):
 		"""determine whether the UserAccount is authenticated
@@ -58,21 +54,12 @@ class UserAccount(ndb.Model):
 		
 		"""
 		return self.key.id()
-
-	def set_password(self, pw):
-		self.password = generate_password_hash(pw)
-
-	def check_password(self, pw):
-#		return pw == self.password
-		return check_password_hash(self.password, pw)
-
+	
 	@classmethod
-	def create_user(cls,name,username,password,email):
-		if UserAccount.get_by_username(username):
-			return None
+	def create_user(cls,name,email):
 		if UserAccount.get_by_email(email):
 			return None
-		user = UserAccount(username=username,name=name,email=email,password=generate_password_hash(password))
+		user = UserAccount(name=name,email=email)
 		if user:
 			user.put()
 			return user
@@ -82,31 +69,26 @@ class UserAccount(ndb.Model):
 	@classmethod
 	def getuser(cls,id):
 		return UserAccount.get_by_id(id)
-
-	@classmethod
-	def get_by_username(cls,username):
-		user = cls.query(cls.username==username).get()
-		return user
 	
 	@classmethod
 	def get_by_email(cls,email):
 		user = cls.query(cls.email==email).get()
 		return user
 
-	@classmethod
-	def get_current(cls):
-		user = users.get_current_user()
-		if user:
-			# fetch the profile
-			uid = user.user_id()
-			account = cls.query(cls.googleid==uid).get()
-			if not account:
-				# create the account
-				account = UserAccount(googleid=uid)
-				account.put()
-			return account
-		else:
-			return None
+	#@classmethod
+	#def get_current(cls):
+	#	user = users.get_current_user()
+	#	if user:
+	#		# fetch the profile
+	#		uid = user.user_id()
+	#		account = cls.query(cls.googleid==uid).get()
+	#		if not account:
+	#			# create the account
+	#			account = UserAccount(googleid=uid)
+	#			account.put()
+	#		return account
+	#	else:
+	#		return None
 
 	def get_library(self):
 		from bookout.books.models import BookCopy
