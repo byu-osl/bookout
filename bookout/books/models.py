@@ -58,6 +58,7 @@ class Book(ndb.Model):
 			logging.debug("Key:%s not found in cache; performing external search" % key)
 			book = Book(OLKey=key)
 			book.update_cache()
+			book = Book.query(Book.OLKey==key).get()
 		return book
 	
 	@classmethod

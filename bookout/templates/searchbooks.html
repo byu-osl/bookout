@@ -6,8 +6,8 @@
 {% block content %}
 
 <script type="text/javascript">
-	function add_book(bookISBN){
-		$.post("/library/" + bookISBN, function(data) {
+	function add_book(bookOLKey){
+		$.post("/library/" + bookOLKey, function(data) {
 			alert(data);
 		});
 	}
@@ -53,8 +53,8 @@
 					<td><img src="{{ books[book].thumbnail_link }}" style="height: 125px;"/></td>
 					<td>Title: {{ books[book].title }}<br/>
 						Author: {{ books[book].author }}<br/>
-						ISBN: {{ books[book].isbn }}</td>
-					<td><a href="#" class="btn" onclick="add_book({{ books[book].isbn }})">Add to Library</a><br/><br/>
+						Open Library ID: {{ books[book].OLKey }}</td>
+					<td><a href="#" class="btn" onclick="add_book('{{ books[book].OLKey }}')">Add to Library</a><br/><br/>
 						<a href="#" class="btn btn-inverse" disabled>Request to Borrow</a></td>
 				</tr>
 			{% endfor %}
