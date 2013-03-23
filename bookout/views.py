@@ -47,8 +47,13 @@ def network():
 def discover():
 	return render_response('discover.html')
 	
-def searchbooks(searchterm):
-	booklist = Book.search_books_by_attribute(searchterm)
+def searchbooks():
+	booklist = {}
+	searchterm = request.args.get('value').lstrip()
+	if searchterm is None or searchterm == "":
+		searchterm = ""
+	else:
+		booklist = Book.search_books_by_attribute(searchterm)
 	return render_response('searchbooks.html', books=booklist, search=searchterm)
 	
 def settings():
@@ -162,12 +167,13 @@ def get_my_book_list():
 		logging.info("there is not a user logged in")
 		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('manage_library'))
 
-	retstring = "<table>"
+	books = {}
+	counter = 0
 	for copy in cur_user.get_library():
 		book = Book.query(Book.key == copy.book).get()
-		retstring += "<tr><td>" + book.title + "</td><td><button onclick=\"remove_book('" + book.OLKey + "');\">Remove</button></td></tr>"
-	retstring += "</table>"
-	return retstring
+		books[counter] = book
+		counter += 1
+	return jsonify(JsonIterable.dictionary(books))
 
 def search_for_book(value, attribute=None):
 	books = Book.search_books_by_attribute(value,attribute)

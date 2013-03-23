@@ -17,11 +17,11 @@
 	<script type="text/javascript">
 	
 		function searchBooks() {
-			window.location = "/searchbooks/" + $("#nav_search_input").val();
+			document.getElementById('searchBarForm').submit();
 		}
 	
 	</script>
-  
+
 </head>
 
 
@@ -53,10 +53,10 @@
 				                </ul>
 	<!-- In order to hide the header search bar on the searchbooks page, use the following if statement in the next line: 'if not request.path.startswith("/searchbooks/")' -->
 						{% if True%}
-							<form class="navbar-search pull-right" action="">
+							<form id="searchBarForm" class="navbar-search pull-right" action="/searchbooks">
 							<span id="search_input_holder">
-							<input type="text" class="search-query span4" placeholder="Search books by title, author, or ISBN" id="nav_search_input" />
-							<input type="button" value="" onclick="searchBooks()" />
+							<input type="text" class="search-query span4" placeholder="Search books by title, author, or ISBN" id="nav_search_input" name="value" />
+							<input type="button" value="" onclick="searchBooks();"/>
 							</span>
 						</form>
 						{% endif %}

@@ -37,7 +37,7 @@ app.add_url_rule('/network',view_func=views.network)
 app.add_url_rule('/discover',view_func=views.discover)
 
 # Search
-app.add_url_rule('/searchbooks/<searchterm>', view_func=views.searchbooks)
+app.add_url_rule('/searchbooks', view_func=views.searchbooks)
 
 # Settings
 app.add_url_rule('/settings',view_func=views.settings)
