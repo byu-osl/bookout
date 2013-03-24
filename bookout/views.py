@@ -70,6 +70,12 @@ def mobile_app():
 	
 def donate():
 	return render_response('donate.html')
+	
+def user_info():
+	return render_response('userinfo.html')
+	
+def book_info():
+	return render_response('bookinfo.html')
 
 def register():
 	if request.method == "POST" and "name" in request.form and "username" in request.form and "password" in request.form and "email" in request.form:

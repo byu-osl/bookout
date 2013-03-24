@@ -138,3 +138,13 @@ max-width: 680px;
 margin: 20px 0;
 }*/
 
+.infoTable td {
+	padding: 7px;
+}
+
+.infoTable td.infoLabel {
+	padding-left: 0;
+	padding-right: 20px;
+	font-weight: bold;
+}
+

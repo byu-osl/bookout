@@ -1,31 +1,82 @@
 
 {% extends "maintemplate.html" %}
 
-{% block title %}Title of book will go here{% endblock %}
+{% block title %}The Google Story{% endblock %}
 
 {% block content %}
 
 <div class="row">
 	<div class="span12">
-
 		<h3>Book Info</h3>
-		
-		<p><b>Title:</b> ...Title will go here...</p>
-		<p><b>Author:</b> ...Author will go here...</p>
-		<p><b>ISBN:</b> ...ISBN will go here...</p>
-		<p><b>Publication Date:</b> ...Publication date will go here...</p>
-		<p><b>Description:</b> ...Description will go here...</p>
-	
+		<table class="infoTable">
+			<tr>
+				<td class="infoLabel">Title:</td>
+				<td>The Google Story</td>
+			</tr>
+			<tr>
+				<td class="infoLabel">Author:</td>
+				<td>David A. Vice, et al</td>
+			</tr>
+			<tr>
+				<td class="infoLabel">Description:</td>
+				<td>Here is the story behind one of the most remarkable Internet successes of our 
+				time. Based on scrupulous research and extraordinary access to Google...</td>
+			</tr>
+		</table>
 	</div>
 </div>
 
 <div class="row">
 	<div class="span12">
-
 		<h3>Book Status</h3>
-		
-		...The table displaying all current statuses of this book will go here...
-
+		<table class="table table-bordered table-striped">
+			<tr>
+				<th></th>
+				<th>Due Date</th>
+				<th>Checkout Status</th>
+			</tr>
+			<tr>
+				<td>You own this book</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;Checked out to Trever</td>
+				<td><input type="text" class="input input-small" value="4/10/2013"/></td>
+				<td><select class="input-medium">
+						<option value="Loaned">Loaned</option>
+						<option value="Returned">Returned</option>
+					</select></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;Checked out to Caroline</td>
+				<td><input type="text" class="input input-small" value="3/27/2013"/></td>
+				<td><select class="input-medium">
+						<option value="loaned">Loaned</option>
+						<option value="returned">Returned</option>
+					</select></td>
+			</tr>
+			<tr>
+				<td>Brian has a copy</td>
+				<td></td>
+				<td>Available</td>
+			</tr>
+			<tr>
+				<td>Natalie has a checked-out copy</td>
+				<td></td>
+				<td>Not Available</td>
+			</tr>
+			<tr>
+				<td>You have requested to borrow Stephen's copy</td>
+				<td></td>
+				<td>Pending Borrow</td>
+			</tr>
+			<tr>
+				<td>You are borrowing Ryan's copy</td>
+				<td>4/16/2013</td>
+				<td>Borrowed</td>
+			</tr>
+		</table>
 	</div>
 </div>
 

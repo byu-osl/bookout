@@ -60,7 +60,11 @@ app.add_url_rule('/donate',view_func=views.donate)
 # Logout
 app.add_url_rule('/logout',view_func=views.logout)
 
+# User Info
+app.add_url_rule('/userinfo',view_func=views.user_info)
 
+# Book Info
+app.add_url_rule('/bookinfo',view_func=views.book_info)
 
 # Register (needs to be tied to signup)
 app.add_url_rule('/register',view_func=views.register,methods=["GET", "POST"])
