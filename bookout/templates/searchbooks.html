@@ -60,12 +60,12 @@
 						Open Library ID: {{ books[book].OLKey }}</td>
 					<td><a href="#" class="btn"
 							{% if user.is_authenticated() == False %}disabled{% endif %} 
-							onclick="add_book('{{ books[book].OLKey }}')" 
+							onclick="{% if user.is_authenticated() %}add_book('{{ books[book].OLKey }}'){% endif %}" 
 							title="{% if user.is_authenticated() %}Add to library and make available to your network{% 
 							else %}Join or login to add to your library{% endif %}">Add to Library</a><br/><br/>
 						<a href="#" class="btn btn-inverse" 
 							{% if user.is_authenticated() == False or True %}disabled{% endif %} 
-							onclick="request_book('{{ books[book].OLKey }}')"
+							onclick="{% if user.is_authenticated() and False %}request_book('{{ books[book].OLKey }}'){% endif %}"
 							title="{% if user.is_authenticated() and False %}Request to borrow book from one of your connections{% 
 							elif user.is_authenticated() %}Not available in your network{% 
 							else %}Join or login to request to borrow books{% endif %}">Request to Borrow</a></td>
