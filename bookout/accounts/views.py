@@ -8,7 +8,7 @@ def view_connections():
 	user = flaskext.login.current_user
 	retval = ""
 	for acct in user.get_connections():
-		retval += "%s<br>" %acct.username
+		retval += "%s<br>" %acct.name
 	return retval
 
 

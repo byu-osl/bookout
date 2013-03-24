@@ -113,7 +113,7 @@ def login():
 	if g_user:
 		if login_account(g_user):
 			return redirect(request.args.get("next") or url_for("library"))
-	return redirect(users.create_login_url(url_for("library")))
+	return redirect(users.create_login_url(request.url))
 
 def logout():
 	logout_account()
@@ -124,7 +124,7 @@ def manage_library():
 	retstring = ""
 	for copy in current_user().get_library():
 		retstring += copy.display() + "<br>"
-	return  render_template('library.html',username=current_user().username,books=get_my_book_list(),logout_url="/logout")
+	return  render_template('library.html',username=current_user().name,books=get_my_book_list(),logout_url="/logout")
 	
 def logout_url():
 	return users.create_logout_url(url_for('index'))
@@ -204,7 +204,7 @@ def manage_connections(otherUserID = None):
 			user = dict()
 			user["name"] = connection.name
 			user["email"] = connection.email
-			user["username"] = connection.username
+			#user["username"] = connection.username
 			user["id"] = connection.get_id()
 			users.append(user)
 		return jsonify({"connectedUsers":users})
@@ -248,7 +248,7 @@ def manage_invites():
 		user = dict()
 		user["name"] = connection.name
 		user["email"] = connection.email
-		user["username"] = connection.username
+		#user["username"] = connection.username
 		user["id"] = connection.get_id()
 		users.append(user)
 	return jsonify({"connectedUsers":users})
