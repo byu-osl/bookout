@@ -49,11 +49,18 @@ def discover():
 	
 def searchbooks():
 	booklist = {}
-	searchterm = request.args.get('value').lstrip()
-	if searchterm is None or searchterm == "":
+	searchterm = request.args.get('value')
+	
+	if searchterm is None:
 		searchterm = ""
 	else:
+		searchterm = searchterm.lstrip()
+		
+	if searchterm is None or searchterm == "":
+		pass
+	else:
 		booklist = Book.search_books_by_attribute(searchterm)
+		
 	return render_response('searchbooks.html', books=booklist, search=searchterm)
 	
 def settings():

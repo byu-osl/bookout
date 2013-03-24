@@ -4,6 +4,19 @@
 
 {% block content %}
 
+<script type="text/javascript">
+	function remove_book(bookOLKey){
+		$.ajax({
+			url:"/library/" + bookOLKey,
+			type: 'DELETE',
+			success:function(data) {
+				alert(data);
+				location.reload();
+			}
+		});
+	}
+</script>
+
 <div class="row">
 	<div class="span12">
 	
@@ -27,6 +40,7 @@
           <h4>My books</h4>
           <table class="table table-bordered table-striped">
             <tr>
+              <th></th>
               <th>Book title</th>
               <th>Author</th>
               <th>Open Libary ID</th>
@@ -34,6 +48,7 @@
             </tr>
             {% for book in myBooks %}
               <tr>
+              	<td><a class="btn" href="#" onclick="remove_book('{{book.OLKey}}')">-</a></td>
                 <td>{{book.title}}</td>
                 <td>{{book.author}}</td>
                 <td>{{book.OLKey}}</td>

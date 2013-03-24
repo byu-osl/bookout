@@ -26,8 +26,10 @@
 	<div class="span10">
 		<br/>
 		<h3>
-			<input type="text" class="input-xxlarge search-query" placeholder="Enter Title, Author, or ISBN..." value="{{ search }}">
+			<form id="searchForm" action="/searchbooks">
+			<input name="value" type="text" class="input-xxlarge search-query" placeholder="Enter Title, Author, or ISBN..." value="{{ search }}">
 			<button type="submit" class="btn">Search</button>
+			</form>
 		</h3>
 	</div>
 </div>
@@ -54,7 +56,7 @@
 			<table class="table">
 			{% for book in books %}
 				<tr>
-					<td><img src="{{ books[book].thumbnail_link }}" style="height: 125px;"/></td>
+					<td><img src="{{ books[book].thumbnail_link }}" style="height:auto;width:75px;"/></td>
 					<td>Title: {{ books[book].title }}<br/>
 						Author: {{ books[book].author }}<br/>
 						Open Library ID: {{ books[book].OLKey }}</td>
