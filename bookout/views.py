@@ -1,12 +1,13 @@
 # Views
 from google.appengine.api import users
 from flask import Response, jsonify, render_template, request, url_for, redirect, flash
+from flaskext.login import login_required, login_user, logout_user
 from books.models import Book
 import logging
 from decorators import crossdomain
 from bookout import app
 from utilities.JsonIterable import *
-from accounts import authenticate as authenticate_account, login as login_account, logout as logout_account, current_user, login_required
+from accounts import login as login_account, logout as logout_account, current_user, login_required
 from accounts.models import UserAccount
 
 def warmup():
@@ -108,19 +109,15 @@ def login():
 	"""view for handling authentication requests
 	
 	"""
-	if request.method == "POST" and "username" in request.form and "password" in request.form:
-		# get the username from the form
-		username = request.form["username"]
-		password = request.form["password"]
-		account = authenticate_account(username=username,password=password)
-		if account:
-			if login_account(account):
-				return redirect(request.args.get("next") or url_for("library"))
-	return render_response('signin.html')
+	g_user = users.get_current_user()
+	if g_user:
+		if login_account(g_user):
+			return redirect(request.args.get("next") or url_for("library"))
+	return redirect(users.create_login_url(url_for("library")))
 
 def logout():
 	logout_account()
-	return redirect("/")
+	return redirect(users.create_logout_url("/"))
 
 @login_required
 def manage_library():

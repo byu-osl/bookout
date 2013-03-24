@@ -14,10 +14,8 @@ class Connection(ndb.Model):
 class UserAccount(ndb.Model):
 	"""Stored information about a User"""
 	
-	username = ndb.StringProperty(required=True)
 	name = ndb.StringProperty(required=True)
 	email = ndb.StringProperty(required=True)
-	password = ndb.StringProperty(required=True)
 
 	connected_accounts = ndb.StructuredProperty(Connection,repeated=True)
 	invites_recieved = ndb.StructuredProperty(Connection,repeated=True)
@@ -90,20 +88,11 @@ class UserAccount(ndb.Model):
 		"""
 		return self.key.id()
 
-	def set_password(self, pw):
-		self.password = generate_password_hash(pw)
-
-	def check_password(self, pw):
-#		return pw == self.password
-		return check_password_hash(self.password, pw)
-
 	@classmethod
-	def create_user(cls,name,username,password,email):
-		if UserAccount.get_by_username(username):
+	def create_user(cls,g_user):
+		if UserAccount.get_by_email(g_user.email()):
 			return None
-		if UserAccount.get_by_email(email):
-			return None
-		user = UserAccount(username=username,name=name,email=email,password=generate_password_hash(password))
+		user = UserAccount(name=g_user.nickname(),email=g_user.email())
 		if user:
 			user.put()
 			return user
@@ -113,31 +102,11 @@ class UserAccount(ndb.Model):
 	@classmethod
 	def getuser(cls,id):
 		return UserAccount.get_by_id(id)
-
-	@classmethod
-	def get_by_username(cls,username):
-		user = cls.query(cls.username==username).get()
-		return user
 	
 	@classmethod
 	def get_by_email(cls,email):
 		user = cls.query(cls.email==email).get()
 		return user
-
-	@classmethod
-	def get_current(cls):
-		user = users.get_current_user()
-		if user:
-			# fetch the profile
-			uid = user.user_id()
-			account = cls.query(cls.googleid==uid).get()
-			if not account:
-				# create the account
-				account = UserAccount(googleid=uid)
-				account.put()
-			return account
-		else:
-			return None
 
 	def get_library(self):
 		"""retrieve the user's library
@@ -261,26 +230,3 @@ class UserAccount(ndb.Model):
 
 class Anonymous(AnonymousUser):
 	name = u"Anonymous"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
