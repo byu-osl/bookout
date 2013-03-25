@@ -6,7 +6,7 @@
 {% block content %}
 
 <br>
-  <div class="row">
+  <div class="row-fluid">
     <div class="tabbable tabs-left">
       <ul class="nav nav-tabs span2">
         <li class="active"><a href="#Connections" data-toggle="tab">My Connections</a></li>
@@ -22,7 +22,7 @@
       </ul>
       <div class="tab-content span9">
         <div class="tab-pane active" id="Connections">
-          <h3>My Connections</h3>
+          <h3 style="margin-top:-4px">My Connections</h3>
           <table class="table table-striped table-bordered">
             <thead>
               <tr>
@@ -35,17 +35,17 @@
               <tr>
                 <td>Example User 1</td>
                 <td>54 books</td>
-                <td><a href="#">View Profile</a></td>
+                <td><a href="/userinfo">View Profile</a></td>
               </tr>
               <tr>
                 <td>Example User 2</td>
                 <td>5 books</td>
-                <td><a href="#">View Profile</a></td>
+                <td><a href="/userinfo">View Profile</a></td>
               </tr>
               <tr><td colspan="3"><b>The remaining listed users are your connections:</b></td></tr>
 {% for connection in user.get_all_connections() %}
   <tr>
-    <td>{{ connection.username }}</td>
+    <td>{{ connection.name }}</td>
     <td>n books</td>
     <td><a href="/user/{{ connection.get_id() }}">View Profile</a></td>
   </tr>
@@ -55,25 +55,27 @@
 
         </div>
         <div class="tab-pane" id="Facebook">
-          <h3>Connect with your Facebook Friends</h3>
+          <h3 style="margin-top:-4px">Connect with your Facebook Friends</h3>
           <p>Facebook connections are not yet supported. We apologize for the inconvenience. Please check back later.</p>
         </div>
         <div class="tab-pane" id="Email">
-          <h3>Invite your Friends by Email</h3>
+          <h3 style="margin-top:-4px">Invite your Friends by Email</h3>
 <!--          <p>Email invitation is not yet supported. We apologize for the inconvenience. Please check back later.</p> -->
-          <div class="row">
-            <div class="span7">
+          <div class="row-fluid">
+            <div class="span9">
               <p>Send your friends an email invitation to join BookOut and automatically connect with you. The email will include a button to join BookOut following your message.</p>
             </div>
           </div>
           <br>
-          <div class="row">
+          <div class="row-fluid">
             <div class="span1">
               <p>To:</p>
             </div>
             <div class="span8">
               <input type="text" class="input-xxlarge" id="EmailTo" placeholder="Enter email addresses, separated by a comma...">
             </div>
+          </div>
+          <div class="row-fluid">
             <div class="span1">
               <p>Message:</p>
             </div>
@@ -90,7 +92,7 @@ I've discovered an awesome new app, called BookOut, that lets you build a librar
           </div>
         </div>
         <div class="tab-pane" id="Link">
-          <h3>Connect with Friends by Sending a Link</h3>
+          <h3 style="margin-top:-4px">Connect with Friends by Sending a Link</h3>
           <p>Use your personal invitation link to invite your friends to join BookOut and automatically connect with you.</p>
           <br>
           <p>

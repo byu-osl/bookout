@@ -44,7 +44,7 @@
 								<span class="caret" style="margin-left:-3px"></span>
 								</a>
 								<ul class="dropdown-menu">
-									<li><a href="/user/{{ user.get_id() }}">{{ user.username }}</a></li>
+									<li><a href="/user/{{ user.get_id() }}">{{ user.email }}</a></li>
 									<li class="divider"></li>
 									<li><a href="/settings">Settings</a></li>
 									<li><a href="/logout">Sign Out</a></li>
@@ -52,7 +52,7 @@
 							</li>
 				                </ul>
 	<!-- In order to hide the header search bar on the searchbooks page, use the following if statement in the next line: 'if not request.path.startswith("/searchbooks/")' -->
-						{% if not request.path.startswith("/searchbooks")%}
+						{% if True%}
 							<form id="searchBarForm" class="navbar-search pull-right" action="/searchbooks">
 							<span id="search_input_holder">
 							<input type="text" class="search-query span4" placeholder="Search books by title, author, or ISBN" id="nav_search_input" name="value" />
