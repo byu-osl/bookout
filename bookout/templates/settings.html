@@ -26,7 +26,7 @@
 
 		<h3>Notifications</h3>
 		Receive Notifications Via:
-		<div class="btn-group">
+		<!-- <div class="btn-group">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 				{ Selected Method }
 				<span class="caret"></span>
@@ -36,8 +36,12 @@
 				<li><a tabindex="-1" href="#">Mobile App</a></li>
 				<li><a tabindex="-1" href="#">Both</a></li>
 			</ul>
-		</div>
-
+		</div> -->
+		<select id="notification_settings" style="vertical-align:baseline">
+			<option>Email</option>
+			<option>Mobile App</option>
+			<option>Both</option>
+		</select>
 	</div>
 </div>
 
@@ -60,7 +64,7 @@
 		
 		<p>Additional info available to connections:</p>
 		
-		<textarea placeholder="Enter any additional info you would like to have visible to your contaacts, such as your contact info, address, or favorite food..." style="width:400px;height:125px;">{{ user.info }}</textarea>
+		<textarea placeholder="Enter any additional info you would like to have visible to your contacts, such as your contact info, address, or favorite food." style="width:400px;height:125px;">{{ user.info }}</textarea>
 
 	</div>
 </div>
@@ -68,7 +72,7 @@
 <div class="row">
 	<div class="span12">
 
-		<a class="btn" href="#">
+		<a class="btn btn-inverse" href="#">
 			Save Changes
 		</a>
 		<a class="btn" href="#">

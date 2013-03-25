@@ -3,6 +3,10 @@
 
 {% block title %}Bookout: The Place to Share Books{% endblock %}
 
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/tables.css') }}" />
+{% endblock %}
+
 {% block content %}
 
 	{% if user.is_authenticated() %}
@@ -29,8 +33,67 @@
 
 				<h3>Pending Requests</h3>
 				
-				...The table of pending requests (if any) will go here...
-
+				<table class="table table-striped no-header" id="pending_requests">
+					<tbody>
+						<tr>
+							<td class="request_info">
+								Daniel Z. has requested to connect
+							</td>
+							<td class="request_button center">
+								<a class="btn btn-inverse" href="#">
+									Accept
+								</a>
+							</td>
+							<td class="request_button center">
+								<a class="btn" href="#">
+									Decline
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="request_info">
+								Jaysen D. has requested to borrow [book]
+							</td>
+							<td class="request_button center">
+								<a class="btn btn-inverse" href="#">
+									Confirm Checkout
+								</a>
+							</td>
+							<td class="request_button center">
+								<a class="btn" href="#">
+									Deny
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="request_info">
+								You have requested to borrow [book] from Jessica P.
+							</td>
+							<td class="request_button center">
+							</td>
+							<td class="request_button center">
+								<a class="btn" href="#">
+									Cancel
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="request_info">
+								Trever H. reported checking in [book]
+							</td>
+							<td class="request_button center">
+								<a class="btn btn-inverse" href="#">
+									Confirm
+								</a>
+							</td>
+							<td class="request_button center">
+								<a class="btn" href="#">
+									Deny
+								</a>
+							</td>
+						</tr>
+					</thead>	
+				</table>	
 			</div>
 		</div>
 
@@ -39,7 +102,76 @@
 
 				<h3>Books You Are Borrowing</h3>
 				
-				...The table of books you are borrowing will go here...
+				<table class="table table-striped" id="books_borrowing">
+					<thead>
+						<tr>
+							<th class="book">
+								Book
+							</th>
+							<th class="owner">
+								Book Owner
+							</th>
+							<th class="due center">
+								Due Date
+							</th>
+							<th class="status center">
+								Status
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="book">
+								The Google Story
+							</td>
+							<td class="owner">
+								Caroline T.
+							</td>
+							<td class="due center">
+								3/10/2013
+							</td>
+							<td class="status center">
+								<select>
+									<option>Checked Out</option>
+									<option>Returned</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="book">
+								Les Miserables
+							</td>
+							<td class="owner">
+								Stephen K.
+							</td>
+							<td class="due center">
+								3/24/2013
+							</td>
+							<td class="status center">
+								<select>
+									<option>Checked Out</option>
+									<option selected="selected">Returned</option>
+								</select>
+							</td>
+						</tr><tr>
+							<td class="book">
+								The Book of Mormon
+							</td>
+							<td class="owner">
+								Ryan H.
+							</td>
+							<td class="due center">
+								4/3/2013
+							</td>
+							<td class="status center">
+								<select>
+									<option>Checked Out</option>
+									<option>Returned</option>
+								</select>
+							</td>
+						</tr>
+					</thead>	
+				</table>
 
 			</div>
 		</div>
