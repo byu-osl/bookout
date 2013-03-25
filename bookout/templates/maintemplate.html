@@ -13,6 +13,7 @@
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}"/>
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/maintemplate.css') }}"/>
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootswatch.css') }}"/>
+	{% block style %}{% endblock %}
 
 	<script type="text/javascript">
 	
@@ -106,6 +107,7 @@
 	<script src="http://code.jquery.com/jquery.js"></script>
 
 	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	{% block script %}{% endblock %}
 
 </body>
 

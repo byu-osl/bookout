@@ -3,13 +3,20 @@
 
 {% block title %}Settings{% endblock %}
 
+{% block style %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery-ui-1.10.2.custom.min.css') }}" />
+
+{% endblock %}
+
 {% block content %}
 <div class="row">
 	<div class="span12">
 
 		<h3>Lending Settings</h3>
 
-		<p>Default Lending Length:</p> ...The option drop-down menu will go here... <p>Days</p>
+		<label for="lending_length" style="display:inline-block">Default Lending Length (Days):</label>
+		<input id="lending_length" style="width:1.5em;" value="14" />
 	
 	</div>
 </div>
@@ -18,8 +25,18 @@
 	<div class="span12">
 
 		<h3>Notifications</h3>
-		
-		<p>Receive notifications via:</p> ...The option drop-down menu will go here...
+		Receive Notifications Via:
+		<div class="btn-group">
+			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				{ Selected Method }
+				<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+				<li><a tabindex="-1" href="#">Email</a></li>
+				<li><a tabindex="-1" href="#">Mobile App</a></li>
+				<li><a tabindex="-1" href="#">Both</a></li>
+			</ul>
+		</div>
 
 	</div>
 </div>
@@ -39,12 +56,34 @@
 
 		<h3>User Profile</h3>
 		
-		<p>Display name to connections: </p> ...The textfield to enter name to display will go here... ...(default to first name + last initial)...
+		<p>Display name to connections: <input type="text" id="display_name" value="{{ user.name }}" style="vertical-align:baseline" /></p> 
 		
 		<p>Additional info available to connections:</p>
 		
-		...Textbox to "Enter any additional info you would like to have visible to your contaacts, such as your contact info, address, or favorite food..." will go here...
+		<textarea placeholder="Enter any additional info you would like to have visible to your contaacts, such as your contact info, address, or favorite food..." style="width:400px;height:125px;">{{ user.info }}</textarea>
 
 	</div>
 </div>
+
+<div class="row">
+	<div class="span12">
+
+		<a class="btn" href="#">
+			Save Changes
+		</a>
+		<a class="btn" href="#">
+			Cancel
+		</a>
+
+	</div>
+</div>
+
+<div style="margin-bottom:25px;"></div>
+{% endblock %}
+
+{% block script %}
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui-1.10.2.custom.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
 {% endblock %}
