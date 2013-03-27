@@ -60,7 +60,6 @@
               </tr>
             {% endfor %}
           </table>
-
         </div>
         <div class="tab-pane" id="LendedBooks">
 
@@ -69,7 +68,7 @@
             <tr>
               <th>Book Title</th>
               <th>Author</th>
-              <th>Number of Copies</th>
+              <th>Copies</th>
               <th></th>
             </tr>
             {% if lendedBooks == [] %}
@@ -78,10 +77,10 @@
             {% endif %}
             {% for book in lendedBooks %}
             <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td><a href="/book/{{book.OLKey}}">{{book.title}}</a></td>
+              <td>{{book.author}}</td>
+              <td style="text-align:center"><input id="book_qty" style="width:1.5em;" value="1"/></td>
+              <td style="text-align:center"><a class="btn btn-danger btn-small" href="#" onclick="remove_book('{{book.OLKey}}')">Remove</a></td>
             </tr>
             {% endfor %}
           </table>
@@ -93,7 +92,7 @@
             <tr>
               <th>Book Title</th>
               <th>Author</th>
-              <th>Number of Copies</th>
+              <th>Copies</th>
               <th></th>
             </tr>
             {% if BorrowedBooks == [] %}
@@ -102,17 +101,19 @@
             {% endif %}
             {% for book in borrowedBooks %}
             <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td><a href="/book/{{book.OLKey}}">{{book.title}}</a></td>
+              <td>{{book.author}}</td>
+              <td style="text-align:center"><input id="book_qty" style="width:1.5em;" value="1"/></td>
+              <td style="text-align:center"><a class="btn btn-danger btn-small" href="#" onclick="remove_book('{{book.OLKey}}')">Remove</a></td>
             </tr>
             {% endfor %}
           </table>
 
         </div>
       </div>
-    </span>
+      <a class="btn btn-inverse" href="#">Save Changes</a>
+      <a class="btn href=#">Cancel</a>
+    </div>
 </div>
 
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui-1.10.2.custom.min.js') }}"></script>
