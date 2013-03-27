@@ -28,7 +28,7 @@ class Book(ndb.Model):
 		"""determine if the cached information in the database needs to be refreshed
 		
 		"""
-		return (datetime.now() - self.last_update) > timedelta(minutes=10)
+		return (datetime.now() - self.last_update) > timedelta(minutes=1000)
 	
 	@classmethod
 	def get_by_key(cls,key=None):
@@ -107,7 +107,7 @@ class Book(ndb.Model):
 					curBook.last_update = datetime.now()
 					if cache == True:
 						curBook.put()
-					books[counter] = curBook.to_dict()
+					books[counter] = curBook
 					counter += 1
 		except:
 			pass

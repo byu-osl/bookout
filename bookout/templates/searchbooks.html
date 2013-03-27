@@ -59,11 +59,14 @@
 					<td><img src="{{ books[book].thumbnail_link }}" style="height:auto;width:100px;"/></td>
 					<td>Title: {{ books[book].title }}<br/>
 						Author: {{ books[book].author }}</td>
-					<td><a href="#" class="btn"
+					<td>{% if books[book].inLibrary == "False" %}<a href="#" class="btn"
 							{% if user.is_authenticated() == False %}disabled{% endif %} 
 							onclick="{% if user.is_authenticated() %}add_book('{{ books[book].OLKey }}'){% endif %}" 
 							title="{% if user.is_authenticated() %}Add to library and make available to your network{% 
 							else %}Join or login to add to your library{% endif %}">Add to Library</a><br/><br/>
+							{% else %}
+							<a href="#" class="btn" disabled>In Library</a><br/><br/>
+							{% endif %}
 						<a href="#" class="btn btn-inverse" 
 							{% if user.is_authenticated() == False or True %}disabled{% endif %} 
 							onclick="{% if user.is_authenticated() and False %}request_book('{{ books[book].OLKey }}'){% endif %}"

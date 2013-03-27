@@ -2,7 +2,7 @@
 from google.appengine.api import users
 from flask import Response, jsonify, render_template, request, url_for, redirect, flash
 from flaskext.login import login_required, login_user, logout_user
-from books.models import Book
+from books.models import Book, BookCopy
 import logging
 from decorators import crossdomain
 from bookout import app
@@ -64,8 +64,23 @@ def searchbooks():
 	if searchterm is None or searchterm == "":
 		pass
 	else:
+		user = current_user()
 		booklist = Book.search_books_by_attribute(searchterm,attr)
-		
+		for book in booklist:
+			#Get the actual book object
+			b = Book.get_by_key(booklist[book].OLKey)
+			
+			#If the book is in the database, check to see if the user has the book
+			if b != None:
+				copy = user.get_book(b)
+			else:
+				copy = None
+			booklist[book] = booklist[book].to_dict()
+			if copy == None:
+				booklist[book]["inLibrary"] = "False"
+			else:
+				booklist[book]["inLibrary"] = "True"
+				
 	return render_response('searchbooks.html', books=booklist, search=searchterm, attribute=attr)
 	
 def settings():
