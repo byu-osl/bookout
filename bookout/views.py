@@ -51,6 +51,10 @@ def discover():
 def searchbooks():
 	booklist = {}
 	searchterm = request.args.get('value')
+	attr = request.args.get('refineSearch')
+	
+	if attr == "all":
+		attr = None
 	
 	if searchterm is None:
 		searchterm = ""
@@ -60,9 +64,9 @@ def searchbooks():
 	if searchterm is None or searchterm == "":
 		pass
 	else:
-		booklist = Book.search_books_by_attribute(searchterm)
+		booklist = Book.search_books_by_attribute(searchterm,attr)
 		
-	return render_response('searchbooks.html', books=booklist, search=searchterm)
+	return render_response('searchbooks.html', books=booklist, search=searchterm, attribute=attr)
 	
 def settings():
 	return render_response('settings.html')

@@ -17,7 +17,7 @@
 	}
 </script>
 
-
+<form id="searchForm" action="/searchbooks">
 <div class="row">
 	<div class="span2">
 		<br/>
@@ -26,10 +26,10 @@
 	<div class="span10">
 		<br/>
 		<h3>
-			<form id="searchForm" action="/searchbooks">
+			
 			<input name="value" type="text" class="input-xxlarge search-query" placeholder="Enter Title, Author, or ISBN..." value="{{ search }}">
 			<button type="submit" class="btn">Search</button>
-			</form>
+			
 		</h3>
 	</div>
 </div>
@@ -43,10 +43,10 @@
 		</div>
 		<div class="well">
 			<h5>Refine Search:</h5>
-			<label class="radio"><input type="radio" name="refineSearch">All results</label>
-			<label class="radio"><input type="radio" name="refineSearch">Title only</label>
-			<label class="radio"><input type="radio" name="refineSearch">Author only</label>
-			<label class="radio"><input type="radio" name="refineSearch">ISBN only</label>
+			<label class="radio"><input type="radio" id="searchAll" name="refineSearch" value="all">All results</label>
+			<label class="radio"><input type="radio" id="searchTitle" name="refineSearch" value="title">Title only</label>
+			<label class="radio"><input type="radio" id="searchAuthor" name="refineSearch" value="author">Author only</label>
+			<label class="radio"><input type="radio" id="searchISBN" name="refineSearch" value="isbn">ISBN only</label>
 		</div>
 	</div>
 	
@@ -56,10 +56,9 @@
 			<table class="table">
 			{% for book in books %}
 				<tr>
-					<td><img src="{{ books[book].thumbnail_link }}" style="height:auto;width:75px;"/></td>
+					<td><img src="{{ books[book].thumbnail_link }}" style="height:auto;width:100px;"/></td>
 					<td>Title: {{ books[book].title }}<br/>
-						Author: {{ books[book].author }}<br/>
-						Open Library ID: {{ books[book].OLKey }}</td>
+						Author: {{ books[book].author }}</td>
 					<td><a href="#" class="btn"
 							{% if user.is_authenticated() == False %}disabled{% endif %} 
 							onclick="{% if user.is_authenticated() %}add_book('{{ books[book].OLKey }}'){% endif %}" 
@@ -77,5 +76,23 @@
 		{% endif %}
 	</div>
 </div>
-
+</form>
+<script type="text/javascript">
+switch("{{attribute}}"){
+case "all":
+	document.getElementById("searchAll").checked=true;	
+	break;
+case "title":
+	document.getElementById("searchTitle").checked=true;
+	break;
+case "author":
+	document.getElementById("searchAuthor").checked=true;
+	break;
+case "isbn":
+	document.getElementById("searchISBN").checked=true;
+	break;
+default:
+	document.getElementById("searchAll").checked=true;
+}
+</script>
 {% endblock %}
