@@ -272,3 +272,48 @@ def manage_invites():
 		users.append(user)
 	return jsonify({"connectedUsers":users})
 
+def lend_book(bookCopyID, borrowerID, due_date = None):
+	cur_user = current_user()
+	return cur_user.lend_book(int(bookCopyID), int(borrowerID), due_date)
+
+def borrow_book(bookCopyID, lenderID, due_date = None):
+	cur_user = current_user()
+	return cur_user.borrow_book(int(bookCopyID), int(lenderID), due_date)
+
+def get_lent_books():
+	cur_user = current_user()
+	lentBooks = []
+	for bookcopy in cur_user.get_lent_books():
+		book = Book.get_by_id(bookcopy.book.id())
+		borrower = UserAccount.get_by_id(bookcopy.borrower.id())
+		bookInfo = dict()
+		bookInfo["title"] = book.title
+		bookInfo["author"] = book.author
+		bookInfo["copyID"] = bookcopy.key.id()
+		bookInfo["borrowerId"] = bookcopy.borrower.id()
+		bookInfo["borrower"] = borrower.name
+		lentBooks.append(bookInfo)
+	return jsonify({"lentBooks":lentBooks})
+
+def get_borrowed_books():
+	cur_user = current_user()
+	borrowedBooks = []
+	for bookcopy in cur_user.get_borrowed_books():
+		book = Book.get_by_id(bookcopy.book.id())
+		owner = UserAccount.get_by_id(bookcopy.owner.id())
+		bookInfo = dict()
+		bookInfo["title"] = book.title
+		bookInfo["author"] = book.author
+		bookInfo["copyID"] = bookcopy.key.id()
+		bookInfo["ownerId"] = bookcopy.owner.id()
+		bookInfo["owner"] = owner.name
+		borrowedBooks.append(bookInfo)
+	return jsonify({"borrowedBooks":borrowedBooks})
+
+def return_book(bookCopyID):
+	cur_user = current_user()
+	from bookout.books.models import BookCopy
+	bookcopy = BookCopy.get_by_id(int(bookCopyID))
+	bookcopy.return_book()
+	bookcopy.put()
+	return jsonify({"Message":"Book successfully returned to owner"})

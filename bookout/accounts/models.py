@@ -26,7 +26,7 @@ class UserAccount(ndb.Model):
 
 	def get_network_books(self):
 		from bookout.books.models import BookCopy
-		return BookCopy.query(BookCopy.account.IN(self.get_connections())).fetch()
+		return BookCopy.query(BookCopy.owner.IN(self.get_connections())).fetch()
 	
 	def get_connections(self):
 		return UserAccount.query(UserAccount.connections.user == self.key).fetch(keys_only=True)
@@ -115,7 +115,7 @@ class UserAccount(ndb.Model):
 		list of BookCopy objects owned by the user
 		"""
 		from bookout.books.models import BookCopy
-		return BookCopy.query(BookCopy.account==self.key).fetch()
+		return BookCopy.query(BookCopy.owner==self.key).fetch()
 	
 	def get_book(self,book):
 		"""retrieve the user's copy of a particular book
@@ -127,7 +127,7 @@ class UserAccount(ndb.Model):
 		the user's BookCOpy object associated with the provided Book; None if the user does not own book
 		"""
 		from bookout.books.models import BookCopy
-		mybook = BookCopy.query(BookCopy.book==book.key,BookCopy.account==self.key).get()
+		mybook = BookCopy.query(BookCopy.book==book.key,BookCopy.owner==self.key).get()
 		return mybook
 	
 	def add_book(self,inBook):
@@ -140,7 +140,7 @@ class UserAccount(ndb.Model):
 		a BookCopy instance that links the User to the Book; None if the Book could not be linked
 		"""
 		from bookout.books.models import BookCopy
-		bookcopy = BookCopy(book=inBook.key,account=self.key)
+		bookcopy = BookCopy(book=inBook.key,owner=self.key)
 		bookcopy.put()
 		return bookcopy
 		
@@ -154,7 +154,7 @@ class UserAccount(ndb.Model):
 		the BookCopy instance that was just deleted; None if the BookCopy was not found
 		"""
 		from bookout.books.models import BookCopy
-		bookcopy = BookCopy.query(BookCopy.book==book.key,BookCopy.account==self.key).get()
+		bookcopy = BookCopy.query(BookCopy.book==book.key,BookCopy.owner==self.key).get()
 		if bookcopy:
 			bookcopy.key.delete()
 		return bookcopy
@@ -225,6 +225,32 @@ class UserAccount(ndb.Model):
 		if(connection not in self.invites_recieved):
 			self.invites_recieved.append(connection)
 			self.put()
+
+	def lend_book(self, bookID, borrowerID, due_date = None):
+		from bookout.books.models import BookCopy
+		bookCopy = BookCopy.get_by_id(bookID)
+		if(bookCopy == None):
+			return "You Don't have that book"
+		bookCopy.lend(borrowerID, due_date)
+		bookCopy.put()
+		return "Book successfully lent"
+
+	def borrow_book(self, bookID, lenderID, due_date = None):
+		from bookout.books.models import BookCopy
+		bookCopy = BookCopy.get_by_id(bookID)
+		if(bookCopy == None):
+			return "The other user does not have that book"
+		bookCopy.lend(self.key.id(), due_date)
+		bookCopy.put()
+		return "Book successfully borrowed"
+
+	def get_lent_books(self):
+		from bookout.books.models import BookCopy
+		return BookCopy.query(BookCopy.owner==self.key,BookCopy.borrower!=None).fetch()
+
+	def get_borrowed_books(self):
+		from bookout.books.models import BookCopy
+		return BookCopy.query(BookCopy.borrower==self.key).fetch()
 		
 
 

@@ -107,6 +107,35 @@ app.add_url_rule('/add_connection/<otherUserID>', view_func=views.simple_add_con
 # Get a json object containing all the users that are connected to the current user
 app.add_url_rule('/invites', view_func=views.manage_invites)
 
+# Lend a book to another user (will use the user that is currently logged in)
+#	parameters:
+#		bookCopyID: The id that corresponds to the book that will be lent out
+#		userID: The id of the user that the book is being lent to
+app.add_url_rule('/lend_book/<bookCopyID>/<borrowerID>/<due_date>', view_func=views.lend_book)
+
+# Borrow a book from another user (will use the user that is currently logged in)
+#	parameters:
+#		bookCopyID: The id that corresponds to the book that will be borrowed
+#		userID: The id of the user that the book is being borrowed from
+app.add_url_rule('/borrow_book/<bookCopyID>/<lenderID>/<due_date>', view_func=views.borrow_book)
+
+# Get all the books the you are loaning to another user
+#	returns json with the following information for each book:
+#		book's title, book's author, id of your bookcopy, borrower id, and borrower name
+app.add_url_rule('/lent_books', view_func=views.get_lent_books)
+
+# Get all the books the you are borrowing from another user
+#	returns json with the following information for each book:
+#		book's title, book's author, id of your bookcopy, owner id, and owner name
+app.add_url_rule('/borrowed_books', view_func=views.get_borrowed_books)
+
+# Get all the books the you are loaning to another user
+#	returns json with the following information for each book:
+#		book's title, book's author, id of your bookcopy, borrower id, and borrower name
+app.add_url_rule('/return_book/<bookCopyID>', view_func=views.return_book)
+
+
+
 ################################### Web service calls ###################################
 # Lookup a book from app
 app.add_url_rule('/api/v1/book/<ISBN>', view_func=api.get_book)

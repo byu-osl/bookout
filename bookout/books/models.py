@@ -122,10 +122,24 @@ class BookCopy(ndb.Model):
 	"""
 	
 	book = ndb.KeyProperty(kind=Book)
-	account = ndb.KeyProperty(kind=UserAccount)
+	owner = ndb.KeyProperty(kind=UserAccount)
+	borrower = ndb.KeyProperty(kind=UserAccount)
+	due_date = ndb.DateProperty()
 
 	def display(self):
 		book = Book.query(Book.key == self.book).get()
 		return book.title
+
+	def lend(self, borrowerID, date = None):
+		borrower = UserAccount.getuser(borrowerID)
+		self.borrower = borrower.key
+		# self.due_date = date
+
+	def return_book(self):
+		self.borrower = None
+		self.due_date = None
+
+	def get_due_date(self):
+		return self.due_date
 
 
