@@ -221,36 +221,110 @@ class UserAccount(ndb.Model):
 		return "manage_connections/" + str(self.get_id())
 
 	def add_invite(self, inviter):
+		"""send an invitation to form a connection with another user
+
+		Arguments:
+		inviter: a UserAccount object representing the user that is sending the inviter
+		"""
 		connection = Connection(user=inviter.key)
 		if(connection not in self.invites_recieved):
 			self.invites_recieved.append(connection)
 			self.put()
 
 	def lend_book(self, bookID, borrowerID, due_date = None):
+		"""Lend a book to another user
+
+		Arguments:
+		bookID: an ID representing the bookCopy object that will be lent out
+		borrowerID: an ID representing the user that will borrow the book
+		due_date: the date the book should be returned, 
+			if none is given the default for the lender is used
+
+		Return value:
+		A string describing the success or failure of the operation
+		"""
 		from bookout.books.models import BookCopy
 		bookCopy = BookCopy.get_by_id(bookID)
+
+		# check to see if the book copy is valid
 		if(bookCopy == None):
-			return "You Don't have that book"
+			return "Invalid book ID"
+		if(bookCopy.owner != self.key):
+			return "You do not own that book"
+		if(bookCopy.borrower != None):
+			return "That book is not avaiable to be lent out"
+
 		bookCopy.lend(borrowerID, due_date)
 		bookCopy.put()
 		return "Book successfully lent"
 
 	def borrow_book(self, bookID, lenderID, due_date = None):
+		"""Borrow a book from another user
+
+		Arguments:
+		bookID: an ID representing the bookCopy object that will be borrowed
+		lenderID: an ID representing the user that will lend the book
+		due_date: the date the book should be returned, 
+			if none is given the default for the lender is used
+
+		Return value:
+		A string describing the success or failure of the operation
+		"""
 		from bookout.books.models import BookCopy
 		bookCopy = BookCopy.get_by_id(bookID)
+
+		# check to see if the book copy is valid
 		if(bookCopy == None):
-			return "The other user does not have that book"
+			return "Invalid book ID"
+		if(bookCopy.owner.id() != lenderID):
+			return "That user does not own this book"
+		if(bookCopy.borrower != None):
+			return "That book is not avaiable to be lent out"
+
 		bookCopy.lend(self.key.id(), due_date)
 		bookCopy.put()
 		return "Book successfully borrowed"
 
 	def get_lent_books(self):
+		"""Get all the books that the user is currently lending to anther user
+
+		Return Value:
+		A list of BookCopy objects of all the the books the user is currently lending
+		"""
 		from bookout.books.models import BookCopy
 		return BookCopy.query(BookCopy.owner==self.key,BookCopy.borrower!=None).fetch()
 
 	def get_borrowed_books(self):
+		"""Get all the books that the user is currently borrowing from anther user
+
+		Return Value:
+		A list of BookCopy objects of all the the books the user is currently lending
+		"""
 		from bookout.books.models import BookCopy
 		return BookCopy.query(BookCopy.borrower==self.key).fetch()
+
+	def return_book(self, bookCopyID):
+		"""Return the given book to it's owner
+
+		Arguments:
+		bookCopyID: an ID representing a BookCopy object, the book to be returned
+
+		Return Value:
+		A list of BookCopy objects of all the the books the user is currently lending
+		"""
+		from bookout.books.models import BookCopy
+		bookcopy = BookCopy.get_by_id(int(bookCopyID))
+
+		# verify the bookCopyID was valid
+		if(bookcopy == None):
+			return "Invalid book ID"
+		if(bookcopy.owner != self.key and bookcopy.borrower != self.key):
+			return "You are not the owner of this book, nor are you borrowing it"
+
+		bookcopy.return_book()
+		bookcopy.put()
+		return "Book successfully returned to owner"
+
 		
 
 

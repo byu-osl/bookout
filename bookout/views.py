@@ -258,7 +258,7 @@ def manage_connections(otherUserID = None):
 			return jsonify({"Message":"Connection didn't existed"})
 	else:
 		#this should never be reached
-		return "Error: http request was invalid"
+		return jsoningy({"Message":"Error: http request was invalid"})
 
 def simple_add_connection(otherUserID):
 	cur_user = current_user()
@@ -324,8 +324,5 @@ def get_borrowed_books():
 
 def return_book(bookCopyID):
 	cur_user = current_user()
-	from bookout.books.models import BookCopy
-	bookcopy = BookCopy.get_by_id(int(bookCopyID))
-	bookcopy.return_book()
-	bookcopy.put()
-	return jsonify({"Message":"Book successfully returned to owner"})
+	result = cur_user.return_book(bookCopyID)
+	return jsonify({"Message":result})
