@@ -122,6 +122,7 @@ class BookCopy(ndb.Model):
 	"""
 	
 	book = ndb.KeyProperty(kind=Book)
+	OLKey = ndb.StringProperty(required=True)
 	owner = ndb.KeyProperty(kind=UserAccount)
 	borrower = ndb.KeyProperty(kind=UserAccount)
 	due_date = ndb.DateProperty()

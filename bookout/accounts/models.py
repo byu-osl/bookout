@@ -29,7 +29,7 @@ class UserAccount(ndb.Model):
 		return BookCopy.query(BookCopy.owner.IN(self.get_connections())).fetch()
 	
 	def get_connections(self):
-		return UserAccount.query(UserAccount.connections.user == self.key).fetch(keys_only=True)
+		return UserAccount.query(UserAccount.connected_accounts.user == self.key).fetch(keys_only=True)
 	
 	def get_all_connections(self):
 		connections = []
@@ -140,7 +140,7 @@ class UserAccount(ndb.Model):
 		a BookCopy instance that links the User to the Book; None if the Book could not be linked
 		"""
 		from bookout.books.models import BookCopy
-		bookcopy = BookCopy(book=inBook.key,owner=self.key)
+		bookcopy = BookCopy(book=inBook.key,owner=self.key,OLKey=inBook.OLKey)
 		bookcopy.put()
 		return bookcopy
 		
