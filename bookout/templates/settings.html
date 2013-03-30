@@ -20,7 +20,7 @@
 
 		<div id="lendingLengthControlGroup" class="control-group">
 			<label for="lending_length" style="display:inline-block">Default lending length (days):</label>
-			<input id="lending_length" name="lendingLength" style="width:1.5em;" value="14" />
+			<input id="lending_length" name="lendingLength" style="width:1.5em;" value="{{ user.lending_length }}" />
 			<span class="help-inline">Must be between 1 and 99.</span>
 		</div>
 	</div>
@@ -43,9 +43,9 @@
 			</ul>
 		</div> -->
 		<select id="notification_settings" name="notifications" style="vertical-align:baseline">
-			<option value="email">Email</option>
-			<option value="mobile">Mobile App</option>
-			<option value="both">Both</option>
+			<option {% if user.notification == "email" %} selected="true" {% endif %} value="email">Email</option>
+			<option {% if user.notification == "mobile" %} selected="true" {% endif %} value="mobile">Mobile App</option>
+			<option {% if user.notification == "both" %} selected="true" {% endif %} value="both">Both</option>
 		</select>
 	</div>
 </div>

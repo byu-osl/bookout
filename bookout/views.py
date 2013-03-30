@@ -96,6 +96,16 @@ def searchbooks():
 	return render_response('searchbooks.html', books=booklist, search=searchterm, attribute=attr)
 	
 def settings():
+	if request.method == 'POST' and "displayName" in request.form and "lendingLength" in request.form and "notifications" in request.form and "additionalInfo" in request.form:
+		user = current_user()
+		name = request.form["displayName"]
+		length = request.form["lendingLength"]
+		notify = request.form["notifications"]
+		info = request.form["additionalInfo"]
+		if user.update(name, length, notify, info):
+			return "Success"
+		else:
+			return False
 	return render_response('settings.html')
 	
 def about():

@@ -16,6 +16,10 @@ class UserAccount(ndb.Model):
 	
 	name = ndb.StringProperty(required=True)
 	email = ndb.StringProperty(required=True)
+	book_count = ndb.IntegerProperty(default=0)
+	lending_length = ndb.StringProperty(default="14")
+	notification = ndb.StringProperty(default="email")
+	info = ndb.StringProperty(default="")
 
 	connected_accounts = ndb.StructuredProperty(Connection,repeated=True)
 	invites_recieved = ndb.StructuredProperty(Connection,repeated=True)
@@ -43,7 +47,15 @@ class UserAccount(ndb.Model):
 			connections.append(UserAccount.query(UserAccount.key==connection.user).get())
 		return connections
 	
-	
+	def update(self,name,lending_length,notifications,info):
+		# validate name
+		self.name = name
+		self.lending_length = lending_length
+		self.notification = notifications
+		self.info = info
+		self.put()
+		return True
+
 	def is_authenticated(self):
 		"""determine whether the UserAccount is authenticated
 		
@@ -141,7 +153,9 @@ class UserAccount(ndb.Model):
 		"""
 		from bookout.books.models import BookCopy
 		bookcopy = BookCopy(book=inBook.key,owner=self.key,OLKey=inBook.OLKey)
-		bookcopy.put()
+		if bookcopy.put():
+			self.book_count = self.book_count + 1
+			self.put()
 		return bookcopy
 		
 	def remove_book(self,book):
@@ -157,6 +171,8 @@ class UserAccount(ndb.Model):
 		bookcopy = BookCopy.query(BookCopy.book==book.key,BookCopy.owner==self.key).get()
 		if bookcopy:
 			bookcopy.key.delete()
+			self.book_count = self.book_count - 1
+			self.put()
 		return bookcopy
 	
 	def add_connection(self, otherUser, reciprocate = True, confirmInvite = False):
