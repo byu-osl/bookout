@@ -45,8 +45,11 @@ app.add_url_rule('/settings',view_func=views.settings)
 # Login
 app.add_url_rule('/login',view_func=views.login,methods=["GET","POST"])
 
-# Sign Up
-app.add_url_rule('/signup',view_func=views.sign_up)
+# Join
+app.add_url_rule('/join',view_func=views.join)
+
+# Handle-join
+app.add_url_rule('/handle-join',view_func=views.handle_join)
 
 # About
 app.add_url_rule('/about',view_func=views.about)
@@ -65,11 +68,6 @@ app.add_url_rule('/userinfo',view_func=views.user_info)
 
 # Book Info
 app.add_url_rule('/bookinfo',view_func=views.book_info)
-
-# Register (needs to be tied to signup)
-app.add_url_rule('/register',view_func=views.register,methods=["GET", "POST"])
-
-
 
 ######################## Internal calls (to be called by ajax) ##########################
 # Get book list

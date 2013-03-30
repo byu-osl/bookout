@@ -2,12 +2,12 @@
 from google.appengine.api import users
 from flask import Response, jsonify, render_template, request, url_for, redirect, flash
 from flaskext.login import login_required, login_user, logout_user
-from books.models import Book, BookCopy
+from books.models import Book
 import logging
 from decorators import crossdomain
 from bookout import app
 from utilities.JsonIterable import *
-from accounts import login as login_account, logout as logout_account, current_user, login_required
+from accounts import login as login_account, logout as logout_account, join as join_account, current_user, login_required
 from accounts.models import UserAccount
 
 def warmup():
@@ -98,9 +98,6 @@ def searchbooks():
 def settings():
 	return render_response('settings.html')
 	
-def sign_up():
-	return render_response('join.html')
-	
 def about():
 	return render_response('aboutbookout.html')
 	
@@ -116,38 +113,32 @@ def user_info():
 def book_info():
 	return render_response('bookinfo.html')
 
-def register():
-	if request.method == "POST" and "name" in request.form and "username" in request.form and "password" in request.form and "email" in request.form:
-		name = request.form["name"]
-		username = request.form["username"]
-		if UserAccount.get_by_username(username):
-			flash("Invalid username. Please choose another.")
+def join():
+	return render_response('join.html')
+
+def handle_join():
+	g_user = users.get_current_user()
+	if g_user:
+		if join_account(g_user):
+			return redirect(request.args.get("next") or url_for("library"))
 		else:
-			password = request.form["password"]
-			email = request.form["email"]
-			#check email
-			account = UserAccount.create_user(name, username, password, email)
-			if account:
-				if login_account(account):
-					return redirect(request.args.get("next") or url_for("index"))
-				else:
-					flash("Could not log in")
-			else:
-				flash("User could not be created")
-	return render_template("register.html")
+			return render_response('join.html',invalid_join=True)
+	return redirect(users.create_login_url(request.url))
 
 def login():
-	"""view for handling authentication requests
-	
-	"""
 	g_user = users.get_current_user()
 	if g_user:
 		if login_account(g_user):
 			return redirect(request.args.get("next") or url_for("library"))
+		else:
+			return render_response('join.html',invalid_login=True)
 	return redirect(users.create_login_url(request.url))
 
+
+# Logs out Bookout user but does not log out Google Account
 def logout():
 	logout_account()
+	#return redirect("/")
 	return redirect(users.create_logout_url("/"))
 
 @login_required

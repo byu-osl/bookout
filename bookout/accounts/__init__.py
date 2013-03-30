@@ -2,12 +2,16 @@ from models import UserAccount
 from flaskext import login as flasklogin
 import logging
 
+def join(account, remember=False):
+	user = UserAccount.create_user(account)
+	if user and flasklogin.login_user(user, remember):
+		return True
+	return False
+
 def login(account, remember=False):
 	email = account.email()
 	user = UserAccount.get_by_email(email)
-	if not user:
-		user = UserAccount.create_user(account)
-	if flasklogin.login_user(user, remember):
+	if user and flasklogin.login_user(user, remember):
 		return True
 	return False
 
