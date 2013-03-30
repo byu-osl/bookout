@@ -10,14 +10,19 @@
 {% endblock %}
 
 {% block content %}
+
+<form id="settingsForm" method="post" action="/settings">
+
 <div class="row">
 	<div class="span12">
 
 		<h3>Lending Settings</h3>
 
-		<label for="lending_length" style="display:inline-block">Default Lending Length (Days):</label>
-		<input id="lending_length" style="width:1.5em;" value="14" />
-	
+		<div id="lendingLengthControlGroup" class="control-group">
+			<label for="lending_length" style="display:inline-block">Default lending length (days):</label>
+			<input id="lending_length" name="lendingLength" style="width:1.5em;" value="14" />
+			<span class="help-inline">Must be between 1 and 99.</span>
+		</div>
 	</div>
 </div>
 
@@ -25,7 +30,7 @@
 	<div class="span12">
 
 		<h3>Notifications</h3>
-		Receive Notifications Via:
+		Receive notifications via:
 		<!-- <div class="btn-group">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 				{ Selected Method }
@@ -37,10 +42,10 @@
 				<li><a tabindex="-1" href="#">Both</a></li>
 			</ul>
 		</div> -->
-		<select id="notification_settings" style="vertical-align:baseline">
-			<option>Email</option>
-			<option>Mobile App</option>
-			<option>Both</option>
+		<select id="notification_settings" name="notifications" style="vertical-align:baseline">
+			<option value="email">Email</option>
+			<option value="mobile">Mobile App</option>
+			<option value="both">Both</option>
 		</select>
 	</div>
 </div>
@@ -60,11 +65,37 @@
 
 		<h3>User Profile</h3>
 		
-		<p>Display name to connections: <input type="text" id="display_name" value="{{ user.name }}" style="vertical-align:baseline" /></p> 
+		<div class="control-group">
+			Display name to connections: 
+			<input type="text" id="display_name" name="displayName" value="{{ user.name }}" style="vertical-align:baseline" />
+			<span class="help-inline">Must have at least one letter or number.</span> 
+		</div>
 		
 		<p>Additional info available to connections:</p>
 		
-		<textarea placeholder="Enter any additional info you would like to have visible to your contacts, such as your contact info, address, or favorite food." style="width:400px;height:125px;">{{ user.info }}</textarea>
+		<textarea name="additionalInfo" style="width:400px;height:125px;"
+		placeholder="Enter any additional info you would like to have visible to your contacts, such as your contact info, address, or favorite food."
+		>{{ user.info }}</textarea>
+
+	</div>
+</div>
+
+</form>
+
+<div class="row">
+	<div class="span4">
+
+		<div id="validationError" class="alert alert-error" style="display:none;">
+			<strong>Settings not saved!</strong>&nbsp; Fix the errors and try again.
+		</div>
+		
+		<div id="submitError" class="alert alert-error" style="display:none;">
+			<strong>Settings not saved!</strong>&nbsp; Something went wrong.
+		</div>
+		
+		<div id="submitSuccess" class="alert alert-success" style="display:none;">
+			<strong>Settings saved.</strong>
+		</div>
 
 	</div>
 </div>
@@ -72,12 +103,12 @@
 <div class="row">
 	<div class="span12">
 
-		<a class="btn btn-inverse" href="#">
+		<btn class="btn btn-inverse" onclick="submit();">
 			Save Changes
-		</a>
-		<a class="btn" href="#">
+		</btn>
+		<!--<a class="btn" href="#">
 			Cancel
-		</a>
+		</a>-->
 
 	</div>
 </div>
@@ -89,5 +120,53 @@
 
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui-1.10.2.custom.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
+<script type="text/javascript">
+
+	function submit() {
+		if(validate()) {
+			$("#validationError").hide();
+			$.post("\settings", $("#settingsForm").serialize())
+			.done(function() {
+				$("#submitSuccess").show();
+				$("#submitError").hide();
+			}).fail(function() {
+				$("#submitError").show();
+				$("#submitSuccess").hide();
+			});
+		}
+		else {
+			$("#validationError").show();
+			$("#submitSuccess").hide();
+			$("#submitError").hide();
+		}
+	}
+	
+	function validate() {
+		var validates = true;
+		
+		// Test that lending length is between 1 and 99
+		var reLength = /^\d{1,2}$/;
+		if(!reLength.test($("#lending_length").val()) || $("#lending_length").val() == "0") {
+			validates = false;
+			$("#lendingLengthControlGroup").removeClass("success").addClass("error");
+		}
+		else {
+			$("#lendingLengthControlGroup").removeClass("error").addClass("success");
+		}
+		
+		// Test that display name has at least one letter or number
+		var reName = /\w/;
+		if(!reName.test($("#display_name").val())) {
+			validates = false;
+			$("#display_name").parent().removeClass("success").addClass("error");
+		}
+		else {
+			$("#display_name").parent().removeClass("error").addClass("success");
+		}
+		return validates;
+	}
+
+</script>
 
 {% endblock %}
