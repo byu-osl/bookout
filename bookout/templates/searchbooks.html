@@ -3,14 +3,48 @@
 
 {% block title %}Search Books{% endblock %}
 
-{% block content %}
+{% block style %}
+
+<style type="text/css">
+	#inLibraryButton {
+		margin-bottom: 10px;
+	}
+</style>
+
+{% endblock %}
+
+{% block script %}
 
 <script type="text/javascript">
+	$(function() {
+		$(".tooltip-button").tooltip({trigger: "hover"});
+		
+		switch("{{attribute}}"){
+			case "all":
+				$("#searchAll").attr("checked", "true");	
+				break;
+			case "title":
+				$("#searchTitle").attr("checked", "true");
+				break;
+			case "author":
+				$("#searchAuthor").attr("checked", "true");
+				break;
+			case "isbn":
+				$("#searchISBN").attr("checked", "true");
+				break;
+			default:
+				$("#searchAll").attr("checked", "true");
+		}
+	});
+
 	function add_book(bookOLKey, button){
 		$(button).attr("disabled", "");
 		$.post("/library/" + bookOLKey, function(data) {
 			$(button).text("In Library");
-			$(button).attr("disabled", "");
+			$(button).removeAttr("disabled");
+			$(button).attr("onclick", "");
+			$(button).attr("href", "\library");
+			$(button).tooltip("destroy");
 		}).fail(function() {
 			$(button).removeAttr("disabled");
 		});
@@ -20,10 +54,13 @@
 	
 	function request_book(bookOLKey){
 		alert("Something happens.");
-		
 		return false;
 	}
 </script>
+
+{% endblock %}
+
+{% block content %}
 
 <form id="searchForm" action="/searchbooks">
 <div class="row">
@@ -71,24 +108,29 @@
 					</td>
 					<td>
 						{% if books[book].inLibrary == "False" %}
-							<a class="btn"
-							{% if user.is_authenticated() == False %}disabled{% endif %} 
-							onclick="{% if user.is_authenticated() %}add_book('{{ books[book].OLKey }}', this){% endif %}" 
-							title="{% if user.is_authenticated() %}Add to library and make available to your network{% 
-							else %}Join or login to add to your library{% endif %}">Add&nbsp;to&nbsp;Library</a><br/><br/>
+							<a class="btn btn-inverse tooltip-button" id="inLibraryButton"
+								{% if user.is_authenticated() == False %}disabled{% endif %} 
+								onclick="{% if user.is_authenticated() %}add_book('{{ books[book].OLKey }}', this){% endif %}" 
+								data-toggle="tooltip"
+								title="{% if user.is_authenticated() %}Add to library and make available to your network{% 
+								else %}Join or login to add to your library{% endif %}">Add&nbsp;to&nbsp;Library</a><br/>
 						{% else %}
-							<a class="btn" disabled>In&nbsp;Library</a><br/><br/>
+							<a class="btn btn-inverse" id="inLibraryButton" href="\library">In&nbsp;Library</a><br/>
 						{% endif %}
 						
 						{% if books[book].inNetwork == "False" %}
-							<a class="btn btn-inverse" disabled>Not&nbsp;available</a>
+							<a class="btn tooltip-button" 
+								data-toggle="tooltip"
+								title="Not available in your network" 
+								disabled>Request&nbsp;to&nbsp;Borrow</a>
 						{% else %}
-						<a class="btn btn-inverse" 
-							{% if user.is_authenticated() == False or True %}disabled{% endif %} 
-							onclick="{% if user.is_authenticated() and False %}request_book('{{ books[book].OLKey }}'){% endif %}"
-							title="{% if user.is_authenticated() and False %}Request to borrow book from one of your connections{% 
-							elif user.is_authenticated() %}Not available in your network{% 
-							else %}Join or login to request to borrow books{% endif %}">Request&nbsp;to&nbsp;Borrow</a>
+							<a class="btn tooltip-button" 
+								{% if user.is_authenticated() == False or True %}disabled{% endif %} 
+								onclick="{% if user.is_authenticated() and False %}request_book('{{ books[book].OLKey }}'){% endif %}"
+								data-toggle="tooltip"
+								title="{% if user.is_authenticated() and False %}Request to borrow book from one of your connections{% 
+								elif user.is_authenticated() %}{% 
+								else %}Join or login to request to borrow books{% endif %}">Request&nbsp;to&nbsp;Borrow</a>
 						{% endif %}
 					</td>
 				</tr>
@@ -98,22 +140,5 @@
 	</div>
 </div>
 </form>
-<script type="text/javascript">
-switch("{{attribute}}"){
-case "all":
-	document.getElementById("searchAll").checked=true;	
-	break;
-case "title":
-	document.getElementById("searchTitle").checked=true;
-	break;
-case "author":
-	document.getElementById("searchAuthor").checked=true;
-	break;
-case "isbn":
-	document.getElementById("searchISBN").checked=true;
-	break;
-default:
-	document.getElementById("searchAll").checked=true;
-}
-</script>
+
 {% endblock %}

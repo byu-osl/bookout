@@ -9,6 +9,67 @@
 
 {% endblock %}
 
+{% block script %}
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui-1.10.2.custom.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
+<script type="text/javascript">
+
+	function submit() {
+		if(validate()) {
+			$("#validationError").hide();
+			$.post("\settings", $("#settingsForm").serialize())
+			.done(function() {
+				$("#submitSuccess").show();
+				$("#submitError").hide();
+			}).fail(function() {
+				$("#submitError").show();
+				$("#submitSuccess").hide();
+			});
+		}
+		else {
+			$("#validationError").show();
+			$("#submitSuccess").hide();
+			$("#submitError").hide();
+		}
+		
+		return false;
+	}
+	
+	function validate() {
+		var validates = true;
+		
+		// Test that lending length is between 1 and 99
+		var reLength = /^\d{1,2}$/;
+		if(!reLength.test($("#lending_length").val()) || $("#lending_length").val() == "0") {
+			validates = false;
+			$("#lendingLengthControlGroup").removeClass("success").addClass("error");
+			$("#lendingLengthHelp").show();
+		}
+		else {
+			$("#lendingLengthControlGroup").removeClass("error").addClass("success");
+			$("#lendingLengthHelp").hide();
+		}
+		
+		// Test that display name has at least one letter or number
+		var reName = /\w/;
+		if(!reName.test($("#display_name").val())) {
+			validates = false;
+			$("#display_name").parent().removeClass("success").addClass("error");
+			$("#displayNameHelp").show();
+		}
+		else {
+			$("#display_name").parent().removeClass("error").addClass("success");
+			$("#displayNameHelp").hide();
+		}
+		return validates;
+	}
+
+</script>
+
+{% endblock %}
+
 {% block content %}
 
 <form id="settingsForm" method="post" action="/settings">
@@ -21,7 +82,7 @@
 		<div id="lendingLengthControlGroup" class="control-group">
 			<label for="lending_length" style="display:inline-block">Default lending length (days):</label>
 			<input id="lending_length" name="lendingLength" style="width:1.5em;" value="{{ user.lending_length }}" />
-			<span class="help-inline">Must be between 1 and 99.</span>
+			<span id="lendingLengthHelp" class="help-inline" style="display: none;">Must be between 1 and 99.</span>
 		</div>
 	</div>
 </div>
@@ -68,7 +129,7 @@
 		<div class="control-group">
 			Display name to connections: 
 			<input type="text" id="display_name" name="displayName" value="{{ user.name }}" style="vertical-align:baseline" />
-			<span class="help-inline">Must have at least one letter or number.</span> 
+			<span id="displayNameHelp" class="help-inline" style="display: none;">Must have at least one letter or number.</span> 
 		</div>
 		
 		<p>Additional info available to connections:</p>
@@ -114,61 +175,5 @@
 </div>
 
 <div style="margin-bottom:25px;"></div>
-{% endblock %}
-
-{% block script %}
-
-<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui-1.10.2.custom.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/settings.js') }}"></script>
-
-<script type="text/javascript">
-
-	function submit() {
-		if(validate()) {
-			$("#validationError").hide();
-			$.post("\settings", $("#settingsForm").serialize())
-			.done(function() {
-				$("#submitSuccess").show();
-				$("#submitError").hide();
-			}).fail(function() {
-				$("#submitError").show();
-				$("#submitSuccess").hide();
-			});
-		}
-		else {
-			$("#validationError").show();
-			$("#submitSuccess").hide();
-			$("#submitError").hide();
-		}
-		
-		return false;
-	}
-	
-	function validate() {
-		var validates = true;
-		
-		// Test that lending length is between 1 and 99
-		var reLength = /^\d{1,2}$/;
-		if(!reLength.test($("#lending_length").val()) || $("#lending_length").val() == "0") {
-			validates = false;
-			$("#lendingLengthControlGroup").removeClass("success").addClass("error");
-		}
-		else {
-			$("#lendingLengthControlGroup").removeClass("error").addClass("success");
-		}
-		
-		// Test that display name has at least one letter or number
-		var reName = /\w/;
-		if(!reName.test($("#display_name").val())) {
-			validates = false;
-			$("#display_name").parent().removeClass("success").addClass("error");
-		}
-		else {
-			$("#display_name").parent().removeClass("error").addClass("success");
-		}
-		return validates;
-	}
-
-</script>
 
 {% endblock %}
