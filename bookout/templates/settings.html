@@ -103,9 +103,9 @@
 <div class="row">
 	<div class="span12">
 
-		<btn class="btn btn-inverse" onclick="submit();">
+		<a class="btn btn-inverse" onclick="submit();">
 			Save Changes
-		</btn>
+		</a>
 		<!--<a class="btn" href="#">
 			Cancel
 		</a>-->
@@ -140,6 +140,8 @@
 			$("#submitSuccess").hide();
 			$("#submitError").hide();
 		}
+		
+		return false;
 	}
 	
 	function validate() {

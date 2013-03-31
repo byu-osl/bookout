@@ -6,14 +6,22 @@
 {% block content %}
 
 <script type="text/javascript">
-	function add_book(bookOLKey){
+	function add_book(bookOLKey, button){
+		$(button).attr("disabled", "");
 		$.post("/library/" + bookOLKey, function(data) {
-			alert(data);
+			$(button).text("In Library");
+			$(button).attr("disabled", "");
+		}).fail(function() {
+			$(button).removeAttr("disabled");
 		});
+		
+		return false;
 	}
 	
 	function request_book(bookOLKey){
 		alert("Something happens.");
+		
+		return false;
 	}
 </script>
 
@@ -57,27 +65,30 @@
 			{% for book in books %}
 				<tr>
 					<td><img src="{{ books[book].thumbnail_link }}" style="height:auto;width:100px;"/></td>
-					<td>Title: {{ books[book].title }}<br/>
-						Author: {{ books[book].author }}</td>
+					<td>
+						Title: {{ books[book].title }}<br/>
+						Author: {{ books[book].author }}
+					</td>
 					<td>
 						{% if books[book].inLibrary == "False" %}
-							<a href="#" class="btn"
+							<a class="btn"
 							{% if user.is_authenticated() == False %}disabled{% endif %} 
-							onclick="{% if user.is_authenticated() %}add_book('{{ books[book].OLKey }}'){% endif %}" 
+							onclick="{% if user.is_authenticated() %}add_book('{{ books[book].OLKey }}', this){% endif %}" 
 							title="{% if user.is_authenticated() %}Add to library and make available to your network{% 
-							else %}Join or login to add to your library{% endif %}">Add to Library</a><br/><br/>
-							{% else %}
-							<a href="#" class="btn" disabled>In Library</a><br/><br/>
-							{% endif %}
-						{% if books[book].inNetwork == "False" %}
-							<a href="#" class="btn btn-inverse" disabled>Not available</a>
+							else %}Join or login to add to your library{% endif %}">Add&nbsp;to&nbsp;Library</a><br/><br/>
 						{% else %}
-						<a href="#" class="btn btn-inverse" 
+							<a class="btn" disabled>In&nbsp;Library</a><br/><br/>
+						{% endif %}
+						
+						{% if books[book].inNetwork == "False" %}
+							<a class="btn btn-inverse" disabled>Not&nbsp;available</a>
+						{% else %}
+						<a class="btn btn-inverse" 
 							{% if user.is_authenticated() == False or True %}disabled{% endif %} 
 							onclick="{% if user.is_authenticated() and False %}request_book('{{ books[book].OLKey }}'){% endif %}"
 							title="{% if user.is_authenticated() and False %}Request to borrow book from one of your connections{% 
 							elif user.is_authenticated() %}Not available in your network{% 
-							else %}Join or login to request to borrow books{% endif %}">Request to Borrow</a>
+							else %}Join or login to request to borrow books{% endif %}">Request&nbsp;to&nbsp;Borrow</a>
 						{% endif %}
 					</td>
 				</tr>
