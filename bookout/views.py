@@ -130,7 +130,7 @@ def handle_join():
 	g_user = users.get_current_user()
 	if g_user:
 		if join_account(g_user):
-			return redirect(request.args.get("next") or url_for("library"))
+			return redirect(request.args.get("next") or url_for("index"))
 		else:
 			return render_response('join.html',invalid_join=True)
 	return redirect(users.create_login_url(request.url))
@@ -139,7 +139,7 @@ def login():
 	g_user = users.get_current_user()
 	if g_user:
 		if login_account(g_user):
-			return redirect(request.args.get("next") or url_for("library"))
+			return redirect(request.args.get("next") or url_for("index"))
 		else:
 			return render_response('join.html',invalid_login=True)
 	return redirect(users.create_login_url(request.url))
