@@ -116,16 +116,59 @@
 		<h3 style="margin-top:-4px">Books I'm Lending</h3>
 		<table class="table table-striped table-bordered">
 			<tr>
-			  <th>Book</th>
+			  <th>Book Title</th>
 			  <th>Book Owner</th>
 			  <th>Due Date</th>
-			  <th></th>
+			  <th style="width:200px"></th>
 			</tr>
 			{% if lendedBooks == [] %}
 			  <tr>
 				<td colspan="4">You don't currently have any books on loan. When you do, they'll show up here.</td>
 			  </tr>
 			{% endif %}
+			  
+			<tr>
+				<td>
+					The Google Story
+				</td>
+				<td>
+					Caroline T.
+				</td>
+				<td style="text-align:center;">
+					<input class="datepicker" size="16" type="text" value="03/10/2013" style="width:100px;text-align:center;vertical-align:middle;margin-bottom:0px;" />
+				</td>
+				<td style="text-align:center;">
+					<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Les Miserables
+				</td>
+				<td>
+					Stephen K.
+				</td>
+				<td style="text-align:center;">
+					<input class="datepicker" size="16" type="text" value="03/24/2013" style="width:100px;text-align:center;vertical-align:middle;margin-bottom:0px;" />
+				</td>
+				<td style="text-align:center;">
+					<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
+				</td>
+			</tr><tr>
+				<td>
+					The Book of Mormon
+				</td>
+				<td>
+					Ryan H.
+				</td>
+				<td style="text-align:center;">
+					<input class="datepicker" size="16" type="text" value="04/03/2013" style="width:100px;text-align:center;vertical-align:middle;margin-bottom:0px;" />
+				</td>
+				<td style="text-align:center;">
+					<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
+				</td>
+			</tr>
+			  
 			{% for book in lendedBooks %}
 			<tr>
 			  <td><a href="/book/{{book.OLKey}}">{{book.title}}</a></td>
@@ -142,14 +185,56 @@
           <table class="table table-striped table-bordered">
             <tr>
               <th>Book Title</th>
-              <th>Author</th>
-              <th>Copies</th>
-              <th></th>
+              <th>Book Borrower</th>
+              <th>Due Date</th>
+              <th style="width:200px"></th>
             </tr>
             {% if BorrowedBooks == [] %}
               <tr>
                 <td colspan="4">You aren't currently borrowing any books. To borrow a book, search for the title or author in the search bar in the header. When you're borrowing books, they'll show up here.</td>
             {% endif %}
+			<tr>
+				<td>
+					The Google Story
+				</td>
+				<td>
+					Caroline T.
+				</td>
+				<td style="text-align:center;">
+					3/10/2013
+				</td>
+				<td style="text-align:center;">
+					<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Les Miserables
+				</td>
+				<td>
+					Stephen K.
+				</td>
+				<td style="text-align:center;">
+					3/24/2013
+				</td>
+				<td style="text-align:center;">
+					<a class="btn btn-inverse" href="#" disabled="" style="width:140px">Pending Confirmation</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					The Book of Mormon
+				</td>
+				<td>
+					Ryan H.
+				</td>
+				<td style="text-align:center;">
+					4/3/2013
+				</td>
+				<td style="text-align:center;">
+					<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
+				</td>
+			</tr>
             {% for book in borrowedBooks %}
             <tr>
               <td><a href="/book/{{book.OLKey}}">{{book.title}}</a></td>
