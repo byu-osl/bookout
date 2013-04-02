@@ -57,6 +57,11 @@
 
 	$(function(){
 		var counter = $(".book_qty").spinner();
+		
+		if(window.location.hash){
+			if(window.location.hash == "#LendedBooks") $("#lended_books").click();
+			else if (window.location.hash == "#BorrowedBooks") $("#borrowed_books").click();
+		}
 	})
 </script>
 
@@ -82,9 +87,9 @@
 	
     <div class="tabbable">
       <ul class="nav nav-tabs">
-        <li class="active"><a href="#MyBooks" data-toggle="tab">My Books</a></li>
-        <li><a href="#LendedBooks" data-toggle="tab">Lended Books</a></li>
-        <li><a href="#BorrowedBooks" data-toggle="tab">Borrowed Books</a></li>
+        <li class="active"><a href="#MyBooks" data-toggle="tab" id="my_books">My Books</a></li>
+        <li><a href="#LendedBooks" data-toggle="tab" id="lended_books">Lended Books</a></li>
+        <li><a href="#BorrowedBooks" data-toggle="tab" id="borrowed_books">Borrowed Books</a></li>
       </ul>
     </div>
       <div class="tab-content">

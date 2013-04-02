@@ -35,6 +35,10 @@
 			default:
 				$("#searchAll").attr("checked", "true");
 		}
+		
+		$("input[name='refineSearch']").change(function(){
+			$(this).closest("form").submit();
+		});
 	});
 
 	function add_book(bookOLKey, button){
