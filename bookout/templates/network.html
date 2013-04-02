@@ -3,6 +3,18 @@
 
 {% block title %}Network{% endblock %}
 
+{% block script %}
+
+<script type="text/javascript">
+function SelectAll(id)
+{
+    document.getElementById(id).focus();
+    document.getElementById(id).select();
+}
+</script>
+
+{% endblock %}
+
 {% block content %}
 
 <br>
@@ -84,7 +96,7 @@
 
 I've discovered an awesome new app, called BookOut, that lets you build a library network between friends. You can input the books you own and find books within your friends' libraries. You can request to borrow books, check them out through the app, and receive notifications when they're due. I've added books from my personal library already and want to connect so we can share books. I hope you join!
 
-{{ user.name }}</textarea>
+- {{ user.name }}</textarea>
               <br>
               <br>
               <a class="btn btn-inverse" href="#">Send Email</a>
@@ -97,7 +109,7 @@ I've discovered an awesome new app, called BookOut, that lets you build a librar
           <br>
           <p>
             Invitation Link:
-            <input type="text" style="margin-left:10px;margin-top:8px" class="input-xxlarge" id="input01" value="http://bookout.org/add_connection/{{ user.get_id() }}">
+            <input type="text" style="width:400px;margin-left:10px;vertical-align:baseline" id="invitationLink" onClick="SelectAll('invitationLink');"value="http://bookout.org/add_connection/{{ user.get_id() }}"><!-- button for copying to clipboard; requires some hefty code to work, just Google it - <a class="btn" href="#" style="vertical-align:baseline">Copy</a> -->
           </p>
         </div>
       </div>
