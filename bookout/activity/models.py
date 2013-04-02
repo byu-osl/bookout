@@ -5,6 +5,7 @@ from bookout.accounts.models import UserAccount
 
 class Action(polymodel.PolyModel):
 	useraccount = ndb.KeyProperty(kind=UserAccount)
+	created = ndb.DateTimeProperty(auto_now_add=True)
 	text = "This is the default text, it should never show up"
 	can_accept = False 
 	accept_text = "Accept"

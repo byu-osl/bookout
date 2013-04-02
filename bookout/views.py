@@ -10,6 +10,8 @@ from utilities.JsonIterable import *
 from accounts import login as login_account, logout as logout_account, join as join_account, current_user, login_required
 from accounts.models import UserAccount
 
+import filters
+
 def warmup():
 	# https://developers.google.com/appengine/docs/python/config/appconfig#Warmup_Requests
 	# This function loads the views into the new instance when
