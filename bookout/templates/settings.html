@@ -63,6 +63,30 @@
 			$("#display_name").parent().removeClass("error").addClass("success");
 			$("#displayNameHelp").hide();
 		}
+		
+		// Test that the info does not exceed 2000 characters
+		if($("#additional_info").val().length > 2000) {
+			validates = false;
+			$("#additional_info").parent().removeClass("success").addClass("error");
+			$("#additionalInfoHelp").show();
+		}
+		else {
+			$("#additional_info").parent().removeClass("error").addClass("success");
+			$("#additionalInfoHelp").hide();
+		}
+		
+		// Test if user is mobile user
+			// We don't have a way of knowing this yet, so assume all users are web only
+		if($("#notification_settings option:selected").val() != "email") {
+			validates = false;
+			$("#notification_settings").parent().removeClass("success").addClass("error");
+			$("#notificationSettingsHelp").show();
+		}
+		else {
+			$("#notification_settings").parent().removeClass("error").addClass("success");
+			$("#notificationSettingsHelp").hide();
+		}
+		
 		return validates;
 	}
 
@@ -91,23 +115,15 @@
 	<div class="span12">
 
 		<h3>Notifications</h3>
-		Receive notifications via:
-		<!-- <div class="btn-group">
-			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-				{ Selected Method }
-				<span class="caret"></span>
-			</a>
-			<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-				<li><a tabindex="-1" href="#">Email</a></li>
-				<li><a tabindex="-1" href="#">Mobile App</a></li>
-				<li><a tabindex="-1" href="#">Both</a></li>
-			</ul>
-		</div> -->
-		<select id="notification_settings" name="notifications" style="vertical-align:baseline">
-			<option {% if user.notification == "email" %} selected="true" {% endif %} value="email">Email</option>
-			<option {% if user.notification == "mobile" %} selected="true" {% endif %} value="mobile">Mobile App</option>
-			<option {% if user.notification == "both" %} selected="true" {% endif %} value="both">Both</option>
-		</select>
+		<div class="control-group">
+			Receive notifications via:
+			<select id="notification_settings" name="notifications" style="vertical-align:baseline">
+				<option {% if user.notification == "email" %} selected="true" {% endif %} value="email">Email</option>
+				<option {% if user.notification == "mobile" %} selected="true" {% endif %} value="mobile">Mobile App</option>
+				<option {% if user.notification == "both" %} selected="true" {% endif %} value="both">Both</option>
+			</select>
+			<span id="notificationSettingsHelp" class="help-inline" style="display: none;">Must be a mobile app user to select options other than Email.</span> 
+		</div>
 	</div>
 </div>
 
@@ -124,9 +140,12 @@
 		
 		<p>Additional info available to connections:</p>
 		
-		<textarea name="additionalInfo" style="width:400px;height:125px;"
-		placeholder="Enter any additional info you would like to have visible to your contacts, such as your contact info, address, or favorite food."
-		>{{ user.info }}</textarea>
+		<div class="control-group">
+			<textarea name="additionalInfo" id="additional_info" style="width:400px;height:125px;"
+			placeholder="Enter any additional info you would like to have visible to your contacts, such as your contact info, address, or favorite food."
+			>{{ user.info }}</textarea>
+			<span id="additionalInfoHelp" class="help-inline" style="display: none;">Info cannot exceed 2000 characters.</span> 
+		</div>
 
 	</div>
 </div>

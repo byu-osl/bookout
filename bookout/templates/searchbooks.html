@@ -49,6 +49,9 @@
 			$(button).attr("onclick", "");
 			$(button).attr("href", "\library");
 			$(button).tooltip("destroy");
+			$(button).attr("class", "btn btn-primary tooltip-button");
+			$(button).attr("title", "Book is already in your library. Click to view library.");
+			$(button).tooltip({trigger: "hover"});
 		}).fail(function() {
 			$(button).removeAttr("disabled");
 		});
