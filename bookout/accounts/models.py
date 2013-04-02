@@ -25,6 +25,11 @@ class UserAccount(ndb.Model):
 	invites_recieved = ndb.StructuredProperty(Connection,repeated=True)
 	
 	@property
+	def pending_actions(self):
+		from bookout.activity.models import Action
+		return Action.query(Action.useraccount == self.key).fetch()
+	
+	@property
 	def connections(self):
 		return self.connected_accounts
 

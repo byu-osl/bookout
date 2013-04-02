@@ -30,21 +30,27 @@
 				
 				<table class="table table-striped table-bordered" id="pending_requests">
 					<tbody>
+						{% for action in user.pending_actions %}
 						<tr>
 							<td>
-								Daniel Z. has requested to connect
+								{{ action.text }}
 							</td>
 							<td style="text-align:center;width:200px">
+								{% if action.can_accept %}
 								<a class="btn btn-inverse" href="#" style="width:140px">
-									Accept
+									{{ action.accept_text }}
 								</a>
+								{% endif %}
 							</td>
 							<td style="text-align:center;width:200px">
+								{% if action.can_reject %}
 								<a class="btn" href="#" style="width:140px">
-									Decline
+									{{ action.reject_text }}
 								</a>
+								{% endif %}
 							</td>
 						</tr>
+						{% endfor %}
 						<tr>
 							<td>
 								Jaysen D. has requested to borrow [book]
