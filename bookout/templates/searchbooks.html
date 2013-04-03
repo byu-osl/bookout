@@ -141,7 +141,8 @@
 						{% else %}
 							<a class="btn tooltip-button"
 								style="width:120px" 
-								{% if user.is_authenticated() == False or True %}disabled{% endif %} 
+								{% if user.is_authenticated() == False %}disabled{% endif %}
+								href="/search/inNetwork/{{ books[book].OLKey }}"
 								onclick="{% if user.is_authenticated() and False %}request_book('{{ books[book].OLKey }}'){% endif %}"
 								data-toggle="tooltip" data-placement="right"
 								title="{% if user.is_authenticated() and False %}Request to borrow book from one of your connections{% 

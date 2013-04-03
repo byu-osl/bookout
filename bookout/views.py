@@ -329,3 +329,24 @@ def return_book(bookCopyID):
 	cur_user = current_user()
 	result = cur_user.return_book(bookCopyID)
 	return jsonify({"Message":result})
+	
+def see_who_in_network_has_book(OLKey):
+	user = current_user()
+
+	networkuserlist = {}
+	string = ""
+	for connection in user.get_connections():
+		u = UserAccount.getuser(connection.id())
+		for copy in u.get_library():
+			if copy.OLKey == OLKey:
+				user = {}
+				user["username"] = u.name
+				user["bookCopyID"] = copy.key.id()
+				if copy.borrower == None:
+					user["available"] = "True"
+				else:
+					user["available"] = "False"
+				networkuserlist[u.get_id()] = user
+
+	return jsonify(networkuserlist)
+

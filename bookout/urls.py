@@ -141,6 +141,7 @@ app.add_url_rule('/borrowed_books', view_func=views.get_borrowed_books)
 app.add_url_rule('/return_book/<bookCopyID>', view_func=views.return_book)
 
 
+app.add_url_rule('/search/inNetwork/<OLKey>',view_func=views.see_who_in_network_has_book)
 
 ################################### Web service calls ###################################
 # Lookup a book from app
