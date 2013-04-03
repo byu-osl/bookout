@@ -5,17 +5,83 @@
 
 {% block script %}
 
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui-1.10.2.custom.min.js') }}"></script>
+
 <script type="text/javascript">
-function SelectAll(id)
-{
-    document.getElementById(id).focus();
-    document.getElementById(id).select();
-}
+
+	var lastRemoveLink;
+	var lastRemoveID;
+	var composeSubject;
+	var composeTo;
+	var composeBody;
+	var composeJoinLink;
+
+	function remove_connection(connectionID, connectionName, button){
+		$.ajax({
+			url:"/manage_network/" + connectionID,
+			type: 'DELETE',
+			success:function(data) {
+				$(button).parent().parent().hide();
+				$("#reconnectMessage").show();
+				$("#reconnectMessageConnection").text(connectionName);
+				lastRemoveLink = button;
+				lastRemoveID = connectionID;
+			}
+		});
+		return false;
+	}
+	
+	function hide_reconnect_message() {
+		$("#reconnectMessage").hide();
+		return false;
+	}
+	
+	function reconnect() {
+			$.post("/manage_network/" + lastRemoveID, function(data) {
+			$("#reconnectMessage").hide();
+		})
+		return false;
+	}
+	
+	function SelectAll(id) {
+		document.getElementById(id).focus();
+		document.getElementById(id).select();
+	}
+	
+	function gmailCompose() {
+		composeSubject = "Invitation to Join BookOut"
+		composeTo = $("#EmailTo").val()
+		composeBody = $("#EmailBody").val()
+		composeJoinLink = "{{ request.host_url }}add_connection/{{ user.get_id() }}"
+		window.open("https://mail.google.com/mail/?compose=1&view=cm&fs=1&to=" 
+			+ encodeURIComponent(composeTo) 
+			+ "&su=" + encodeURIComponent(composeSubject) 
+			+ "&body=" + encodeURIComponent(composeBody)
+			//+ "%0A%0A"
+			+ encodeURIComponent("\n\nJoin Bookout and Connect with {{ user.name }}: " + composeJoinLink)
+			,'_blank');
+	}
+
+	$(function() {
+		$(".tooltip-link").tooltip({trigger: "hover"});
+		
+	});
+	
 </script>
 
 {% endblock %}
 
 {% block content %}
+
+<div class="row" style="position: relative">
+	<div class="span6 offset3" style="position: absolute; top:50px;">
+		<div id="reconnectMessage" class="alert" style="display: none;">
+			<a class="close" onclick="hide_reconnect_message()">x</a>
+			<span id="reconnectMessageConnection"></span> was removed from your connections.&nbsp;&nbsp;
+			<strong><a onclick="reconnect()" class="alert-link">Reconnect</a></strong>
+		</div>
+	</div>
+</div>
 
 <br>
   <div class="row-fluid">
@@ -23,7 +89,7 @@ function SelectAll(id)
       <ul class="nav nav-tabs span2">
         <li class="active"><a href="#Connections" data-toggle="tab">My Connections</a></li>
         <li><a href="#Facebook" data-toggle="tab">Invite by Facebook</a></li>
-        <li><a href="#Email" data-toggle="tab">Invite by Email</a></li>
+        <li><a href="#Gmail" data-toggle="tab">Invite by Gmail</a></li>
         <li><a href="#Link" data-toggle="tab">Invite by Link</a></li>
 <br>
 <br>
@@ -34,48 +100,39 @@ function SelectAll(id)
       </ul>
       <div class="tab-content span9">
         <div class="tab-pane active" id="Connections">
+		 <div class="row-fluid">
+		  <div class="span10">
           <h3 style="margin-top:-4px">My Connections</h3>
           <table class="table table-striped table-bordered">
             <thead>
               <tr>
                 <th>Username</th>
-                <th>Library Size</th>
-                <th>Action</th>
+                <th style="text-align:center;width:100px">Library Size</th>
+				<th style="width:100px"></th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Example User 1</td>
-                <td>54 books</td>
-                <td><a href="/userinfo">View Profile</a></td>
-              </tr>
-              <tr>
-                <td>Example User 2</td>
-                <td>5 books</td>
-                <td><a href="/userinfo">View Profile</a></td>
-              </tr>
-              <tr><td colspan="3"><b>The remaining listed users are your connections:</b></td></tr>
-{% for connection in user.get_all_connections() %}
-  <tr>
-    <td>{{ connection.name }}</td>
-    <td>n books</td>
-    <td><a href="/user/{{ connection.get_id() }}">View Profile</a></td>
-  </tr>
-{% endfor %}
+				{% for connection in user.get_all_connections() %}
+				  <tr>
+					<td><a class="tooltip-link" data-toggle="tooltip" data-placement="right" title="View Profile" href="/user/{{ connection.get_id() }}">{{ connection.name }}</a></td>
+					<td style="text-align:center;">n books</td>
+					<td style="text-align:center"><a class="btn btn-small" onclick="remove_connection('{{connection.get_id()}}', '{{connection.name}}', this)"><i class="icon-remove"></i>&nbsp;&nbsp;Remove</a></td>
+				  </tr>
+				{% endfor %}
             </tbody>
           </table>
-
+          </div>
+		 </div>
         </div>
         <div class="tab-pane" id="Facebook">
           <h3 style="margin-top:-4px">Connect with your Facebook Friends</h3>
           <p>Facebook connections are not yet supported. We apologize for the inconvenience. Please check back later.</p>
         </div>
-        <div class="tab-pane" id="Email">
-          <h3 style="margin-top:-4px">Invite your Friends by Email</h3>
-<!--          <p>Email invitation is not yet supported. We apologize for the inconvenience. Please check back later.</p> -->
+        <div class="tab-pane" id="Gmail">
+          <h3 style="margin-top:-4px">Invite your Friends by Gmail</h3>
           <div class="row-fluid">
             <div class="span9">
-              <p>Send your friends an email invitation to join BookOut and automatically connect with you. The email will include a button to join BookOut following your message.</p>
+              <p>Send your friends an email invitation to join BookOut and automatically connect with you. Clicking the "Send with Gmail" button will open Gmail Compose in a new window with your message included. The email will include your BookOut invitation link following your message.</p>
             </div>
           </div>
           <br>
@@ -99,7 +156,7 @@ I've discovered an awesome new app, called BookOut, that lets you build a librar
 - {{ user.name }}</textarea>
               <br>
               <br>
-              <a class="btn btn-inverse" href="#">Send Email</a>
+              <a class="btn btn-inverse" onClick="gmailCompose()">Send with Gmail</a>
             </div>
           </div>
         </div>
@@ -109,7 +166,7 @@ I've discovered an awesome new app, called BookOut, that lets you build a librar
           <br>
           <p>
             Invitation Link:
-            <input type="text" style="width:400px;margin-left:10px;vertical-align:baseline" id="invitationLink" onClick="SelectAll('invitationLink');"value="http://bookout.org/add_connection/{{ user.get_id() }}"><!-- button for copying to clipboard; requires some hefty code to work, just Google it - <a class="btn" href="#" style="vertical-align:baseline">Copy</a> -->
+            <input type="text" style="width:400px;margin-left:10px;vertical-align:baseline" id="invitationLink" onClick="SelectAll('invitationLink');"value="{{ request.host_url }}add_connection/{{ user.get_id() }}"><!-- button for copying to clipboard; requires some hefty code to work, just Google it - <a class="btn" href="#" style="vertical-align:baseline">Copy</a> -->
           </p>
         </div>
       </div>
