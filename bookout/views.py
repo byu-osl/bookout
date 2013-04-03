@@ -127,6 +127,9 @@ def user_info():
 def book_info():
 	return render_response('bookinfo.html')
 
+def send_connection_request():
+	return render_response('connectionrequest.html')
+	
 def join():
 	return render_response('join.html')
 
@@ -264,7 +267,7 @@ def manage_connections(otherUserID = None):
 	else:
 		#this should never be reached
 		return jsoningy({"Message":"Error: http request was invalid"})
-
+		
 def simple_add_connection(otherUserID):
 	cur_user = current_user()
 	otherUser = UserAccount.getuser(int(otherUserID))
