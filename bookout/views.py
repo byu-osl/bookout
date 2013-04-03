@@ -10,6 +10,7 @@ from bookout import app
 from utilities.JsonIterable import *
 from accounts import login as login_account, logout as logout_account, join as join_account, current_user, login_required
 from accounts.models import UserAccount
+from activity.models import Action
 
 import filters
 
@@ -246,9 +247,9 @@ def manage_connections(otherUserID = None):
 	elif request.method == 'POST':
 		cur_user = current_user()
 		otherUser = UserAccount.getuser(int(otherUserID))
-		result = cur_user.add_connection(otherUser)
+		result = cur_user.send_invite(otherUser)
 		if(result == 0):
-			return jsonify({"Message":"Connection successfully created"})
+			return jsonify({"Message":"Invitation successfully sent"})
 		elif(result == 1):
 			return jsonify({"Message":"Connection already existed"})
 		elif(result == 2):
@@ -267,7 +268,7 @@ def manage_connections(otherUserID = None):
 def simple_add_connection(otherUserID):
 	cur_user = current_user()
 	otherUser = UserAccount.getuser(int(otherUserID))
-	if cur_user.just_add_connection(otherUser):
+	if cur_user.add_connection(otherUser):
 		return jsonify({"Message":"Connection successfully created"})
 	else:
 		return jsonify({"Message":"Connection already existed"})
@@ -369,3 +370,26 @@ def setup_book_borrow_actions(lenderID, bookCopyID):
 	wtb1.book = bookCopy.key
 	wtb1.put()
 
+def get_notifications():
+	cur_user = current_user()
+	notifications = []
+	for notification in cur_user.pending_actions:
+		info = dict()
+		info["ID"] = notification.key.id()
+		info["text"] = notification.text
+		info["confirm_text"] = notification.accept_text
+		info["confirm_activated"] = notification.can_accept
+		info["reject_text"] = notification.reject_text
+		info["reject_activated"] = notification.can_reject
+		notifications.append(info)
+	return jsonify({"notifications": notifications})
+
+def confirm_notification(notificationID):
+	action = Action.get_by_id(int(notificationID))
+	result = action.confirm()
+	return result
+
+def reject_notification(notificationID):
+	action = Action.get_by_id(int(notificationID))
+	result = action.reject()
+	return result

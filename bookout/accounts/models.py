@@ -180,33 +180,43 @@ class UserAccount(ndb.Model):
 			self.put()
 		return bookcopy
 	
-	def add_connection(self, otherUser, reciprocate = True, confirmInvite = False):
-		"""add a connection with another user
+	def send_invite(self, otherUser):
+		"""sends an invite to another user
 
 		Arguments:
-		otherUser - a UserAccount object representing the user the connection should be made with
-		reciprocate - whether or not the connection should also be added to the other user as well
+		otherUser - a UserAccount object representing the user that should recieve the invite
 
 		Return value:
 		True if successfull, false if not
 		"""
+		from bookout.activity.models import ConnectionRequest
 		connection = Connection(user=otherUser.key)
 		if(connection in self.connected_accounts):
 			return 1
 		if(otherUser.get_id() == self.get_id()):
 			return 2
-		if(connection in self.invites_recieved or confirmInvite):
-			self.connected_accounts.append(connection)
-			if(connection in self.invites_recieved):
-				self.invites_recieved.remove(connection)
-			self.put()
-			if reciprocate:
-				otherUser.add_connection(self, reciprocate = False, confirmInvite = True)
-		else:
-			otherUser.add_invite(self)
+		invitation = ConnectionRequest(useraccount=otherUser.key,connection=self.key)
+		invitation.put()
 		return 0
 
-	def just_add_connection(self, otherUser, reciprocate = True):
+		#####This was the old implementation, before the activity class was made
+		# connection = Connection(user=otherUser.key)
+		# if(connection in self.connected_accounts):
+		# 	return 1
+		# if(otherUser.get_id() == self.get_id()):
+		# 	return 2
+		# if(connection in self.invites_recieved or confirmInvite):
+		# 	self.connected_accounts.append(connection)
+		# 	if(connection in self.invites_recieved):
+		# 		self.invites_recieved.remove(connection)
+		# 	self.put()
+		# 	if reciprocate:
+		# 		otherUser.add_connection(self, reciprocate = False, confirmInvite = True)
+		# else:
+		# 	otherUser.add_invite(self)
+		# return 0
+
+	def add_connection(self, otherUser, reciprocate = True):
 		"""add a connection with another user without worrying about invites and such
 		(parameters and return values are the same as the previous method)
 		"""
@@ -216,7 +226,7 @@ class UserAccount(ndb.Model):
 		self.connected_accounts.append(connection)
 		self.put()
 		if reciprocate:
-			otherUser.add_connection(self, reciprocate = False, confirmInvite = True)
+			otherUser.add_connection(self, reciprocate = False)
 		return True
 		
 	def remove_connection(self, otherUser, reciprocate = True):

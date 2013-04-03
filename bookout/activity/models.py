@@ -58,15 +58,16 @@ class ConnectionRequest(Action):
 	reject_text = "Reject" 
 	
 	def confirm(self):
-		other = UserAccount.query(UserAccount.key==self.connection).get()
-		#self.useraccount.add_connection(other)     								 THIS NEEDS WORK
-		print "You have accepted a connection request from %s" %(other.name)
-		#self.cleanup()
+		invitee = UserAccount.query(UserAccount.key==self.connection).get()
+		invited = UserAccount.query(UserAccount.key==self.useraccount).get()
+		invited.add_connection(invitee)
+		self.cleanup()
+		return "You have accepted a connection request from %s" %(invitee.name)
 	
 	def reject(self):
 		other = UserAccount.query(UserAccount.key==self.connection).get()
-		print "You have rejected a connection request from %s" %(other.name)
-		#self.cleanup()
+		self.cleanup()
+		return "You have rejected a connection request from %s" %(other.name)
 
 
 class RequestToBorrow(Action):

@@ -94,7 +94,7 @@ app.add_url_rule('/library/<OLKey>', methods = ['GET', 'POST', 'DELETE'], view_f
 # Altering or accessing a user's connections to other users
 #	the following http types should be sent to do their corresponding functions
 #		GET - get all the connections for the current user
-#		POST - add a connection between the current user the the given user
+#		POST - send an connection inviation to another user.
 #		DELETE - remove the connection between the current user the the given user
 app.add_url_rule('/manage_network/<otherUserID>', methods = ['GET', 'POST', 'DELETE'], view_func=views.manage_connections)
 
@@ -139,6 +139,21 @@ app.add_url_rule('/borrowed_books', view_func=views.get_borrowed_books)
 #	returns:
 #		JSON array with a message: success or the reason for a failure
 app.add_url_rule('/return_book/<bookCopyID>', view_func=views.return_book)
+
+# Get all the notifications that the current user has recieved
+#	returns:
+#		JSON object with the following info about each notification:
+#			ID, text, confirm_text, confirm_activated, reject_text, and reject_activated
+app.add_url_rule('/get_notifications', view_func=views.get_notifications)
+
+# Confirm the notification
+app.add_url_rule('/confirm_notification/<notificationID>', view_func=views.confirm_notification)
+
+# Confirm the notification
+app.add_url_rule('/reject_notification/<notificationID>', view_func=views.reject_notification)
+
+
+
 
 
 app.add_url_rule('/search/inNetwork/<OLKey>',view_func=views.see_who_in_network_has_book)
