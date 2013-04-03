@@ -143,6 +143,8 @@ app.add_url_rule('/return_book/<bookCopyID>', view_func=views.return_book)
 
 app.add_url_rule('/search/inNetwork/<OLKey>',view_func=views.see_who_in_network_has_book)
 
+app.add_url_rule('/setup_book_borrow/<lenderID>/<bookCopyID>',view_func=views.setup_book_borrow_actions)
+
 ################################### Web service calls ###################################
 # Lookup a book from app
 app.add_url_rule('/api/v1/book/<ISBN>', view_func=api.get_book)

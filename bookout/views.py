@@ -2,7 +2,8 @@
 from google.appengine.api import users
 from flask import Response, jsonify, render_template, request, url_for, redirect, flash
 from flaskext.login import login_required, login_user, logout_user
-from books.models import Book
+from books.models import Book,BookCopy
+from activity.models import RequestToBorrow, WaitingToBorrow
 import logging
 from decorators import crossdomain
 from bookout import app
@@ -349,4 +350,22 @@ def see_who_in_network_has_book(OLKey):
 				networkuserlist[u.get_id()] = user
 
 	return jsonify(networkuserlist)
+	
+def setup_book_borrow_actions(lenderID, bookCopyID):
+
+	borrower = current_user()
+	lender = UserAccount.getuser(lenderID)
+	bookCopy = BookCopy.get_by_id(bookCopyID)
+
+	rtb1 = RequestToBorrow()
+	rtb1.useraccount = borrower.key
+	rtb1.connection = lender.key
+	rtb1.book = bookCopy.key
+	rtb1.put()
+
+	wtb1 = WaitingToBorrow()
+	wtb1.useraccount = lender.key
+	wtb1.connection = borrower.key
+	wtb1.book = bookCopy.key
+	wtb1.put()
 
