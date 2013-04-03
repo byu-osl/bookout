@@ -33,7 +33,7 @@
 						{% for action in user.pending_actions %}
 						<tr>
 							<td>
-								{{ action.text }} <span style="float: right;">{{ action.created | timesince }}</span>
+								<span style="display: inline-block; width: 75%;">{{ action.text }}</span> <span style="float: right;">{{ action.created | timesince }}</span>
 							</td>
 							<td style="text-align:center;width:200px">
 								{% if action.can_accept %}

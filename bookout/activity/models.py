@@ -1,6 +1,7 @@
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import polymodel
 from bookout.accounts.models import UserAccount
+from bookout.books.models import BookCopy,Book
 
 
 class Action(polymodel.PolyModel):
@@ -66,4 +67,69 @@ class ConnectionRequest(Action):
 		other = UserAccount.query(UserAccount.key==self.connection).get()
 		print "You have rejected a connection request from %s" %(other.name)
 		#self.cleanup()
+
+
+class RequestToBorrow(Action):
+	connection = ndb.KeyProperty(kind=UserAccount)
+	book = ndb.KeyProperty(kind=BookCopy)
+	
+	@property
+	def text(self):
+		other = UserAccount.query(UserAccount.key==self.connection).get()
+		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
+		book = Book.query(Book.key==bookcopy.book).get()
+		return "%s has requested to borrow '%s' from your library" %(other.name,book.title)
+		
+	can_accept = True 
+	accept_text = "Allow"
+	can_reject = True
+	reject_text = "Deny" 
+	
+	def confirm(self):
+		other = UserAccount.query(UserAccount.key==self.connection).get()
+		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
+		book = Book.query(Book.key==bookcopy.book).get()
+		print "You have accepted a connection request from %s" %(other.name)
+		#self.cleanup()
+	
+	def reject(self):
+		other = UserAccount.query(UserAccount.key==self.connection).get()
+		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
+		book = Book.query(Book.key==bookcopy.book).get()
+		print "You have denied %s permission to borrow %s" %(other.name,book.title)
+		#self.cleanup()
+
+
+class WaitingToBorrow(Action):
+	connection = ndb.KeyProperty(kind=UserAccount)
+	book = ndb.KeyProperty(kind=BookCopy)
+	
+	@property
+	def text(self):
+		other = UserAccount.query(UserAccount.key==self.connection).get()
+		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
+		book = Book.query(Book.key==bookcopy.book).get()
+		return "You have requested to borrow '%s' from %s" %(book.title,other.name)
+		
+	can_accept = False 
+	accept_text = "Allow"
+	can_reject = True
+	reject_text = "Cancel Request" 
+	
+	def confirm(self):
+		other = UserAccount.query(UserAccount.key==self.connection).get()
+		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
+		book = Book.query(Book.key==bookcopy.book).get()
+		print "You have accepted a connection request from %s" %(other.name)
+		#self.cleanup()
+	
+	def reject(self):
+		other = UserAccount.query(UserAccount.key==self.connection).get()
+		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
+		book = Book.query(Book.key==bookcopy.book).get()
+		print "You have denied %s permission to borrow %s" %(other.name,book.title)
+		#self.cleanup()
+
+
+
 
