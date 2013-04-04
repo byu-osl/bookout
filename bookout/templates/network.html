@@ -114,7 +114,7 @@
             <tbody>
 				{% for connection in user.get_all_connections() %}
 				  <tr>
-					<td><a class="tooltip-link" data-toggle="tooltip" data-placement="right" title="View Profile" href="/user/{{ connection.get_id() }}">{{ connection.name }}</a></td>
+					<td><a class="tooltip-link" data-toggle="tooltip" data-placement="right" title="View user's profile and library" href="/user/{{ connection.get_id() }}">{{ connection.name }}</a></td>
 					<td style="text-align:center;">n books</td>
 					<td style="text-align:center"><a class="btn btn-small" onclick="remove_connection('{{connection.get_id()}}', '{{connection.name}}', this)"><i class="icon-remove"></i>&nbsp;&nbsp;Remove</a></td>
 				  </tr>

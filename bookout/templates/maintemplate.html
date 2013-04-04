@@ -32,7 +32,7 @@
 		<div class="navbar navbar-inverse navbar-fixed-top main_nav">
 			<div class="navbar-inner">
 				<div class="container">
-					<a class="brand pull-left" href="{{ url_for('index') }}">BookOut</a>
+					<a class="brand pull-left" href="{{ url_for('index') }}">BookOut<sup style="font-size:10px;vertical-align:top;">BETA</sup></a>
 					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="float:left;">
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
@@ -92,16 +92,15 @@
 	
 	<div id="footer">
 		<div class="container">
-			<!-- <div class="links"> -->
+			<div class="links">
 				<ul>
 					<li><a href="{{ url_for('mobile_app') }}">Mobile App</a></li>
 					<li><a href="http://github.com/byu-osl/bookout">GitHub Project Page</a></li>
-					<li><a href="{{ url_for('donate') }}">Donate</a></li>
-					<li><a href="{{ url_for('about') }}">Terms of Use</a></li>
-					<li><a href="{{ url_for('about') }}">About</a></li>
-					<li><a href="{{ url_for('about') }}">Contact Us</a></li>
+					<!--<li><a href="{{ url_for('donate') }}">Donate</a></li>
+					<li><a href="{{ url_for('about') }}">Terms of Use</a></li>-->
+					<li><a class="pull-right" href="https://github.com/byu-osl/bookout/issues/new" target="_blank">Report a Bug</a></li>
 				</ul>
-			<!-- </div> -->
+			</div>
 		</div>
 	</div>
 
