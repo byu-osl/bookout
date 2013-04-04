@@ -16,30 +16,27 @@
 	var composeBody;
 	var composeJoinLink;
 
-	function remove_connection(connectionID, connectionName, button){
+	function confirmRemove(connectionID, connectionName, button) {
+		lastRemoveLink = button;
+		lastRemoveID = connectionID;
+		$("#removeConfirmation").show();
+		$("#removeConfirmationConnection").text(connectionName);
+	}
+	
+	function remove_connection(){
 		$.ajax({
-			url:"/manage_network/" + connectionID,
+			url:"/manage_network/" + lastRemoveID,
 			type: 'DELETE',
 			success:function(data) {
-				$(button).parent().parent().hide();
-				$("#reconnectMessage").show();
-				$("#reconnectMessageConnection").text(connectionName);
-				lastRemoveLink = button;
-				lastRemoveID = connectionID;
+				$(lastRemoveLink).parent().parent().hide();
+				$("#removeConfirmation").hide();
 			}
 		});
 		return false;
 	}
 	
-	function hide_reconnect_message() {
-		$("#reconnectMessage").hide();
-		return false;
-	}
-	
-	function reconnect() {
-			$.post("/manage_network/" + lastRemoveID, function(data) {
-			$("#reconnectMessage").hide();
-		})
+	function cancelRemove() {
+		$("#removeConfirmation").hide();
 		return false;
 	}
 	
@@ -75,13 +72,18 @@
 
 <div class="row" style="position: relative">
 	<div class="span6 offset3" style="position: absolute; top:50px;">
-		<div id="reconnectMessage" class="alert" style="display: none;">
-			<a class="close" onclick="hide_reconnect_message()">x</a>
-			<span id="reconnectMessageConnection"></span> was removed from your connections.&nbsp;&nbsp;
-			<strong><a onclick="reconnect()" class="alert-link">Reconnect</a></strong>
+		<div id="removeConfirmation" class="alert alert-block" style="display: none;">
+			<a class="close" onclick="cancelRemove()">×</a>
+			<p>
+				Are you sure you want to remove <span id="removeConfirmationConnection"></span> as a connection?
+			</p>
+			<br>
+			<a class="btn btn-inverse" onclick="remove_connection()">Remove Connection</a>
+			<a class="btn" onclick="cancelRemove()">Cancel</a>
 		</div>
 	</div>
 </div>
+
 
 <br>
   <div class="row-fluid">
@@ -116,7 +118,7 @@
 				  <tr>
 					<td><a class="tooltip-link" data-toggle="tooltip" data-placement="right" title="View user's profile and library" href="/user/{{ connection.get_id() }}">{{ connection.name }}</a></td>
 					<td style="text-align:center;">n books</td>
-					<td style="text-align:center"><a class="btn btn-small" onclick="remove_connection('{{connection.get_id()}}', '{{connection.name}}', this)"><i class="icon-remove"></i>&nbsp;&nbsp;Remove</a></td>
+					<td style="text-align:center"><a class="btn btn-small" onclick="confirmRemove('{{connection.get_id()}}', '{{connection.name}}', this)"><i class="icon-remove"></i>&nbsp;&nbsp;Remove</a></td>
 				  </tr>
 				{% endfor %}
             </tbody>
