@@ -15,6 +15,7 @@
 
 from flask import Flask
 from bookout import app, views, api
+from views import render_response
 import accounts.views
 
 # Warmup
@@ -177,8 +178,8 @@ app.add_url_rule('/api/v1/library/<ISBN>', methods = ['GET','POST','DELETE'], vi
 ## Error Handlers
 @app.errorhandler(404)
 def page_not_found(e):
-	return "404 - Page not found", 404
+	return render_response('404error.html')
 
 @app.errorhandler(500)
 def server_error(e):
-	return "500 - Server Error", 500
+	return render_response('500error.html')
