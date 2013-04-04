@@ -36,7 +36,25 @@ def render_response(template, *args, **kwargs):
 
 ################################ Website landing pages ##################################
 def index():
-	return render_response('home.html')
+	# Each user has an invitation link (in /network) which they send to other users to
+	# invite them to connect on BookOut. Currently, this is the only method of connecting
+	# users. The link adds an argument to the index link (?connect=) with the inviter's
+	# user ID. A modal appears in the view if otherUserID is not 0.
+	
+	# Grab User ID from connection invitation
+	otherUserID = request.args.get('connect')
+	
+	# Get User Object from User ID
+	# otherUserName = UserAccount.get_by_id(otherUserID).name
+	# if otherUserName is None;
+	#	otherUserName = 0
+	
+	# Set invalid user to 0 (ignored in view)
+	if otherUserID is None:
+		otherUserID = 0
+	# if otherUserID does not match a BookOut user Or equals the current user's ID:
+	#	otherUserID = 0
+	return render_response('home.html',connectUserID=otherUserID) #,connectUserName=otherUserName
 	
 def library():
 	booklist = []

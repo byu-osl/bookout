@@ -100,10 +100,7 @@ app.add_url_rule('/manage_network/<otherUserID>', methods = ['GET', 'POST', 'DEL
 
 # temporary url - simply adds a connection to the given user
 #	The end goal is to use POST requests to user for manage_connections (that one also deals with invitations)
-#app.add_url_rule('/add_connection/<otherUserID>', view_func=views.simple_add_connection)
-
-# Initiates connection process after a user clicks on another user's invitation link
-app.add_url_rule('/connect/<otherUserID>', view_func=views.send_connection_request)
+app.add_url_rule('/add_connection/<otherUserID>', view_func=views.simple_add_connection)
 
 # Get all the invitations that the current user has recieved
 #	returns a JSON object with information about all the user that have sent invites
