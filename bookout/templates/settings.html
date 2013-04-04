@@ -76,7 +76,7 @@
 		}
 		
 		// Test if user is mobile user
-			// We don't have a way of knowing this yet, so assume all users are web only
+		// We don't have a way of knowing this yet, so assume all users are web only
 		if($("#notification_settings option:selected").val() != "email") {
 			validates = false;
 			$("#notification_settings").parent().removeClass("success").addClass("error");
@@ -89,12 +89,36 @@
 		
 		return validates;
 	}
+	
+	function confirm_delete_account() {
+		$("#deleteModal").modal('show');
+	}
+	
+	function delete_account() {
+		// delete account
+		$("#deleteModal").modal('hide');
+		// redirect
+	}
 
 </script>
 
 {% endblock %}
 
 {% block content %}
+
+<div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 id="deleteModalLabel">Are you sure?</h3>
+  </div>
+  <div class="modal-body">
+    <p>If you delete your account it will be gone forever!</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    <button class="btn btn-danger" onclick="delete_account()">Delete Account</button>
+  </div>
+</div>
 
 <form id="settingsForm" method="post" action="/settings">
 
@@ -104,7 +128,7 @@
 		<h3>Lending Settings</h3>
 
 		<div id="lendingLengthControlGroup" class="control-group">
-			<label for="lending_length" style="display:inline-block">Default lending length (days):</label>
+			<label for="lending_length" style="display:inline-block">Default lending length (days):&nbsp;</label>
 			<input id="lending_length" name="lendingLength" style="width:1.5em;" value="{{ user.lending_length }}" />
 			<span id="lendingLengthHelp" class="help-inline" style="display: none;">Must be between 1 and 99.</span>
 		</div>
@@ -116,7 +140,7 @@
 
 		<h3>Notifications</h3>
 		<div class="control-group">
-			Receive notifications via:
+			Receive notifications via:&nbsp;
 			<select id="notification_settings" name="notifications" style="vertical-align:baseline">
 				<option {% if user.notification == "email" %} selected="true" {% endif %} value="email">Email</option>
 				<option {% if user.notification == "mobile" %} selected="true" {% endif %} value="mobile">Mobile App</option>
@@ -133,7 +157,7 @@
 		<h3>User Profile</h3>
 		
 		<div class="control-group">
-			Display name to connections: 
+			Display name to connections:&nbsp;
 			<input type="text" id="display_name" name="displayName" value="{{ user.name }}" style="vertical-align:baseline" />
 			<span id="displayNameHelp" class="help-inline" style="display: none;">Must have at least one letter or number.</span> 
 		</div>
@@ -147,6 +171,15 @@
 			<span id="additionalInfoHelp" class="help-inline" style="display: none;">Info cannot exceed 2000 characters.</span> 
 		</div>
 
+	</div>
+</div>
+
+<div class="row">
+	<div class="span12">
+		<h3>Delete Account</h3>
+		
+		Completely remove your BookOut account:&nbsp;
+		<a class="btn btn-danger" onclick="confirm_delete_account()">Delete Account</a>
 	</div>
 </div>
 
@@ -166,20 +199,24 @@
 		<div id="submitSuccess" class="alert alert-success" style="display:none;">
 			<strong>Settings saved.</strong>
 		</div>
+		
+		<!--<div id="deleteConfirm" class="alert alert-block alert-error fade in" style="display:none;">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h4 class="alert-heading">Are you sure?</h4>
+			<p>If you delete your account it'll be gone forever!</p>
+			<p>
+				<a class="btn btn-danger" href="#">Delete Account</a> <a class="btn" href="#">Cancel</a>
+			</p>
+		</div>-->
 
 	</div>
 </div>
 
 <div class="row">
 	<div class="span12">
-
 		<a class="btn btn-inverse" onclick="submit();">
 			Save Changes
 		</a>
-		<!--<a class="btn" href="#">
-			Cancel
-		</a>-->
-
 	</div>
 </div>
 
