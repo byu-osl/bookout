@@ -49,7 +49,7 @@
 		composeSubject = "Invitation to Join BookOut"
 		composeTo = $("#EmailTo").val()
 		composeBody = $("#EmailBody").val()
-		composeJoinLink = "{{ request.host_url }}add_connection/{{ user.get_id() }}"
+		composeJoinLink = "{{ request.host_url }}connect/{{ user.get_id() }}"
 		window.open("https://mail.google.com/mail/?compose=1&view=cm&fs=1&to=" 
 			+ encodeURIComponent(composeTo) 
 			+ "&su=" + encodeURIComponent(composeSubject) 
@@ -168,7 +168,7 @@ I've discovered an awesome new app, called BookOut, that lets you build a librar
           <br>
           <p>
             Invitation Link:
-            <input type="text" style="width:400px;margin-left:10px;vertical-align:baseline" id="invitationLink" onClick="SelectAll('invitationLink');"value="{{ request.host_url }}add_connection/{{ user.get_id() }}"><!-- button for copying to clipboard; requires some hefty code to work, just Google it - <a class="btn" href="#" style="vertical-align:baseline">Copy</a> -->
+            <input type="text" style="width:400px;margin-left:10px;vertical-align:baseline" id="invitationLink" onClick="SelectAll('invitationLink');"value="{{ request.host_url }}connect/{{ user.get_id() }}"><!-- button for copying to clipboard; requires some hefty code to work, just Google it - <a class="btn" href="#" style="vertical-align:baseline">Copy</a> -->
           </p>
         </div>
       </div>

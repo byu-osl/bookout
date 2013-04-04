@@ -127,8 +127,9 @@ def user_info():
 def book_info():
 	return render_response('bookinfo.html')
 
-def send_connection_request():
-	return render_response('connectionrequest.html')
+def send_connection_request(otherUserID):
+	#otherUserName = UserAccount.get_by_id(otherUserID)
+	return render_response('connectionrequest.html',connectUserID=otherUserID)
 	
 def join():
 	return render_response('join.html')
