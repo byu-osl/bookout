@@ -6,7 +6,7 @@
 {% block style %}
 
 <style type="text/css">
-	#inLibraryButton {
+	.in-library-button {
 		margin-bottom: 10px;
 	}
 </style>
@@ -35,33 +35,66 @@
 			default:
 				$("#searchAll").attr("checked", "true");
 		}
-		
-		$("input[name='refineSearch']").change(function(){
-			$(this).closest("form").submit();
-		});
 	});
 
 	function add_book(bookOLKey, button){
 		$(button).attr("disabled", "");
 		$.post("/library/" + bookOLKey, function(data) {
 			$(button).text("In Library");
-			$(button).removeAttr("disabled");
 			$(button).attr("onclick", "");
 			$(button).attr("href", "\library");
-			$(button).tooltip("destroy");
-			$(button).attr("class", "btn btn-primary tooltip-button");
-			$(button).attr("title", "Book is already in your library. Click to view library.");
-			$(button).tooltip({trigger: "hover"});
-		}).fail(function() {
-			$(button).removeAttr("disabled");
+			$(button).removeClass("btn-inverse").addClass("btn-primary");
+			$(button).tooltip("destroy").attr("title", "Book is already in your library. Click to view library.").tooltip({trigger: "hover"});
 		});
+		$(button).removeAttr("disabled");
 		
 		return false;
 	}
 	
 	function request_book(bookOLKey){
-		alert("Something happens.");
+		$.getJSON("/search/inNetwork/" + bookOLKey, function(data) {
+			$.each(data, function(key, val) {
+				//var stuff = "";
+				//$.each(val, function(ikey, ival) {
+				//	stuff += ikey + ": " + ival + ", ";
+				//})
+				
+				var link = $('<a>', {
+					'class': 'btn btn-inverse',
+					onclick: 'borrow_book("' + val.bookCopyID + '", "' + key + '", this)',
+					html: 'Request to Borrow'
+				});
+				if(!val.available) {
+					link.attr("disabled", "");
+				}
+				
+				$('#borrowTable').empty();
+				$('#borrowTable')
+				.append(
+					$('<tr>')
+					.append(
+						$('<td>', {
+							html: val.username
+						}))
+					.append(
+						$('<td>')
+						.append(
+							link
+						)
+					)
+				);
+			});
+			$("#borrowModal").modal('show');
+		});
+		
 		return false;
+	}
+	
+	function borrow_book(bookCopyID, lenderID, button) {
+		$.ajax("/setup_book_borrow/" + lenderID + "/" + bookCopyID, function(data) {
+			alert(data);
+			button.html("Requested");
+		});
 	}
 </script>
 
@@ -115,18 +148,16 @@
 					</td>
 					<td>
 						{% if books[book].inLibrary == "False" %}
-							<a class="btn btn-inverse tooltip-button"
-								style="width:120px" 
-								id="inLibraryButton"
+							<a class="btn btn-inverse tooltip-button in-library-button"
+								style="width:120px"
 								{% if user.is_authenticated() == False %}disabled{% endif %} 
 								onclick="{% if user.is_authenticated() %}add_book('{{ books[book].OLKey }}', this){% endif %}" 
 								data-toggle="tooltip" data-placement="right"
 								title="{% if user.is_authenticated() %}Add to library and make available to your network{% 
 								else %}Join or login to add to your library{% endif %}">Add&nbsp;to&nbsp;Library</a><br/>
 						{% else %}
-							<a class="btn btn-primary tooltip-button" 
-								style="width:120px" 
-								id="inLibraryButton" 
+							<a class="btn btn-primary tooltip-button in-library-button" 
+								style="width:120px"
 								data-toggle="tooltip" data-placement="right"
 								title="Book is already in your library. Click to view library." 
 								href="\library">In&nbsp;Library</a><br/>
@@ -142,11 +173,9 @@
 							<a class="btn tooltip-button"
 								style="width:120px" 
 								{% if user.is_authenticated() == False %}disabled{% endif %}
-								href="/search/inNetwork/{{ books[book].OLKey }}"
-								onclick="{% if user.is_authenticated() and False %}request_book('{{ books[book].OLKey }}'){% endif %}"
+								onclick="{% if user.is_authenticated() %}request_book('{{ books[book].OLKey }}'){% endif %}"
 								data-toggle="tooltip" data-placement="right"
-								title="{% if user.is_authenticated() and False %}Request to borrow book from one of your connections{% 
-								elif user.is_authenticated() %}{% 
+								title="{% if user.is_authenticated() %}Request to borrow book from one of your connections{% 
 								else %}Join or login to request to borrow books{% endif %}">Request&nbsp;to&nbsp;Borrow</a>
 						{% endif %}
 					</td>
@@ -157,5 +186,19 @@
 	</div>
 </div>
 </form>
+
+<div id="borrowModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="borrowModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+    <h3 id="borrowModalLabel">Users Who Have This Book</h3>
+  </div>
+  <div class="modal-body">
+    <table id="borrowTable" class="table">
+	</table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+  </div>
+</div>
 
 {% endblock %}
