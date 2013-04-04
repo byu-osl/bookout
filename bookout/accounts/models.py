@@ -344,16 +344,22 @@ class UserAccount(ndb.Model):
 		A list of BookCopy objects of all the the books the user is currently lending
 		"""
 		from bookout.books.models import BookCopy
+		from bookout.activity.models import ConfirmReturn
 		bookcopy = BookCopy.get_by_id(int(bookCopyID))
 
 		# verify the bookCopyID was valid
 		if(bookcopy == None):
 			return "Invalid book ID"
-		if(bookcopy.owner != self.key and bookcopy.borrower != self.key):
+		if(bookcopy.owner == self.key):
+			bookcopy.return_book()
+			bookcopy.put()
+			return "Book successfully returned to your library"
+		elif (bookcopy.borrower == self.key):
+			notification = ConfirmReturn(useraccount=bookcopy.owner,book=bookcopy.key)
+			notification.put()
+			return "Notice sent to owner, awaiting their confirmantion"
+		else:
 			return "You are not the owner of this book, nor are you borrowing it"
-
-		bookcopy.return_book()
-		bookcopy.put()
 		return "Book successfully returned to owner"
 
 		

@@ -132,5 +132,37 @@ class WaitingToBorrow(Action):
 		#self.cleanup()
 
 
+class ConfirmReturn(Action):
+	book = ndb.KeyProperty(kind=BookCopy)
+	
+	@property
+	def text(self):
+		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
+		other = UserAccount.query(UserAccount.key==bookcopy.borrower).get()
+		book = Book.query(Book.key==bookcopy.book).get()
+		return "Did %s return '%s'?" %(other.name,book.title)
+		
+	can_accept = True 
+	accept_text = "Yes"
+	can_reject = True
+	reject_text = "No" 
+	
+	def confirm(self):
+		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
+		other = UserAccount.query(UserAccount.key==bookcopy.borrower).get()
+		book = Book.query(Book.key==bookcopy.book).get()
+		bookcopy.return_book()
+		bookcopy.put()
+		self.cleanup()
+		return "%s has been returned to your library" %(book.title)
+	
+	def reject(self):
+		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
+		other = UserAccount.query(UserAccount.key==bookcopy.borrower).get()
+		book = Book.query(Book.key==bookcopy.book).get()
+		self.cleanup()
+		return "Recorded that %s didn't return %s" %(other.name,book.title)
+
+
 
 
