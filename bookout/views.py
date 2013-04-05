@@ -44,17 +44,30 @@ def index():
 	# Grab User ID from connection invitation
 	otherUserID = request.args.get('connect')
 	
-	# Get User Object from User ID
-	# otherUserName = UserAccount.get_by_id(otherUserID).name
-	# if otherUserName is None;
-	#	otherUserName = 0
-	
-	# Set invalid user to 0 (ignored in view)
+	# If no connect argument is present (just a regular visit to the dashboard), set to 0 (ignored in view)
 	if otherUserID is None:
-		otherUserID = 0
-	# if otherUserID does not match a BookOut user Or equals the current user's ID:
-	#	otherUserID = 0
-	return render_response('home.html',connectUserID=otherUserID) #,connectUserName=otherUserName
+		connectionType = 0 #No connection request is being made
+	else:
+		# Get User Name from User ID
+		otherUserObj = UserAccount.get_by_id(int(otherUserID))
+		# Set invalid objects to invalid
+		if otherUserObj is None:
+			otherUserID = 0
+			otherUserName = 0
+			connectionType = 1 #Invalid User ID
+		else:
+			otherUserName = otherUserObj.name
+			connectionType = 2 #Valid User
+	
+		# Don't let a user connect with him/herself, set to 0 so they get nothing
+		if int(otherUserID) == current_user().get_id():
+			connectionType = 3 #Own self
+			
+		# Don't let a user connect with an existing connection
+		# if int(otherUserID) matches something in current_user().connected_accounts
+		#	connectionType = 4 #Existing Connection
+			
+	return render_response('home.html',connectUserID=otherUserID,connectUserName=otherUserName,connectType=connectionType)#connectUserValid=validUser)
 	
 def library():
 	booklist = []

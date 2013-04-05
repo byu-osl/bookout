@@ -3,7 +3,7 @@
 # them to the appropriate functions in the views.py file.
 #
 # Lazy loading Info: http://flask.pocoo.org/docs/patterns/lazyloading/
-#  -We are only doing part of what is on this page. We are creating
+#   We are only doing part of what is on this page. We are creating
 #   a centralized URL map in this file and one of the functions is a
 #   warmup function that loads the views into a new instance when google
 #   app engine has to start up a new instance due to load increases. The example
