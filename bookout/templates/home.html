@@ -93,11 +93,11 @@
 			<h3 id="connectModalLabel">Send Request to Connect</h3>
 		  </div>
 		  <div class="modal-body">
-			<p>Please confirm your intention to send a connection request to {{ connectUserName }}. Once {{ connectUserName }} accepts your request, {{ connectUserName }}'s books will appear in your network and within applicable search results.</p>
+			<p><span id="connectModalMessage"></span></p>
 		  </div>
 		  <div class="modal-footer">
-			<a class="btn btn-inverse" onclick="sendRequest()" data-dismiss="modal">Send Request</a>
-			<a class="btn" data-dismiss="modal">Cancel</a>
+			<a class="btn btn-inverse" id="connectModalSend" onclick="sendRequest()" data-dismiss="modal">Send Request</a>
+			<a class="btn" id="connectModalCancel" data-dismiss="modal">Cancel</a>
 		  </div>
 		</div>
 	
