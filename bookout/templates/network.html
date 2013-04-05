@@ -19,7 +19,7 @@
 	function confirmRemove(connectionID, connectionName, button) {
 		lastRemoveLink = button;
 		lastRemoveID = connectionID;
-		$("#removeConfirmation").show();
+		$("#removeModal").modal('show');
 		$("#removeConfirmationConnection").text(connectionName);
 	}
 	
@@ -29,20 +29,14 @@
 			type: 'DELETE',
 			success:function(data) {
 				$(lastRemoveLink).parent().parent().hide();
-				$("#removeConfirmation").hide();
+				$("#removeModal").modal('hide');
 			}
 		});
 		return false;
 	}
 	
-	function cancelRemove() {
-		$("#removeConfirmation").hide();
-		return false;
-	}
-	
 	function SelectAll(id) {
-		document.getElementById(id).focus();
-		document.getElementById(id).select();
+		$(id).focus().select();
 	}
 	
 	function gmailCompose() {
@@ -70,7 +64,21 @@
 
 {% block content %}
 
-<div class="row" style="position: relative">
+<div id="removeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 id="removeModalLabel">Confirm</h3>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to remove <span id="removeConfirmationConnection"></span> as a connection?</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    <button class="btn btn-danger" onclick="remove_connection()">Remove Connection</button>
+  </div>
+</div>
+
+<!--<div class="row" style="position: relative">
 	<div class="span6 offset3" style="position: absolute; top:50px;">
 		<div id="removeConfirmation" class="alert alert-block" style="display: none;">
 			<a class="close" onclick="cancelRemove()">×</a>
@@ -82,7 +90,7 @@
 			<a class="btn" onclick="cancelRemove()">Cancel</a>
 		</div>
 	</div>
-</div>
+</div>-->
 
 
 <br>

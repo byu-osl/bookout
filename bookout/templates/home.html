@@ -2,32 +2,68 @@
 
 {% block title %}Bookout: The Place to Share Books{% endblock %}
 
-{% block content %}
-
 {% block script %}
 
 <script type="text/javascript">
 	// Show connection modal if attempting to connect with another user.
 	// If connectUserID is 0, no connection is being requested.
-	if ({{ connectUserID }} != 0) {
-		$("#connectModal").modal('show');
-	}
+	$(function() {
+		if ({{ connectUserID }} != 0) {
+			$("#connectModal").modal('show');
+		}
+		
+		$('.datepicker').on('dateChanged', function(ev) {
+			alert("Update the due date!");
+		});
+	});
 	
 	// Send connection request to user in invitation link
 	function sendRequest() {
-	$.ajax({
-		url:"/manage_network/" + {{ connectUserID }},
-		type: 'POST',
-		success:function(data) {
-			//update pending requests;
-		}
-	});
-	return false;
-}
+		$.ajax({
+			url:"/manage_network/" + {{ connectUserID }},
+			type: 'POST',
+			success:function(data) {
+				//update pending requests;
+			}
+		});
+		return false;
+	}
+	
+	function accept_request(notificationID, button) {
+		$.ajax({
+			url: "/confirm_notification/" + notificationID,
+			type: 'GET',
+			success: function(data) {
+				$(button).parent().parent().hide();
+				if($("#pending_requests tr:visible").length == 0) {
+					$("#pending_requests").html("<tr><td colspan='3'>You have no pending requests.</td></tr>");
+				}
+			}
+		});
+		
+		return false;
+	}
+	
+	function reject_request(notificationID, button) {
+		$.ajax({
+			url: "/reject_notification/" + notificationID,
+			type: 'GET',
+			success: function(data) {
+				$(button).parent().parent().hide();
+				if($("#pending_requests tr:visible").length == 0) {
+					$("#pending_requests").html("<tr><td colspan='3'>You have no pending requests.</td></tr>");
+				}
+			}
+		});
+		
+		return false;
+	}
 
 </script>
 
 {% endblock %}
+
+{% block content %}
 
 	{% if user.is_authenticated() %}
 
@@ -68,71 +104,36 @@
 				<h3>Pending Requests</h3>
 				
 				<table class="table table-striped table-bordered" id="pending_requests">
-					<tbody>
+					{% if user.pending_actions|length < 1 %}
+						<tr>
+							<td colspan="3">You have no pending requests.</td>
+						</tr>
+					{% else %}
 						{% for action in user.pending_actions %}
 						<tr>
-							<td>
-								<span style="display: inline-block; width: 75%;">{{ action.text }}</span> <span style="float: right;">{{ action.created | timesince }}</span>
+							<td style="vertical-align: middle">
+								{{ action.text }}
+							</td>
+							<td style="vertical-align: middle">
+								{{ action.created | timesince }}
 							</td>
 							<td style="text-align:center;width:200px">
 								{% if action.can_accept %}
-								<a class="btn btn-inverse" href="#" style="width:140px">
+								<a class="btn btn-inverse" onclick="accept_request('{{ action.key.id() }}', this)" style="width:140px">
 									{{ action.accept_text }}
 								</a>
 								{% endif %}
 							</td>
 							<td style="text-align:center;width:200px">
 								{% if action.can_reject %}
-								<a class="btn" href="#" style="width:140px">
+								<a class="btn" onclick="reject_request('{{ action.key.id() }}', this)" style="width:140px">
 									{{ action.reject_text }}
 								</a>
 								{% endif %}
 							</td>
 						</tr>
 						{% endfor %}
-						<tr>
-							<td>
-								Jaysen D. has requested to borrow [book]
-							</td>
-							<td style="text-align:center;">
-								<a class="btn btn-inverse" href="#" style="width:140px">
-									Confirm Checkout
-								</a>
-							</td>
-							<td style="text-align:center;">
-								<a class="btn" href="#" style="width:140px">
-									Deny
-								</a>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								You have requested to borrow [book] from Jessica P.
-							</td>
-							<td style="text-align:center;">
-							</td>
-							<td style="text-align:center;">
-								<a class="btn" href="#" style="width:140px">
-									Withdraw Request
-								</a>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Trever H. reported checking in [book]
-							</td>
-							<td style="text-align:center;">
-								<a class="btn btn-inverse" href="#" style="width:140px">
-									Confirm
-								</a>
-							</td>
-							<td style="text-align:center;">
-								<a class="btn" href="#" style="width:140px">
-									Deny
-								</a>
-							</td>
-						</tr>
-					</thead>	
+					{% endif %}	
 				</table>	
 			</div>
 		</div>
