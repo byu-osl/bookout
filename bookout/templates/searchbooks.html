@@ -157,7 +157,9 @@
 			<table class="table">
 			{% for book in books %}
 				<tr>
-					<td><img src="{{ books[book].thumbnail_link }}" style="height:auto;width:100px;"/></td>
+					<td><img {% if books[book].thumbnail_link == "" %}src="{{ url_for('static', filename='img/nocoverart.png') }}"
+							{% else %}src="{{ books[book].thumbnail_link }}"{% endif %} 
+							style="height:auto;width:100px;"/></td>
 					<td>
 						Title: {{ books[book].title }}<br/>
 						Author: {{ books[book].author }}
