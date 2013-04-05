@@ -47,6 +47,8 @@ def index():
 	# If no connect argument is present (just a regular visit to the dashboard), set to 0 (ignored in view)
 	if otherUserID is None:
 		connectionType = 0 #No connection request is being made
+		otherUserID = 0
+		otherUserName = 0
 	else:
 		# Get User Name from User ID
 		otherUserObj = UserAccount.get_by_id(int(otherUserID))
