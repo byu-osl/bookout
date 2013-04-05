@@ -5,10 +5,30 @@
 {% block script %}
 
 <script type="text/javascript">
-	// Show connection modal if attempting to connect with another user.
-	// If connectUserID is 0, no connection is being requested.
+
+	var connectModalMessage
+	
 	$(function() {
-		if ({{ connectUserID }} != 0) {
+		// If attempting to connect, set message appropriate to connection type
+		if ({{ connectType }} != 0) { // no connect type (don't show modal)
+			if ({{ connectType }} == 1) { // invalid user
+				connectModalMessage = "The connection link you provided includes an invalid User ID. Please check the link and try again.";
+				$("#connectModalSend").hide();
+				$("#connectModalCancel").text("Close");
+			}else if ({{ connectType }} == 2) { // valid user
+				connectModalMessage = "Please confirm your intention to send a connection request to {{ connectUserName }}. Once {{ connectUserName }} accepts your request, {{ connectUserName }}'s books will appear in your network and within applicable search results.";
+			}else if ({{ connectType }} == 3) { // own self
+				connectModalMessage = "You cannot connect with yourself. Please use the link you provided as an invitation to others to connect with you.";
+				$("#connectModalSend").hide();
+				$("#connectModalCancel").text("Close");
+			}else if ({{ connectType }} == 4) { // already a connection
+				connectModalMessage = "You are attempting to connect with {{ connectUserName }}, but {{ connectUserName }} is already one of your connections. Click Network in the header to see a list of all your connections.";
+				$("#connectModalSend").hide();
+				$("#connectModalCancel").text("Close");
+			}
+			
+			// Show modal
+			$("#connectModalMessage").text(connectModalMessage);
 			$("#connectModal").modal('show');
 		}
 		
