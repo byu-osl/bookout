@@ -66,11 +66,8 @@
 	
 	function request_book(bookOLKey){
 		$.getJSON("/search/inNetwork/" + bookOLKey, function(data) {
+			$('#borrowTable').empty();
 			$.each(data, function(key, val) {
-				//var stuff = "";
-				//$.each(val, function(ikey, ival) {
-				//	stuff += ikey + ": " + ival + ", ";
-				//})
 				
 				var link = $('<a>', {
 					'class': 'btn btn-inverse',
@@ -81,7 +78,6 @@
 					link.attr("disabled", "");
 				}
 				
-				$('#borrowTable').empty();
 				$('#borrowTable')
 				.append(
 					$('<tr>')
