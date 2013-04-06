@@ -13,6 +13,7 @@ from accounts.models import UserAccount
 from activity.models import Action
 from google.appengine.api import mail
 from datetime import date,timedelta
+import re
 
 import filters
 
@@ -100,6 +101,8 @@ def library():
 	useraccount = current_user()
 	for copy in useraccount.get_library():
 		book = Book.query(Book.key == copy.book).get()
+		book.title = book.title
+		book.escapedtitle = re.escape(book.title)
 		booklist.append(book)
 	return render_response('managelibrary.html', myBooks=booklist)
 	

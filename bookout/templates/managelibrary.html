@@ -111,7 +111,7 @@
                 <td><a href="/book/{{book.OLKey}}">{{book.title}}</a></td>
                 <td>{{book.author}}</td>
                 <td style="text-align:center"><input id="book_qty" class="book_qty" style="width:1.5em;" value="1"/></td>
-                <td style="text-align:center"><a class="btn btn-small" onclick="remove_book('{{book.OLKey}}', '{{book.title}}', this)"><i class="icon-remove"></i>&nbsp;&nbsp;Remove</a></td>
+                <td style="text-align:center"><a class="btn btn-small" onclick="remove_book('{{book.OLKey}}', '{{ book.escapedtitle }}', this)"><i class="icon-remove"></i>&nbsp;&nbsp;Remove</a></td>
               </tr>
             {% endfor %}
           </table>
