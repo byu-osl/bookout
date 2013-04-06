@@ -1,0 +1,50 @@
+
+{% extends "maintemplate.html" %}
+
+{% block title %}Daniel Z.{% endblock %}
+
+{% block content %}
+
+{% if profile_user %}
+<div class="row">
+	<div class="span12">
+		<h3>User Profile</h3>
+		<table class="infoTable">
+			<tr>
+				<td class="infoLabel">Name:</td>
+				<td>{{ profile_user.name }}</td>
+			</tr>
+			<tr>
+				<td class="infoLabel">Info:</td>
+				<td>{{ profile_user.info }}</td>
+			</tr>
+		<table>
+	</div>
+</div>
+
+<div class="row">
+	<div class="span12">
+		<h3>{{ profile_user.name }}'s Books</h3>
+		<table class="table table-bordered table-striped">
+			<tr>
+				<th>Book Title</th>
+				<th>Author</th>
+				<th>Checkout Status</th>
+			</tr>
+			{% for book in library %}
+			<tr>
+				<td>{{ book.title }}</td>
+				<td>{{ book.author }}</td>
+				<td>Available</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+</div>
+{% elif exists == False %}
+Error: user doesn't exist
+{% elif connected == False %}
+Error: you are not connected to this user
+{% endif %}
+
+{% endblock %}

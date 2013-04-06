@@ -180,9 +180,20 @@ def mobile_app():
 	
 def donate():
 	return render_response('donate.html')
-	
-def user_info():
-	return render_response('userinfo.html')
+
+@login_required
+def profile(userID):
+	profile_user = UserAccount.get_by_id(int(userID))
+	user = current_user()
+	if not profile_user:
+		return render_response('profile.html',exists=False)
+	if user.is_connected(profile_user):
+		library = []
+		for copy in profile_user.get_library():
+			book = Book.query(Book.key == copy.book).get()
+			library.append(book)
+		return render_response('profile.html',profile_user=profile_user,library=library)
+	return render_response('profile.html',connected=False)
 	
 def book_info():
 	return render_response('bookinfo.html')
@@ -212,11 +223,11 @@ def login():
 			return render_response('join.html',invalid_login=True)
 	return redirect(users.create_login_url(request.url))
 
-
-# Logs out Bookout user but does not log out Google Account
 def logout():
+	# Logs out Bookout user
 	logout_account()
 	#return redirect("/")
+	# Logs out Google user
 	return redirect(users.create_logout_url("/"))
 
 @login_required
@@ -225,9 +236,6 @@ def manage_library():
 	for copy in current_user().get_library():
 		retstring += copy.display() + "<br>"
 	return  render_template('library.html',username=current_user().name,books=get_my_book_list(),logout_url="/logout")
-	
-def logout_url():
-	return users.create_logout_url(url_for('index'))
 
 ######################## Internal calls (to be called by ajax) ##########################
 def library_requests(OLKey):

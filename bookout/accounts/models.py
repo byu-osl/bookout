@@ -216,6 +216,14 @@ class UserAccount(ndb.Model):
 		# 	otherUser.add_invite(self)
 		# return 0
 
+	def is_connected(self,otherUser):
+		if self == otherUser:
+			return True
+		connection = Connection(user=otherUser.key)
+		if(connection in self.connected_accounts):
+			return True
+		return False
+
 	def add_connection(self, otherUser, reciprocate = True):
 		"""add a connection with another user without worrying about invites and such
 		(parameters and return values are the same as the previous method)
