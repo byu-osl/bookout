@@ -84,21 +84,35 @@ class RequestToBorrow(Action):
 	can_accept = True 
 	accept_text = "Allow"
 	can_reject = True
-	reject_text = "Deny" 
+	reject_text = "Deny"
 	
 	def confirm(self):
 		other = UserAccount.query(UserAccount.key==self.connection).get()
 		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
 		book = Book.query(Book.key==bookcopy.book).get()
-		print "You have accepted a connection request from %s" %(other.name)
-		#self.cleanup()
+		
+		due_date = None
+		cur_user = UserAccount.query(UserAccount.key==self.useraccount).get()
+		cur_user.lend_book(int(bookcopy.key.id()), int(other.key.id()), due_date)
+		
+		self.cleanup()
+		
+		otherAction = WaitingToBorrow.query(WaitingToBorrow.book == bookcopy.key and WaitingToBorrow.useraccount == other.key).get()
+		otherAction.cleanup()
+		
+		return "You have agreed to lend %s to %s" %(book.title,other.name)
 	
 	def reject(self):
 		other = UserAccount.query(UserAccount.key==self.connection).get()
 		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
 		book = Book.query(Book.key==bookcopy.book).get()
-		print "You have denied %s permission to borrow %s" %(other.name,book.title)
-		#self.cleanup()
+		self.cleanup()
+
+		otherAction = WaitingToBorrow.query(WaitingToBorrow.book == bookcopy.key and WaitingToBorrow.useraccount == other.key).get()
+		otherAction.cleanup()
+		
+		return "You have denied %s permission to borrow %s" %(other.name,book.title)
+		
 
 
 class WaitingToBorrow(Action):
@@ -128,8 +142,12 @@ class WaitingToBorrow(Action):
 		other = UserAccount.query(UserAccount.key==self.connection).get()
 		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
 		book = Book.query(Book.key==bookcopy.book).get()
-		print "You have denied %s permission to borrow %s" %(other.name,book.title)
-		#self.cleanup()
+		self.cleanup()
+		
+		otherAction = RequestToBorrow.query(RequestToBorrow.book == bookcopy.key and RequestToBorrow.useraccount == other.key).get()
+		otherAction.cleanup()
+		
+		return "Request cancelled"
 
 
 class ConfirmReturn(Action):
