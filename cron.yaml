@@ -1,0 +1,5 @@
+cron:
+- description: book due reminders
+  url: /tasks/book_due_reminders
+  schedule: every day 00:01
+
