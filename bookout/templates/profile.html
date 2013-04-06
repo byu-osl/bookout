@@ -35,7 +35,8 @@
 			<tr>
 				<td>{{ book.title }}</td>
 				<td>{{ book.author }}</td>
-				<td>Available</td>
+				<td>{% if book.available %}Available
+					{% else %}Checked Out{% endif %}</td>
 			</tr>
 			{% endfor %}
 		</table>

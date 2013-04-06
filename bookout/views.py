@@ -192,6 +192,10 @@ def profile(userID):
 		for copy in profile_user.get_library():
 			book = Book.query(Book.key == copy.book).get()
 			library.append(book)
+			if copy.borrower is None:
+				book.available = True
+			else:
+				book.available = False
 		return render_response('profile.html',profile_user=profile_user,library=library)
 	return render_response('profile.html',connected=False)
 	
