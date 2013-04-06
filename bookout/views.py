@@ -11,14 +11,38 @@ from utilities.JsonIterable import *
 from accounts import login as login_account, logout as logout_account, join as join_account, current_user, login_required
 from accounts.models import UserAccount
 from activity.models import Action
+from google.appengine.api import mail
+from datetime import date,timedelta
 
 import filters
+
+
+#mail = Mail(app)
 
 def warmup():
 	# https://developers.google.com/appengine/docs/python/config/appconfig#Warmup_Requests
 	# This function loads the views into the new instance when
 	# one has to start up due to load increases on the app
 	return ''
+
+#return (datetime.now() - self.last_update) > timedelta(minutes=1000)
+
+@app.route("/tasks/book_due_reminders")
+def book_due_reminders():
+	count = 0
+	"""find all the books due tomorrow and send reminder emails"""
+	books = BookCopy.query(BookCopy.due_date==date.today() + timedelta(days=1)).fetch()
+	for book in books:
+		count += 1
+		owner = UserAccount.query(UserAccount.key==book.owner).get()
+		mail.send_mail(sender=owner.email,
+			to=UserAccount.query(UserAccount.key==book.borrower).get().email,
+			subject="Book Due Soon",
+			body="""Hey, remember that book you borrowed on Bookout from me, '%s'? Please get it back to me by tomorrow.
+			
+Thanks!
+%s"""%(Book.query(Book.key==book.book).get().title,owner.name))
+	return "%s reminders were sent out" %count
 
 @app.route("/crossdomain")
 @crossdomain(origin='*')

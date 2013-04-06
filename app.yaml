@@ -20,5 +20,10 @@ handlers:
 - url: /static
   static_dir: bookout/static
 
+- url: /tasks/book_due_reminders
+  script: bookout.app
+  login: admin
+
 - url: .*
   script: bookout.app
+
