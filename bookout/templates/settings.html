@@ -97,7 +97,21 @@
 	function delete_account() {
 		// delete account
 		$("#deleteModal").modal('hide');
-		// redirect
+        $.get("/delete")
+          .done(function(data) {
+              if (data == "Success") {
+                $("#deleteError").hide();
+                $("#deleteSuccess").show();
+                window.location = "/logout";
+              } else {
+                $("#deleteError").show();
+                $("#deleteSuccess").hide();
+              }
+          }).fail(function() {
+              $("#deleteError").show();
+              $("#deleteSuccess").hide();
+          });
+        return false;
 	}
 
 </script>
@@ -177,7 +191,12 @@
 <div class="row">
 	<div class="span12">
 		<h3>Delete Account</h3>
-		
+        <div id="deleteError" class="alert alert-error" style="display:none;">
+          <strong>Account not deleted</strong>&nbsp; Make sure all borrowed and lent books are returned.
+        </div>
+        <div id="deleteSuccess" class="alert alert-success" style="display:none;">
+          <strong>Account deleted.</strong>
+        </div>
 		Completely remove your BookOut account:&nbsp;
 		<a class="btn btn-danger" onclick="confirm_delete_account()">Delete Account</a>
 	</div>

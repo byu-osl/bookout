@@ -18,6 +18,11 @@ def login(account, remember=False):
 def logout():
 	flasklogin.logout_user()
 
+def delete(user):
+	if UserAccount.can_delete_user(user):
+		return UserAccount.delete_user(user)
+	return None
+
 def current_user():
 	return flasklogin.current_user
 

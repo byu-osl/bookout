@@ -117,6 +117,25 @@ class UserAccount(ndb.Model):
 			return None
 
 	@classmethod
+	def can_delete_user(cls,user):
+		borrowed = user.get_borrowed_books()
+		lent = user.get_lent_books()
+		if borrowed or lent:
+			return None
+		return True
+
+	@classmethod
+	def delete_user(cls,user):
+		if UserAccount.can_delete_user(user):
+			for connection in user.connections:
+				user.remove_connection(connection,True)
+			for copy in user.get_library():
+				copy.key.delete()
+			user.key.delete()
+			return True
+		return None
+
+	@classmethod
 	def getuser(cls,id):
 		return UserAccount.get_by_id(id)
 	

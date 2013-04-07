@@ -8,7 +8,7 @@ import logging
 from decorators import crossdomain
 from bookout import app
 from utilities.JsonIterable import *
-from accounts import login as login_account, logout as logout_account, join as join_account, current_user, login_required
+from accounts import login as login_account, logout as logout_account, join as join_account, delete as delete_account, current_user, login_required
 from accounts.models import UserAccount
 from activity.models import Action
 from google.appengine.api import mail
@@ -242,6 +242,15 @@ def manage_library():
 	return  render_template('library.html',username=current_user().name,books=get_my_book_list(),logout_url="/logout")
 
 ######################## Internal calls (to be called by ajax) ##########################
+def delete_user():
+	cur_user = current_user()
+	if not cur_user:
+		logging.info("there is not a user logged in")
+		return "<a href='%s' >Login</a>" %users.create_login_url(dest_url=url_for('library_requests',ISBN=ISBN))
+	if delete_account(cur_user):
+		return "Success"
+	return ""
+
 def library_requests(OLKey):
 	cur_user = current_user()
 	if not cur_user:

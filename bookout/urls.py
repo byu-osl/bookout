@@ -74,6 +74,9 @@ app.add_url_rule('/bookinfo',view_func=views.book_info)
 # Get book list
 app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
 
+# Delete User
+app.add_url_rule('/delete',view_func=views.delete_user,methods=['GET'])
+
 # Search for a book
 #	The attribute is what part of the book you will search with (isbn, title, auther, etc.)
 #		If you want to search for a book disregarding these use "all"
