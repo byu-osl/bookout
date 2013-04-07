@@ -65,7 +65,7 @@ app.add_url_rule('/donate',view_func=views.donate)
 app.add_url_rule('/logout',view_func=views.logout)
 
 # User Profile
-app.add_url_rule('/profile/<userID>',view_func=views.profile)
+app.add_url_rule('/user/<userID>',view_func=views.profile)
 
 # Book Info
 app.add_url_rule('/bookinfo',view_func=views.book_info)
