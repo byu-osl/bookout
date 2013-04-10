@@ -132,9 +132,11 @@ class BookCopy(ndb.Model):
 		return book.title
 
 	def lend(self, borrowerID, date = None):
+		import datetime
 		borrower = UserAccount.getuser(borrowerID)
+		owner = UserAccount.get_by_id(self.owner.id())
 		self.borrower = borrower.key
-		# self.due_date = date
+		self.due_date = datetime.datetime.now() + datetime.timedelta(days=int(owner.lending_length))
 
 	def return_book(self):
 		self.borrower = None

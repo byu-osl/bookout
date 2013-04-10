@@ -394,6 +394,7 @@ def get_lent_books():
 		bookInfo["copyID"] = bookcopy.key.id()
 		bookInfo["borrowerId"] = bookcopy.borrower.id()
 		bookInfo["borrower"] = borrower.name
+		bookInfo["due_date"] = str(bookcopy.due_date)
 		lentBooks.append(bookInfo)
 	return jsonify({"lentBooks":lentBooks})
 
@@ -409,6 +410,7 @@ def get_borrowed_books():
 		bookInfo["copyID"] = bookcopy.key.id()
 		bookInfo["ownerId"] = bookcopy.owner.id()
 		bookInfo["owner"] = owner.name
+		bookInfo["due_date"] = str(bookcopy.due_date)
 		borrowedBooks.append(bookInfo)
 	return jsonify({"borrowedBooks":borrowedBooks})
 
