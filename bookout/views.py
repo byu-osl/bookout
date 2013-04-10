@@ -418,6 +418,11 @@ def return_book(bookCopyID):
 	cur_user = current_user()
 	result = cur_user.return_book(bookCopyID)
 	return jsonify({"Message":result})
+
+def change_due_date(bookCopyID, newDueDate):
+	cur_user = current_user()
+	result = cur_user.change_due_date(bookCopyID, newDueDate)
+	return jsonify({"Message":result})	
 	
 def see_who_in_network_has_book(OLKey):
 	user = current_user()

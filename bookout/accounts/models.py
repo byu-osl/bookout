@@ -356,7 +356,7 @@ class UserAccount(ndb.Model):
 		"""Get all the books that the user is currently borrowing from anther user
 
 		Return Value:
-		A list of BookCopy objects of all the the books the user is currently lending
+		A list of BookCopy objects of all the the books the user is currently borrowing
 		"""
 		from bookout.books.models import BookCopy
 		return BookCopy.query(BookCopy.borrower==self.key).fetch()
@@ -368,7 +368,7 @@ class UserAccount(ndb.Model):
 		bookCopyID: an ID representing a BookCopy object, the book to be returned
 
 		Return Value:
-		A list of BookCopy objects of all the the books the user is currently lending
+		A message describing the success or failure or the operation
 		"""
 		from bookout.books.models import BookCopy
 		from bookout.activity.models import ConfirmReturn
@@ -387,7 +387,32 @@ class UserAccount(ndb.Model):
 			return "Notice sent to owner, awaiting their confirmantion"
 		else:
 			return "You are not the owner of this book, nor are you borrowing it"
-		return "Book successfully returned to owner"
+
+	def change_due_date(self, bookCopyID, newDueDate):
+		"""Update the date that a book is due
+
+		Arguments:
+		bookCopyID: an ID representing a BookCopy object, the book to be returned
+		newDueDate: a string representing the new due date of the book
+
+		Return Value:
+		A message describing the success or failure or the operation
+		"""
+		from bookout.books.models import BookCopy
+		bookcopy = BookCopy.get_by_id(int(bookCopyID))
+
+		if(bookcopy == None):
+			return "Invalid book ID"
+		if(bookcopy.owner == self.key):
+			bookcopy.update_due_date(newDueDate)
+			bookcopy.put()
+			return "Due date successfully updated"
+		elif (bookcopy.borrower == self.key):
+			# TODO, send a notice to the owner requesting an extension
+			return "Borrower can't update the due date of a book"
+		else:
+			return "You are not the owner of this book, nor are you borrowing it"
+
 
 		
 

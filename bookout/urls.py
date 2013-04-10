@@ -144,6 +144,14 @@ app.add_url_rule('/borrowed_books', view_func=views.get_borrowed_books)
 #		JSON array with a message: success or the reason for a failure
 app.add_url_rule('/return_book/<bookCopyID>', view_func=views.return_book)
 
+# Change the due_date of a book that is being borrowed
+#	parameters:
+#		bookCopyID: the id of the BookCopy object that is being returned
+#		newDueDate: the new date the book will be due.  Must be in the format year-month-day
+#	returns:
+#		JSON object with a message: success or the reason for the failure
+app.add_url_rule('/change_due_date/<bookCopyID>/<newDueDate>', view_func=views.change_due_date)
+
 # Get all the notifications that the current user has recieved
 #	returns:
 #		JSON object with the following info about each notification:

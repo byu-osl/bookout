@@ -136,11 +136,18 @@ class BookCopy(ndb.Model):
 		borrower = UserAccount.getuser(borrowerID)
 		owner = UserAccount.get_by_id(self.owner.id())
 		self.borrower = borrower.key
-		self.due_date = datetime.datetime.now() + datetime.timedelta(days=int(owner.lending_length))
+		if(date):
+			self.due_date = datetime.datetime.strptime(date, '%Y-%m-%d');
+		else:
+			self.due_date = datetime.datetime.now() + datetime.timedelta(days=int(owner.lending_length))
 
 	def return_book(self):
 		self.borrower = None
 		self.due_date = None
+
+	def update_due_date(self, date):
+		import datetime
+		self.due_date = datetime.datetime.strptime(date, '%Y-%m-%d');
 
 	def get_due_date(self):
 		return self.due_date
