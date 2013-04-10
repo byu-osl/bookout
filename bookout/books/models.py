@@ -147,7 +147,7 @@ class BookCopy(ndb.Model):
 
 	def update_due_date(self, date):
 		import datetime
-		self.due_date = datetime.datetime.strptime(date, '%Y-%m-%d');
+		self.due_date = date
 
 	def get_due_date(self):
 		return self.due_date

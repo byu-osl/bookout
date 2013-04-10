@@ -182,5 +182,34 @@ class ConfirmReturn(Action):
 		return "Recorded that %s didn't return %s" %(other.name,book.title)
 
 
+class DueDateExtension(Action):
+	book = ndb.KeyProperty(kind=BookCopy)
+	due_date = ndb.DateProperty()
+	
+	@property
+	def text(self):
+		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
+		other = UserAccount.query(UserAccount.key==bookcopy.borrower).get()
+		book = Book.query(Book.key==bookcopy.book).get()
+		return "%s wants to extend the due date of '%s' to %s?" %(other.name,book.title,str(self.due_date))
+		
+	can_accept = True 
+	accept_text = "Allow"
+	can_reject = True
+	reject_text = "No" 
+	
+	def confirm(self):
+		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
+		book = Book.query(Book.key==bookcopy.book).get()
+		bookcopy.update_due_date(self.due_date)
+		bookcopy.put()
+		self.cleanup()
+		return "%s has been extended to %s" %(book.title,str(self.due_date))
+	
+	def reject(self):
+		self.cleanup()
+		return "Extension rejected"
+
+
 
 

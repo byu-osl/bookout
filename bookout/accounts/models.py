@@ -399,17 +399,21 @@ class UserAccount(ndb.Model):
 		A message describing the success or failure or the operation
 		"""
 		from bookout.books.models import BookCopy
+		from bookout.activity.models import DueDateExtension
 		bookcopy = BookCopy.get_by_id(int(bookCopyID))
+		new_date = datetime.datetime.strptime(newDueDate, '%Y-%m-%d')
 
 		if(bookcopy == None):
 			return "Invalid book ID"
 		if(bookcopy.owner == self.key):
-			bookcopy.update_due_date(newDueDate)
+			bookcopy.update_due_date(new_date)
 			bookcopy.put()
 			return "Due date successfully updated"
 		elif (bookcopy.borrower == self.key):
-			# TODO, send a notice to the owner requesting an extension
-			return "Borrower can't update the due date of a book"
+			import datetime
+			notification = DueDateExtension(useraccount=bookcopy.owner,book=bookcopy.key,due_date=new_date)
+			notification.put()
+			return "Request sent to owner"
 		else:
 			return "You are not the owner of this book, nor are you borrowing it"
 

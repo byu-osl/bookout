@@ -145,6 +145,8 @@ app.add_url_rule('/borrowed_books', view_func=views.get_borrowed_books)
 app.add_url_rule('/return_book/<bookCopyID>', view_func=views.return_book)
 
 # Change the due_date of a book that is being borrowed
+# If the current user is the owner of the book the date is automaticall changed
+# If the current user is the borrower, a notification is sent to the owner and he/she can accept the new due date
 #	parameters:
 #		bookCopyID: the id of the BookCopy object that is being returned
 #		newDueDate: the new date the book will be due.  Must be in the format year-month-day
