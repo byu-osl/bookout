@@ -56,8 +56,6 @@
 	}
 
 	$(function(){
-		var counter = $(".book_qty").spinner();
-		
 		if(window.location.hash){
 			if(window.location.hash == "#LendedBooks") $("#lended_books").click();
 			else if (window.location.hash == "#BorrowedBooks") $("#borrowed_books").click();
@@ -99,8 +97,7 @@
             <tr>
               <th>Book Title</th>
               <th>Author</th>
-              <th style="text-align:center">Copies</th>
-              <th></th>
+              <th style="width:100px"></th>
             </tr>
             {% if myBooks == [] %}
               <tr>
@@ -108,9 +105,8 @@
             {% endif %}
             {% for book in myBooks %}
               <tr>
-                <td><a href="/book/{{book.OLKey}}">{{book.title}}</a></td>
+                <td>{{book.title}}</td>
                 <td>{{book.author}}</td>
-                <td style="text-align:center"><input id="book_qty" class="book_qty" style="width:1.5em;" value="1"/></td>
                 <td style="text-align:center"><a class="btn btn-small" onclick="remove_book('{{book.OLKey}}', '{{ book.escapedtitle }}', this)"><i class="icon-remove"></i>&nbsp;&nbsp;Remove</a></td>
               </tr>
             {% endfor %}
@@ -123,7 +119,7 @@
 			<tr>
 			  <th>Book Title</th>
 			  <th>Book Owner</th>
-			  <th>Due Date</th>
+			  <th style="text-align:center;">Due Date</th>
 			  <th style="width:200px"></th>
 			</tr>
 			{% if lendedBooks == [] %}
@@ -191,7 +187,7 @@
             <tr>
               <th>Book Title</th>
               <th>Book Borrower</th>
-              <th>Due Date</th>
+              <th style="text-align:center;">Due Date</th>
               <th style="width:200px"></th>
             </tr>
             {% if BorrowedBooks == [] %}
@@ -243,8 +239,8 @@
             {% for book in borrowedBooks %}
             <tr>
               <td><a href="/book/{{book.OLKey}}">{{book.title}}</a></td>
-              <td>{{book.author}}</td>
-              <td style="text-align:center"><input id="book_qty" style="width:1.5em;" value="1"/></td>
+              <td>[BOOK BORROWER HERE]</td>
+              <td style="text-align:center">[BOOK DUE DATE HERE]</td>
               <td style="text-align:center"><a class="btn btn-danger btn-small" href="#" onclick="remove_book('{{book.OLKey}}')">Remove</a></td>
             </tr>
             {% endfor %}
