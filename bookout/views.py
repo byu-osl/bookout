@@ -128,34 +128,47 @@ def searchbooks():
 	if searchterm is None or searchterm == "":
 		pass
 	else:
-		user = current_user()
-		
-		#Create a dictionary of the user's books
-		mybooklist = {}
-		for copy in user.get_library():
-			mybooklist[copy.OLKey] = copy
-			
-		#Create a dictionary of the books in my network
-		networkbooklist = {}
-		string = ""
-		for connection in user.get_connections():
-			u = UserAccount.getuser(connection.id())
-			for copy in u.get_library():
-				networkbooklist[copy.OLKey] = copy
-
-		booklist = Book.search_books_by_attribute(searchterm,attr)
-		for book in booklist:
-			booklist[book] = booklist[book].to_dict()
-
-			if booklist[book]['OLKey'] in mybooklist:
-				booklist[book]["inLibrary"] = "True"
-			else:
-				booklist[book]["inLibrary"] = "False"
+		cur_user = current_user()
+		logging.info(cur_user)
+		if not cur_user.is_authenticated():
+			#Assume no books in library or network, return results only
+			booklist = Book.search_books_by_attribute(searchterm,attr)
+			for book in booklist:
+				booklist[book] = booklist[book].to_dict()
 				
-			if booklist[book]['OLKey'] in networkbooklist:
-				booklist[book]["inNetwork"] = "True"
-			else:
+				#Assume not in booklist or networkbooklist
+				booklist[book]["inLibrary"] = "False"
 				booklist[book]["inNetwork"] = "False"
+		
+		else:
+			user = current_user()
+			
+			#Create a dictionary of the user's books
+			mybooklist = {}
+			for copy in user.get_library():
+				mybooklist[copy.OLKey] = copy
+				
+			#Create a dictionary of the books in my network
+			networkbooklist = {}
+			string = ""
+			for connection in user.get_connections():
+				u = UserAccount.getuser(connection.id())
+				for copy in u.get_library():
+					networkbooklist[copy.OLKey] = copy
+
+			booklist = Book.search_books_by_attribute(searchterm,attr)
+			for book in booklist:
+				booklist[book] = booklist[book].to_dict()
+
+				if booklist[book]['OLKey'] in mybooklist:
+					booklist[book]["inLibrary"] = "True"
+				else:
+					booklist[book]["inLibrary"] = "False"
+					
+				if booklist[book]['OLKey'] in networkbooklist:
+					booklist[book]["inNetwork"] = "True"
+				else:
+					booklist[book]["inNetwork"] = "False"
 				
 	return render_response('searchbooks.html', books=booklist, search=searchterm, attribute=attr)
 	
