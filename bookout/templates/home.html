@@ -44,6 +44,7 @@
 			type: 'POST',
 			success:function(data) {
 				//update pending requests;
+				window.location='/';
 			}
 		});
 		return false;
@@ -79,37 +80,37 @@
 		return false;
 	}
 	
-	function requestCheckIn(checkinID, button) {
+//	function requestCheckIn(checkinID, button) {
 	// Request to check in book user is borrowing
-		$.ajax({
-			url: "/request_checkin/" + checkinID,
-			type: 'POST',
-			success: function(data) {
-				$(button).parent().parent().hide();
-				if($("#books_borrowing tr:visible").length == 0) {
-					$("#books_borrowing").html("<tr><td colspan='3'>You are not borrowing any books.");
-				}
-			}
-		});
-		
-		return false;
-	}
-	
-	function checkIn(checkinID, button) 
-	// Check in book user is lending
-		$.ajax({
-			url: "/checkin/" + checkinID,
-			type: 'POST',
-			success: function(data) {
-				$(button).parent().parent().hide();
-				if($("#books_lending tr:visible").length == 0) {
-					$("#books_lending").html("<tr><td colspan='3'>You are not lending any books.");
-				}
-			}
-		});
-		
-		return false;
-	}
+//		$.ajax({
+//			url: "/request_checkin/" + checkinID,
+//			type: 'POST',
+//			success: function(data) {
+//				$(button).parent().parent().hide();
+//				if($("#books_borrowing tr:visible").length == 0) {
+//					$("#books_borrowing").html("<tr><td colspan='3'>You are not borrowing any books.");
+//				}
+//			}
+//		});
+//		
+//		return false;
+//	}
+//	
+//	function checkIn(checkinID, button) 
+//	// Check in book user is lending
+//		$.ajax({
+///			url: "/checkin/" + checkinID,
+//			type: 'POST',
+//			success: function(data) {
+//				$(button).parent().parent().hide();
+//				if($("#books_lending tr:visible").length == 0) {
+//					$("#books_lending").html("<tr><td colspan='3'>You are not lending any books.");
+//				}
+//			}
+//		});
+//		
+//		return false;
+//	}
 
 
 </script>
@@ -229,7 +230,7 @@
 								{{ book.due_date }}
 							</td>
 							<td style="text-align:center;">
-								<a class="btn btn-inverse" onclick="requestCheckIn('', this)" style="width:140px">Check In</a>
+								<a class="btn btn-inverse" style="width:140px">Check In</a><!--onclick="requestCheckIn('', this)" -->
 							</td>
 						</tr>
 						{% endfor %}
@@ -278,7 +279,7 @@
 								{{ book.due_date }}
 							</td>
 							<td style="text-align:center;">
-								<a class="btn btn-inverse" onclick="checkIn('', this)" style="width:140px">Check In</a>
+								<a class="btn btn-inverse" style="width:140px">Check In</a><!--onclick="checkIn('', this)" -->
 							</td>
 						</tr>
 						{% endfor %}
