@@ -164,6 +164,11 @@
 				<h3>Books You Are Borrowing</h3>
 				
 				<table class="table table-striped table-bordered" id="books_borrowing">
+					{% if user.get_borrowed_books()|length < 1 %}
+						<tr>
+							<td colspan="3">You are not borrowing any books.</td>
+						</tr>
+					{% else %}
 					<thead>
 						<tr>
 							<th>
@@ -179,81 +184,23 @@
 						</tr>
 					</thead>
 					<tbody>
+						{% for book in user.get_borrowed_books() %}
 						<tr>
 							<td>
-								The Google Story
+								{{ book.display() }}
 							</td>
 							<td>
-								Caroline T.
+								{{ book.get_owner() }}
 							</td>
 							<td style="text-align:center;">
-								3/10/2013
+								{{ book.due_date }}
 							</td>
 							<td style="text-align:center;">
 <a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
 </td>
 						</tr>
-						<tr>
-							<td>
-								Les Miserables
-							</td>
-							<td>
-								Stephen K.
-							</td>
-							<td style="text-align:center;">
-								3/24/2013
-							</td>
-							<td style="text-align:center;">
-								<a class="btn btn-inverse" disabled="" style="width:140px">Pending Confirmation</a>
-							</td>
-						</tr><tr>
-							<td>
-								The Book of Mormon
-							</td>
-							<td>
-								Ryan H.
-							</td>
-							<td style="text-align:center;">
-								4/3/2013
-							</td>
-							<td style="text-align:center;">
-<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-</td>
-						</tr>
-						<tr>
-							<td>
-								Dreaming in Code
-							</td>
-							<td>
-								Daniel Z.
-							</td>
-							<td style="text-align:center;">
-								04/12/2013
-							</td>
-							<td style="text-align:center;">
-								<a class="btn btn-inverse" disabled="" style="width:140px">Pending Confirmation</a>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								The Mythical Man-Month
-							</td>
-							<td>
-								Chuck K.
-							</td>
-							<td style="text-align:center;">
-								04/21/2013
-							</td>
-							<td style="text-align:center;">
-								<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="4" style="text-align:center;">
-								<b>Only the first five results are shown here. <a href="/library#BorrowedBooks">View all books you are borrowing</a>.</b>
-							</td>
-						</tr>
-					</tbody>	
+						{% endfor %}
+					{% endif %}	
 				</table>
 			</div>
 		</div>
@@ -264,6 +211,11 @@
 				<h3>Books You Are Lending</h3>
 				
 				<table class="table table-striped table-bordered" id="books_borrowing">
+					{% if user.get_lent_books()|length < 1 %}
+						<tr>
+							<td colspan="3">You are not lending any books.</td>
+						</tr>
+					{% else %}
 					<thead>
 						<tr>
 							<th>
@@ -281,82 +233,23 @@
 						</tr>
 					</thead>
 					<tbody>
+						{% for book in user.get_lent_books() %}
 						<tr>
 							<td>
-								The Google Story
+								{{ book.display() }}
 							</td>
 							<td>
-								Caroline T.
+								{{ book.get_borrower() }}
 							</td>
 							<td style="text-align:center;">
-								<input class="datepicker" size="16" type="text" value="03/10/2013" style="width:100px;text-align:center;vertical-align:middle;margin-bottom:0px;" />
+								{{ book.due_date }}
 							</td>
 							<td style="text-align:center;">
-								<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-							</td>
+<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
+</td>
 						</tr>
-						<tr>
-							<td>
-								Les Miserables
-							</td>
-							<td>
-								Stephen K.
-							</td>
-							<td style="text-align:center;">
-								<input class="datepicker" size="16" type="text" value="03/24/2013" style="width:100px;text-align:center;vertical-align:middle;margin-bottom:0px;" />
-							</td>
-							<td style="text-align:center;">
-								<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								The Book of Mormon
-							</td>
-							<td>
-								Ryan H.
-							</td>
-							<td style="text-align:center;">
-								<input class="datepicker" size="16" type="text" value="04/03/2013" style="width:100px;text-align:center;vertical-align:middle;margin-bottom:0px;" />
-							</td>
-							<td style="text-align:center;">
-								<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Dreaming in Code
-							</td>
-							<td>
-								Daniel Z.
-							</td>
-							<td style="text-align:center;">
-								<input class="datepicker" size="16" type="text" value="04/12/2013" style="width:100px;text-align:center;vertical-align:middle;margin-bottom:0px;" />
-							</td>
-							<td style="text-align:center;">
-								<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								The Mythical Man-Month
-							</td>
-							<td>
-								Chuck K.
-							</td>
-							<td style="text-align:center;">
-								<input class="datepicker" size="16" type="text" value="04/21/2013" style="width:100px;text-align:center;vertical-align:middle;margin-bottom:0px;" />
-							</td>
-							<td style="text-align:center;">
-								<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="4" style="text-align:center;">
-								<b>Only the first five results are shown here. <a href="/library#LendedBooks">View all books you are lending</a>.</b>
-							</td>
-						</tr>
-					</tbody>	
+						{% endfor %}
+					{% endif %}	
 				</table>
 			</div>
 		</div>
