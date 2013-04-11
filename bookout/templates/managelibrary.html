@@ -97,6 +97,7 @@
             <tr>
               <th>Book Title</th>
               <th>Author</th>
+			  <th>Lend Status</th>
               <th style="width:100px"></th>
             </tr>
             {% if myBooks == [] %}
@@ -107,6 +108,8 @@
               <tr>
                 <td>{{book.title}}</td>
                 <td>{{book.author}}</td>
+				<td>{% if book.available %}Available
+					{% else %}On Loan{% endif %}</td>
                 <td style="text-align:center"><a class="btn btn-small" onclick="remove_book('{{book.OLKey}}', '{{ book.escapedtitle }}', this)"><i class="icon-remove"></i>&nbsp;&nbsp;Remove</a></td>
               </tr>
             {% endfor %}

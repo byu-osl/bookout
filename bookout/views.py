@@ -103,6 +103,10 @@ def library():
 		book = Book.query(Book.key == copy.book).get()
 		book.title = book.title
 		book.escapedtitle = re.escape(book.title)
+		if copy.borrower is None:
+			book.available = True
+		else:
+			book.available = False
 		booklist.append(book)
 	return render_response('managelibrary.html', myBooks=booklist)
 	
