@@ -100,9 +100,8 @@
 	}
 	
 	function borrow_book(bookCopyID, lenderID, button) {
-		$.ajax("/setup_book_borrow/" + lenderID + "/" + bookCopyID, function(data) {
-			alert(data);
-			button.html("Requested");
+		$.getJSON("/setup_book_borrow/" + lenderID + "/" + bookCopyID, function(data) {
+			$(button).html("Requested");
 		});
 	}
 </script>

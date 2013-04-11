@@ -462,22 +462,23 @@ def see_who_in_network_has_book(OLKey):
 	return jsonify(networkuserlist)
 	
 def setup_book_borrow_actions(lenderID, bookCopyID):
-
 	borrower = current_user()
 	lender = UserAccount.getuser(int(lenderID))
 	bookCopy = BookCopy.get_by_id(int(bookCopyID))
-
+	
 	rtb1 = RequestToBorrow()
 	rtb1.useraccount = lender.key
 	rtb1.connection = borrower.key
 	rtb1.book = bookCopy.key
 	rtb1.put()
-
+	
 	wtb1 = WaitingToBorrow()
 	wtb1.useraccount = borrower.key
 	wtb1.connection = lender.key
 	wtb1.book = bookCopy.key
 	wtb1.put()
+	return jsonify({"Message":"OK"})
+
 
 def get_notifications():
 	cur_user = current_user()
