@@ -53,9 +53,9 @@ class ConnectionRequest(Action):
 		return "%s has requested to connect" %(other.name)
 		
 	can_accept = True 
-	accept_text = "Confirm"
+	accept_text = "Accept"
 	can_reject = True
-	reject_text = "Reject" 
+	reject_text = "Deny" 
 	
 	def confirm(self):
 		invitee = UserAccount.query(UserAccount.key==self.connection).get()
@@ -79,10 +79,10 @@ class RequestToBorrow(Action):
 		other = UserAccount.query(UserAccount.key==self.connection).get()
 		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
 		book = Book.query(Book.key==bookcopy.book).get()
-		return "%s has requested to borrow '%s' from your library" %(other.name,book.title)
+		return "%s has requested to borrow '%s'" %(other.name,book.title)
 		
 	can_accept = True 
-	accept_text = "Allow"
+	accept_text = "Confirm Checkout"
 	can_reject = True
 	reject_text = "Deny"
 	
@@ -129,7 +129,7 @@ class WaitingToBorrow(Action):
 	can_accept = False 
 	accept_text = "Allow"
 	can_reject = True
-	reject_text = "Cancel Request" 
+	reject_text = "Withdraw Request" 
 	
 	def confirm(self):
 		other = UserAccount.query(UserAccount.key==self.connection).get()
@@ -158,12 +158,12 @@ class ConfirmReturn(Action):
 		bookcopy = BookCopy.query(BookCopy.key==self.book).get()
 		other = UserAccount.query(UserAccount.key==bookcopy.borrower).get()
 		book = Book.query(Book.key==bookcopy.book).get()
-		return "Did %s return '%s'?" %(other.name,book.title)
+		return "%s reported checking in '%s'" %(other.name,book.title)
 		
 	can_accept = True 
-	accept_text = "Yes"
+	accept_text = "Confirm"
 	can_reject = True
-	reject_text = "No" 
+	reject_text = "Deny"
 	
 	def confirm(self):
 		bookcopy = BookCopy.query(BookCopy.key==self.book).get()

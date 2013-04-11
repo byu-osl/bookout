@@ -35,10 +35,6 @@
 		return false;
 	}
 	
-	function SelectAll(id) {
-		$(id).focus().select();
-	}
-	
 	function gmailCompose() {
 		composeSubject = "Invitation to Join BookOut"
 		composeTo = $("#EmailTo").val()
@@ -176,7 +172,7 @@ I've discovered an awesome new app, called BookOut, that lets you build a librar
           <br>
           <p>
             Invitation Link:
-            <input type="text" style="width:400px;margin-left:10px;vertical-align:baseline" id="invitationLink" onClick="SelectAll('invitationLink');"value="{{ request.host_url }}?connect={{ user.get_id() }}"><!-- button for copying to clipboard; requires some hefty code to work, just Google it - <a class="btn" href="#" style="vertical-align:baseline">Copy</a> -->
+            <input type="text" style="width:400px;margin-left:10px;vertical-align:baseline" id="invitationLink" onClick="this.select();" value="{{ request.host_url }}?connect={{ user.get_id() }}"><!-- button for copying to clipboard; requires some hefty code to work, just Google it - <a class="btn" href="#" style="vertical-align:baseline">Copy</a> -->
           </p>
         </div>
       </div>

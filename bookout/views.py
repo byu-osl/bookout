@@ -94,7 +94,7 @@ def index():
 		# if int(otherUserID) matches something in current_user().connected_accounts
 		#	connectionType = 4 #Existing Connection
 			
-	return render_response('home.html',connectUserID=otherUserID,connectUserName=otherUserName,connectType=connectionType)#connectUserValid=validUser)
+	return render_response('home.html',connectUserID=otherUserID,connectUserName=otherUserName,connectType=connectionType)
 	
 def library():
 	booklist = []

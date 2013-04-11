@@ -78,6 +78,39 @@
 		
 		return false;
 	}
+	
+	function requestCheckIn(checkinID, button) {
+	// Request to check in book user is borrowing
+		$.ajax({
+			url: "/request_checkin/" + checkinID,
+			type: 'POST',
+			success: function(data) {
+				$(button).parent().parent().hide();
+				if($("#books_borrowing tr:visible").length == 0) {
+					$("#books_borrowing").html("<tr><td colspan='3'>You are not borrowing any books.");
+				}
+			}
+		});
+		
+		return false;
+	}
+	
+	function checkIn(checkinID, button) 
+	// Check in book user is lending
+		$.ajax({
+			url: "/checkin/" + checkinID,
+			type: 'POST',
+			success: function(data) {
+				$(button).parent().parent().hide();
+				if($("#books_lending tr:visible").length == 0) {
+					$("#books_lending").html("<tr><td colspan='3'>You are not lending any books.");
+				}
+			}
+		});
+		
+		return false;
+	}
+
 
 </script>
 
@@ -196,8 +229,8 @@
 								{{ book.due_date }}
 							</td>
 							<td style="text-align:center;">
-<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-</td>
+								<a class="btn btn-inverse" onclick="requestCheckIn('', this)" style="width:140px">Check In</a>
+							</td>
 						</tr>
 						{% endfor %}
 					{% endif %}	
@@ -210,7 +243,7 @@
 
 				<h3>Books You Are Lending</h3>
 				
-				<table class="table table-striped table-bordered" id="books_borrowing">
+				<table class="table table-striped table-bordered" id="books_lending">
 					{% if user.get_lent_books()|length < 1 %}
 						<tr>
 							<td colspan="3">You are not lending any books.</td>
@@ -245,8 +278,8 @@
 								{{ book.due_date }}
 							</td>
 							<td style="text-align:center;">
-<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-</td>
+								<a class="btn btn-inverse" onclick="checkIn('', this)" style="width:140px">Check In</a>
+							</td>
 						</tr>
 						{% endfor %}
 					{% endif %}	
