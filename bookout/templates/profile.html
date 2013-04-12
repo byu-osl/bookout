@@ -3,6 +3,97 @@
 
 {% block title %}{{ profile_user.name }}'s Profile{% endblock %}
 
+{% block style %}
+
+<style type="text/css">
+	.in-library-button	{
+		margin-bottom: 10px;
+	}
+</style>
+
+{% endblock %}
+
+{% block script %}
+
+<script src="{{ url_for('static', filename='js/jquery.cookie.js') }}"></script>
+
+<script type="text/javascript">
+	$(function() {
+		$(".tooltip-button").tooltip({trigger: "hover"});
+		
+		switch("{{attribute}}"){
+			case "all":
+				$("#searchAll").attr("checked", "true");	
+				break;
+			case "title":
+				$("#searchTitle").attr("checked", "true");
+				break;
+			case "author":
+				$("#searchAuthor").attr("checked", "true");
+				break;
+			case "isbn":
+				$("#searchISBN").attr("checked", "true");
+				break;
+			default:
+				$("#searchAll").attr("checked", "true");
+		}
+		
+		if ($.cookie("{{ user.get_id() }}")) $("#show_out_of_network_books_checkbox").removeAttr("checked");
+		
+		$("#show_out_of_network_books_checkbox").change(function(){
+			if($.cookie("{{ user.get_id() }}")) $.removeCookie("{{ user.get_id() }}");
+			if(!$(this).is(":checked")) $.cookie("{{ user.get_id() }}", "true", {expires:365});
+		});
+		
+		$("input[name='refineSearch']").change(function(){
+			$(this).closest("form").submit();
+		});
+	});
+	
+	function request_book(bookOLKey){
+		$.getJSON("/search/inNetwork/" + bookOLKey, function(data) {
+			$('#borrowTable').empty();
+			$.each(data, function(key, val) {
+				
+				var link = $('<a>', {
+					'class': 'btn btn-inverse',
+					onclick: 'borrow_book("' + val.bookCopyID + '", "' + key + '", this)',
+					html: 'Request to Borrow'
+				});
+				if(!val.available) {
+					link.attr("disabled", "");
+				}
+				
+				$('#borrowTable')
+				.append(
+					$('<tr>')
+					.append(
+						$('<td>', {
+							html: val.username
+						}))
+					.append(
+						$('<td>')
+						.append(
+							link
+						)
+					)
+				);
+			});
+			$("#borrowModal").modal('show');
+		});
+		
+		return false;
+	}
+	
+	function borrow_book(bookCopyID, lenderID, button) {
+		$.getJSON("/setup_book_borrow/" + lenderID + "/" + bookCopyID, function(data) {
+			$(button).html("Requested");
+		});
+	}
+</script>
+
+{% endblock %}
+
 {% block content %}
 
 {% if profile_user %}
@@ -35,8 +126,25 @@
 			<tr>
 				<td>{{ book.title }}</td>
 				<td>{{ book.author }}</td>
-				<td>{% if book.available %}Available
-					{% else %}Checked Out{% endif %}</td>
+				<td>
+				{% if profile_user.get_id() == user.get_id() %}
+					{% if book.available %}Available
+					{% else %}On Loan
+					{% endif %}
+				{% else %}
+					{% if book.available %}
+					<a class="btn btn-inverse tooltip-button"
+						style="width:120px"
+						onclick="request_book('{{ book.OLKey }}')"
+						data-toggle="tooltip" 
+						data-placement="right"
+						title="Request to borrow book from this user">
+						Request&nbsp;to&nbsp;Borrow</a>
+					{% else %}
+					<a class="btn tooltip-button"
+						style="width:120px">Unavailable</a>
+					{% endif %}
+				{% endif %}</td>
 			</tr>
 			{% endfor %}
 		</table>
