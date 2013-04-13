@@ -213,6 +213,7 @@ def profile(userID):
 				book.available = True
 			else:
 				book.available = False
+			book.copyid = copy.key.id()
 		return render_response('profile.html',profile_user=profile_user,library=library)
 	return render_response('profile.html',connected=False)
 	

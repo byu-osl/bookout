@@ -20,74 +20,14 @@
 <script type="text/javascript">
 	$(function() {
 		$(".tooltip-button").tooltip({trigger: "hover"});
-		
-		switch("{{attribute}}"){
-			case "all":
-				$("#searchAll").attr("checked", "true");	
-				break;
-			case "title":
-				$("#searchTitle").attr("checked", "true");
-				break;
-			case "author":
-				$("#searchAuthor").attr("checked", "true");
-				break;
-			case "isbn":
-				$("#searchISBN").attr("checked", "true");
-				break;
-			default:
-				$("#searchAll").attr("checked", "true");
-		}
-		
-		if ($.cookie("{{ user.get_id() }}")) $("#show_out_of_network_books_checkbox").removeAttr("checked");
-		
-		$("#show_out_of_network_books_checkbox").change(function(){
-			if($.cookie("{{ user.get_id() }}")) $.removeCookie("{{ user.get_id() }}");
-			if(!$(this).is(":checked")) $.cookie("{{ user.get_id() }}", "true", {expires:365});
-		});
-		
-		$("input[name='refineSearch']").change(function(){
-			$(this).closest("form").submit();
-		});
 	});
 	
-	function request_book(bookOLKey){
-		$.getJSON("/search/inNetwork/" + bookOLKey, function(data) {
-			$('#borrowTable').empty();
-			$.each(data, function(key, val) {
-				
-				var link = $('<a>', {
-					'class': 'btn btn-inverse',
-					onclick: 'borrow_book("' + val.bookCopyID + '", "' + key + '", this)',
-					html: 'Request to Borrow'
-				});
-				if(!val.available) {
-					link.attr("disabled", "");
-				}
-				
-				$('#borrowTable')
-				.append(
-					$('<tr>')
-					.append(
-						$('<td>', {
-							html: val.username
-						}))
-					.append(
-						$('<td>')
-						.append(
-							link
-						)
-					)
-				);
-			});
-			$("#borrowModal").modal('show');
-		});
-		
-		return false;
-	}
-	
-	function borrow_book(bookCopyID, lenderID, button) {
-		$.getJSON("/setup_book_borrow/" + lenderID + "/" + bookCopyID, function(data) {
+	function borrow_book(bookCopyID, button) {
+		$.getJSON("/setup_book_borrow/" + {{ profile_user.get_id() }} + "/" + bookCopyID, function(data) {
+			$(button).attr("disabled", "");
+			$(button).attr("onclick", "");
 			$(button).html("Requested");
+			$(button).tooltip("destroy").attr("title", "Book has been requested").tooltip({trigger: "hover"});
 		});
 	}
 </script>
@@ -120,13 +60,18 @@
 			<tr>
 				<th>Book Title</th>
 				<th>Author</th>
-				<th>Checkout Status</th>
+				<th style="width:160px;text-align:center">{% if profile_user.get_id() == user.get_id() %}Lend Status{% endif %}</th>
 			</tr>
+			{% if library|length < 1 %}
+			<tr>
+				<td colspan='3'>You don't have any books in your library. To add books, search for the title, author, or ISBN in the search field inside the header. Once you've added books, they'll show up here.</td>
+			</tr>
+			{% endif %}
 			{% for book in library %}
 			<tr>
 				<td>{{ book.title }}</td>
 				<td>{{ book.author }}</td>
-				<td>
+				<td style="text-align:center">
 				{% if profile_user.get_id() == user.get_id() %}
 					{% if book.available %}Available
 					{% else %}On Loan
@@ -135,14 +80,18 @@
 					{% if book.available %}
 					<a class="btn btn-inverse tooltip-button"
 						style="width:120px"
-						onclick="request_book('{{ book.OLKey }}')"
+						onclick="borrow_book('{{ book.copyid }}', this)"
 						data-toggle="tooltip" 
 						data-placement="right"
-						title="Request to borrow book from this user">
+						title="Request to borrow book from {{ profile_user.name }}">
 						Request&nbsp;to&nbsp;Borrow</a>
 					{% else %}
-					<a class="btn tooltip-button"
-						style="width:120px">Unavailable</a>
+					<a class="btn btn-inverse tooltip-button disabled"
+						style="width:120px"
+						data-toggled="tooltip"
+						data-placement="right"
+						title="Book not available">
+						Unavailable</a>
 					{% endif %}
 				{% endif %}</td>
 			</tr>
