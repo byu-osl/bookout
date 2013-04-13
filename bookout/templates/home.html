@@ -109,7 +109,11 @@
 			url: "/return_book/" + bookCopyID,
 			type: 'GET',
 			success: function(data) {
-				$(button).parent().parent().hide();
+				if($("#books_lending tr:visible").length == 7) {
+					$(button).parent().parent().siblings(":nth-child(7)").remove();
+				}
+				$(button).parent().parent().siblings(":nth-child(6)").show();
+				$(button).parent().parent().remove();
 				if($("#books_lending tr:visible").length == 1) {
 					$("#books_lending").html("<tr><td colspan='3'>You are not lending any books.");
 				}
