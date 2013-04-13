@@ -64,7 +64,11 @@
 			</tr>
 			{% if library|length < 1 %}
 			<tr>
+				{% if profile_user.get_id() == user.get_id() %}
 				<td colspan='3'>You don't have any books in your library. To add books, search for the title, author, or ISBN in the search field inside the header. Once you've added books, they'll show up here.</td>
+				{% else %}
+				<td colspan='3'>{{ profile_user.name }} has not added any books yet.</td>
+				{% endif %}
 			</tr>
 			{% endif %}
 			{% for book in library %}
