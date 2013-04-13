@@ -64,14 +64,14 @@
 		return false;
 	}
 	
-	function request_book(bookOLKey){
+	function request_book(bookOLKey, title){
 		$.getJSON("/search/inNetwork/" + bookOLKey, function(data) {
 			$('#borrowTable').empty();
 			$.each(data, function(key, val) {
 				
 				var link = $('<a>', {
 					'class': 'btn btn-inverse',
-					onclick: 'borrow_book("' + val.bookCopyID + '", "' + key + '", this)',
+					onclick: 'borrow_book("' + val.bookCopyID + '", "' + key + '", this, "' + title + '", "' + val.username + '")',
 					html: 'Request to Borrow'
 				});
 				if(!val.available) {
@@ -99,16 +99,34 @@
 		return false;
 	}
 	
-	function borrow_book(bookCopyID, lenderID, button) {
+	function borrow_book(bookCopyID, lenderID, button, bookTitle, lenderName) {
+		$(button).attr("disabled", "");
 		$.getJSON("/setup_book_borrow/" + lenderID + "/" + bookCopyID, function(data) {
-			$(button).html("Requested");
+			$("#borrowModal").modal('hide');
+			$("#messageBook").text(bookTitle);
+			$("#messageUser").text(lenderName);
+			$("#message").show();
 		});
+	}
+	
+	function hide_message() {
+		$("#message").hide();
+		return false;
 	}
 </script>
 
 {% endblock %}
 
 {% block content %}
+
+<div class="row" style="position: relative;">
+	<div class="span6 offset3" style="position: absolute; top: 10px;">
+		<div id="message" class="alert" style="display: none;">
+			<a class="close" onclick="hide_message()">x</a>
+			You have requested to borrow <span id="messageBook"></span> from <span id="messageUser"></span>.
+		</div>
+	</div>
+</div>
 
 <form id="searchForm" action="/searchbooks">
 <div class="row">
@@ -186,7 +204,7 @@
 							<a class="btn tooltip-button"
 								style="width:120px" 
 								{% if user.is_authenticated() == False %}disabled{% endif %}
-								onclick="{% if user.is_authenticated() %}request_book('{{ books[book].OLKey }}'){% endif %}"
+								onclick="{% if user.is_authenticated() %}request_book('{{ books[book].OLKey }}', '{{ books[book].title }}'){% endif %}"
 								data-toggle="tooltip" data-placement="right"
 								title="{% if user.is_authenticated() %}Request to borrow book from one of your connections{% 
 								else %}Join or login to request to borrow books{% endif %}">Request&nbsp;to&nbsp;Borrow</a>
