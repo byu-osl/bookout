@@ -375,22 +375,6 @@ def simple_add_connection(otherUserID):
 	else:
 		return jsonify({"Message":"Connection already existed"})
 
-def manage_invites():
-	cur_user = current_user()
-
-	invites = cur_user.get_all_invites()
-	users = []
-	result = "you have " + str(len(invites)) + " invites"
-	for connection in invites:
-		result += "<br>" + connection.name
-		user = dict()
-		user["name"] = connection.name
-		user["email"] = connection.email
-		#user["username"] = connection.username
-		user["id"] = connection.get_id()
-		users.append(user)
-	return jsonify({"connectedUsers":users})
-
 def lend_book(bookCopyID, borrowerID, due_date = None):
 	cur_user = current_user()
 	return cur_user.lend_book(int(bookCopyID), int(borrowerID), due_date)

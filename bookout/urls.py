@@ -106,11 +106,6 @@ app.add_url_rule('/manage_network/<otherUserID>', methods = ['GET', 'POST', 'DEL
 #	The end goal is to use POST requests to user for manage_connections (that one also deals with invitations)
 app.add_url_rule('/add_connection/<otherUserID>', view_func=views.simple_add_connection)
 
-# Get all the invitations that the current user has recieved
-#	returns a JSON object with information about all the user that have sent invites
-#		includes the following about each user: name, email, id
-app.add_url_rule('/invites', view_func=views.manage_invites)
-
 # Lend a book to another user (will use the user that is currently logged in)
 #	parameters:
 #		bookCopyID: The id that corresponds to the book that will be lent out
@@ -161,9 +156,15 @@ app.add_url_rule('/change_due_date/<bookCopyID>/<newDueDate>', view_func=views.c
 app.add_url_rule('/get_notifications', view_func=views.get_notifications)
 
 # Confirm the notification
+# Performs the confirm action on the given notification
+#	parameters:
+# 		notificationID: the id of the notification to be confirmed
 app.add_url_rule('/confirm_notification/<notificationID>', view_func=views.confirm_notification)
 
-# Confirm the notification
+# Reject the notification
+# Performs the reject action on the given notification
+#	parameters:
+# 		notificationID: the id of the notification to be rejected
 app.add_url_rule('/reject_notification/<notificationID>', view_func=views.reject_notification)
 
 

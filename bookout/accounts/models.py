@@ -22,7 +22,6 @@ class UserAccount(ndb.Model):
 	info = ndb.StringProperty(default="")
 
 	connected_accounts = ndb.StructuredProperty(Connection,repeated=True)
-	invites_recieved = ndb.StructuredProperty(Connection,repeated=True)
 	
 	@property
 	def pending_actions(self):
@@ -31,28 +30,54 @@ class UserAccount(ndb.Model):
 	
 	@property
 	def connections(self):
+		"""Get all the keys of all the users this user is connected to
+
+		Return value:
+		an array will all the keys of all the users this user is connected to
+		"""
 		return self.connected_accounts
 
 	def get_network_books(self):
+		"""Get all the books owned by users connected to this owned
+
+		Return value:
+		an array will all the BookCopy objects belonging to connected users
+
+		"""
 		from bookout.books.models import BookCopy
 		return BookCopy.query(BookCopy.owner.IN(self.get_connections())).fetch()
 	
 	def get_connections(self):
+		"""Get all the users this user is connected to
+
+		Return value:
+		an array will all the user objects this user is connected to
+		"""
 		return UserAccount.query(UserAccount.connected_accounts.user == self.key).fetch(keys_only=True)
 	
 	def get_all_connections(self):
+		"""Get all the users this user is connected to
+
+		Return value:
+		an array will all the user objects this user is connected to
+		"""
 		connections = []
 		for connection in self.connected_accounts:
 			connections.append(UserAccount.query(UserAccount.key==connection.user).get())
 		return connections
 	
-	def get_all_invites(self):
-		connections = []
-		for connection in self.invites_recieved:
-			connections.append(UserAccount.query(UserAccount.key==connection.user).get())
-		return connections
-	
 	def update(self,name,lending_length,notifications,info):
+		"""update the user's settings
+
+		Arguments:
+		name - the name the user would like to have displayed
+		lending_length - the default number of days that this user lends out his/her books 
+		notification - a string saying how this user will recieve notifications (email, mobile, both)
+		info - a string, additional information about the user that will be displayed to other users
+		
+		Return value:
+		True if successfull
+		"""
 		# validate name
 		self.name = name
 		self.lending_length = lending_length
@@ -118,6 +143,12 @@ class UserAccount(ndb.Model):
 
 	@classmethod
 	def can_delete_user(cls,user):
+		"""Checks to see if a user can be deleted
+		A user cannot be deleted if it is borrowing or lending books
+
+		Return Value:
+		True if it can be deleted, false if not
+		"""
 		borrowed = user.get_borrowed_books()
 		lent = user.get_lent_books()
 		if borrowed or lent:
@@ -126,6 +157,12 @@ class UserAccount(ndb.Model):
 
 	@classmethod
 	def delete_user(cls,user):
+		"""Deletes the given user from the system
+		Also deletes the connection with each user it is connected to
+
+		Arguments:
+		user - The UserAccount object that should be deleted
+		"""
 		if UserAccount.can_delete_user(user):
 			for connection in user.connections:
 				user.remove_connection(connection,True)
@@ -218,24 +255,15 @@ class UserAccount(ndb.Model):
 		invitation.put()
 		return 0
 
-		#####This was the old implementation, before the activity class was made
-		# connection = Connection(user=otherUser.key)
-		# if(connection in self.connected_accounts):
-		# 	return 1
-		# if(otherUser.get_id() == self.get_id()):
-		# 	return 2
-		# if(connection in self.invites_recieved or confirmInvite):
-		# 	self.connected_accounts.append(connection)
-		# 	if(connection in self.invites_recieved):
-		# 		self.invites_recieved.remove(connection)
-		# 	self.put()
-		# 	if reciprocate:
-		# 		otherUser.add_connection(self, reciprocate = False, confirmInvite = True)
-		# else:
-		# 	otherUser.add_invite(self)
-		# return 0
-
 	def is_connected(self,otherUser):
+		"""Check to see if this user is connected to the user given
+
+		Arguments:
+		otherUser - a UserAccount object representing the other user in question
+
+		Return value:
+		True if there exists a connection between the two users, False if notifications
+		"""
 		if self == otherUser:
 			return True
 		connection = Connection(user=otherUser.key)
@@ -277,17 +305,6 @@ class UserAccount(ndb.Model):
 
 	def create_invitation_link(self):
 		return "manage_connections/" + str(self.get_id())
-
-	def add_invite(self, inviter):
-		"""send an invitation to form a connection with another user
-
-		Arguments:
-		inviter: a UserAccount object representing the user that is sending the inviter
-		"""
-		connection = Connection(user=inviter.key)
-		if(connection not in self.invites_recieved):
-			self.invites_recieved.append(connection)
-			self.put()
 
 	def lend_book(self, bookID, borrowerID, due_date = None):
 		"""Lend a book to another user
@@ -416,9 +433,6 @@ class UserAccount(ndb.Model):
 			return "Request sent to owner"
 		else:
 			return "You are not the owner of this book, nor are you borrowing it"
-
-
-		
 
 
 class Anonymous(AnonymousUser):
