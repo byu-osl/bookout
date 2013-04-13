@@ -54,6 +54,41 @@
 		})
 		return false;
 	}
+	
+	function requestCheckIn(bookCopyID, button) {
+	// Request to check in book user is borrowing
+		$.ajax({
+			url: "/return_book/" + bookCopyID,
+			type: 'GET',
+			success: function(data) {
+				$(button).attr("disabled", "");
+				$(button).attr("onclick", "");
+				$(button).html("Pending Confirmation");
+			}
+		});
+		
+		return false;
+	}
+	
+	function checkIn(bookCopyID, button) {
+	// Check in book user is lending
+		$.ajax({
+			url: "/return_book/" + bookCopyID,
+			type: 'GET',
+			success: function(data) {
+				$(button).parent().parent().hide();
+				if($("#books_lending tr:visible").length == 1) {
+					$("#books_lending").html("<tr><td colspan='3'>You aren't currently lending any books. When you are, they'll show up here.");
+				}
+			}
+		});
+		
+		return false;
+	}
+	
+	function add_hash(url_hash){
+		window.location.hash = url_hash;
+	}
 
 	$(function(){
 		if(window.location.hash){
@@ -61,6 +96,7 @@
 			else if (window.location.hash == "#BorrowedBooks") $("#borrowed_books").click();
 		}
 	})
+	
 </script>
 
 {% endblock %}
@@ -85,168 +121,91 @@
 	
     <div class="tabbable">
       <ul class="nav nav-tabs">
-        <li class="active"><a href="#MyBooks" data-toggle="tab" id="my_books">My Books</a></li>
-        <li><a href="#LendedBooks" data-toggle="tab" id="lended_books">Lended Books</a></li>
-        <li><a href="#BorrowedBooks" data-toggle="tab" id="borrowed_books">Borrowed Books</a></li>
+        <li class="active"><a href="#MyBooks" data-toggle="tab" id="my_books" onclick='add_hash("MyBooks")'>My Books</a></li>
+        <li><a href="#LendedBooks" data-toggle="tab" id="lended_books" onclick='add_hash("LendedBooks")'>Lended Books</a></li>
+        <li><a href="#BorrowedBooks" data-toggle="tab" id="borrowed_books" onclick='add_hash("BorrowedBooks")'>Borrowed Books</a></li>
       </ul>
     </div>
       <div class="tab-content">
         <div class="tab-pane active" id="MyBooks">
           <h3 style="margin-top:-4px">Books I Own</h3>
           <table class="table table-striped table-bordered">
-            <tr>
-              <th>Book Title</th>
-              <th>Author</th>
-			  <th>Lend Status</th>
-              <th style="width:100px"></th>
-            </tr>
-            {% if myBooks == [] %}
+            {% if myBooks|length < 1 %}
               <tr>
                 <td colspan="4">You don't have any books in your library. To add books, search for the title, author, or ISBN in the search field inside the header. Once you've added books, they'll show up here.</td>
-            {% endif %}
-            {% for book in myBooks %}
-              <tr>
-                <td>{{book.title}}</td>
-                <td>{{book.author}}</td>
-				<td>{% if book.available %}Available
-					{% else %}On Loan{% endif %}</td>
-                <td style="text-align:center"><a class="btn btn-small" onclick="remove_book('{{book.OLKey}}', '{{ book.escapedtitle }}', this)"><i class="icon-remove"></i>&nbsp;&nbsp;Remove</a></td>
-              </tr>
-            {% endfor %}
+            {% else %}
+				<tr>
+				  <th>Book Title</th>
+				  <th>Author</th>
+				  <th>Lend Status</th>
+				  <th style="width:100px"></th>
+				</tr>
+				{% for book in myBooks %}
+				  <tr>
+					<td>{{book.title}}</td>
+					<td>{{book.author}}</td>
+					<td>{% if book.available %}Available
+						{% else %}On Loan{% endif %}</td>
+					<td style="text-align:center"><a class="btn btn-small" onclick="remove_book('{{book.OLKey}}', '{{ book.escapedtitle }}', this)"><i class="icon-remove"></i>&nbsp;&nbsp;Remove</a></td>
+				  </tr>
+				{% endfor %}
+			{% endif %}
           </table>
         </div>
         <div class="tab-pane" id="LendedBooks">
 
 		<h3 style="margin-top:-4px">Books I'm Lending</h3>
-		<table class="table table-striped table-bordered">
+		<table class="table table-striped table-bordered" id="books_lending">
+			{% if user.get_lent_books()|length < 1 %}
 			<tr>
-			  <th>Book Title</th>
-			  <th>Book Owner</th>
-			  <th style="text-align:center;">Due Date</th>
-			  <th style="width:200px"></th>
+				<td colspan="4">You aren't currently lending any books. When you are, they'll show up here.</td>
 			</tr>
-			{% if lendedBooks == [] %}
-			  <tr>
-				<td colspan="4">You don't currently have any books on loan. When you do, they'll show up here.</td>
-			  </tr>
+			{% else %}
+				<tr>
+				  <th>Book Title</th>
+				  <th>Book Borrower</th>
+				  <th style="text-align:center;width:200px">Due Date</th>
+				  <th style="text-align:center;width:200px"></th>
+				</tr>
+				{% for book in user.get_lent_books() %}
+				<tr>
+				  <td>{{ book.display() }}</td>
+				  <td>{{ book.get_borrower() }}</td>
+				  <td style="text-align:center;">{{ book.due_date }}</td>
+				  <td style="text-align:center;">
+				    <a class="btn btn-inverse" style="width:140px" onclick="checkIn('{{ book.key.id() }}', this)">Check In</a>
+				  </td>
+				</tr>
+				{% endfor %}
 			{% endif %}
-			  
-			<tr>
-				<td>
-					The Google Story
-				</td>
-				<td>
-					Caroline T.
-				</td>
-				<td style="text-align:center;">
-					<input class="datepicker" size="16" type="text" value="03/10/2013" style="width:100px;text-align:center;vertical-align:middle;margin-bottom:0px;" />
-				</td>
-				<td style="text-align:center;">
-					<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Les Miserables
-				</td>
-				<td>
-					Stephen K.
-				</td>
-				<td style="text-align:center;">
-					<input class="datepicker" size="16" type="text" value="03/24/2013" style="width:100px;text-align:center;vertical-align:middle;margin-bottom:0px;" />
-				</td>
-				<td style="text-align:center;">
-					<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-				</td>
-			</tr><tr>
-				<td>
-					The Book of Mormon
-				</td>
-				<td>
-					Ryan H.
-				</td>
-				<td style="text-align:center;">
-					<input class="datepicker" size="16" type="text" value="04/03/2013" style="width:100px;text-align:center;vertical-align:middle;margin-bottom:0px;" />
-				</td>
-				<td style="text-align:center;">
-					<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-				</td>
-			</tr>
-			  
-			{% for book in lendedBooks %}
-			<tr>
-			  <td><a href="/book/{{book.OLKey}}">{{book.title}}</a></td>
-			  <td>[BOOK OWNER HERE]</td>
-			  <td>[DUE DATE HERE]</td>
-			  <td><a class="btn btn-small" href="#" onclick="request_to_return('bookcopyID')">Request to Return</a></td>
-			</tr>
-			{% endfor %}
 		</table>
 
         </div>
         <div class="tab-pane" id="BorrowedBooks">
           <h3 style="margin-top:-4px">Books I'm Borrowing</h3>
-          <table class="table table-striped table-bordered">
-            <tr>
-              <th>Book Title</th>
-              <th>Book Borrower</th>
-              <th style="text-align:center;">Due Date</th>
-              <th style="width:200px"></th>
-            </tr>
-            {% if BorrowedBooks == [] %}
+          <table class="table table-striped table-bordered" id="books_borrowing">
+            {% if user.get_borrowed_books()|length < 1 %}
               <tr>
                 <td colspan="4">You aren't currently borrowing any books. To borrow a book, search for the title or author in the search bar in the header. When you're borrowing books, they'll show up here.</td>
-            {% endif %}
-			<tr>
-				<td>
-					The Google Story
-				</td>
-				<td>
-					Caroline T.
-				</td>
-				<td style="text-align:center;">
-					3/10/2013
-				</td>
-				<td style="text-align:center;">
-					<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Les Miserables
-				</td>
-				<td>
-					Stephen K.
-				</td>
-				<td style="text-align:center;">
-					3/24/2013
-				</td>
-				<td style="text-align:center;">
-					<a class="btn btn-inverse" href="#" disabled="" style="width:140px">Pending Confirmation</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					The Book of Mormon
-				</td>
-				<td>
-					Ryan H.
-				</td>
-				<td style="text-align:center;">
-					4/3/2013
-				</td>
-				<td style="text-align:center;">
-					<a class="btn btn-inverse" href="#" style="width:140px">Check In</a>
-				</td>
-			</tr>
-            {% for book in borrowedBooks %}
-            <tr>
-              <td><a href="/book/{{book.OLKey}}">{{book.title}}</a></td>
-              <td>[BOOK BORROWER HERE]</td>
-              <td style="text-align:center">[BOOK DUE DATE HERE]</td>
-              <td style="text-align:center"><a class="btn btn-danger btn-small" href="#" onclick="remove_book('{{book.OLKey}}')">Remove</a></td>
-            </tr>
-            {% endfor %}
+			  </tr>
+			{% else %}
+				<tr>
+				  <th>Book Title</th>
+				  <th>Book Borrower</th>
+				  <th style="text-align:center;width:200px">Due Date</th>
+				  <th style="text-align:center;width:200px"></th>
+				</tr>
+				{% for book in user.get_borrowed_books() %}
+				<tr>
+				  <td>{{ book.display() }}</td>
+				  <td>{{ book.get_owner() }}</td>
+				  <td style="text-align:center">{{ book.due_date }}</td>
+				  <td style="text-align:center">
+					<a class="btn btn-inverse" style="width:140px" onclick="requestCheckIn('{{ book.key.id() }}', this)">Check In</a>
+				  </td>
+				</tr>
+				{% endfor %}
+			{% endif %}
           </table>
 
         </div>

@@ -54,6 +54,19 @@
 		
 	});
 	
+	function add_hash(url_hash){
+		window.location.hash = url_hash;
+	}
+
+	$(function(){
+		if(window.location.hash){
+			if(window.location.hash == "#Connections") $("#Connections_tab").click();
+			else if (window.location.hash == "#Facebook") $("#Facebook_tab").click();
+			else if (window.location.hash == "#Gmail") $("#Gmail_tab").click();
+			else if (window.location.hash == "#Link") $("#Link_tab").click();
+		}
+	})
+	
 </script>
 
 {% endblock %}
@@ -78,10 +91,10 @@
   <div class="row-fluid">
     <div class="tabbable tabs-left">
       <ul class="nav nav-tabs span2">
-        <li class="active"><a href="#Connections" data-toggle="tab">My Connections</a></li>
-        <li><a href="#Facebook" data-toggle="tab">Invite by Facebook</a></li>
-        <li><a href="#Gmail" data-toggle="tab">Invite by Gmail</a></li>
-        <li><a href="#Link" data-toggle="tab">Invite by Link</a></li>
+        <li class="active"><a href="#Connections" data-toggle="tab" id="Connections_tab" onclick='add_hash("Connections")'>My Connections</a></li>
+        <li><a href="#Facebook" data-toggle="tab" id="Facebook_tab" onclick='add_hash("Facebook")'>Invite by Facebook</a></li>
+        <li><a href="#Gmail" data-toggle="tab" id="Gmail_tab" onclick='add_hash("Gmail")'>Invite by Gmail</a></li>
+        <li><a href="#Link" data-toggle="tab" id="Link_tab" onclick='add_hash("Link")'>Invite by Link</a></li>
 <br>
 <br>
 <br>
