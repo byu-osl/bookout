@@ -218,7 +218,7 @@
 					</thead>
 					<tbody>
 						{% for book in user.get_borrowed_books() %}
-						<tr>
+						<tr {% if loop.index > 5 %}style="display: none;"{% endif %}>
 							<td>
 								{{ book.display() }}
 							</td>
@@ -232,6 +232,11 @@
 								<a class="btn btn-inverse" style="width:140px" onclick="requestCheckIn('{{ book.key.id() }}', this)">Check In</a>
 							</td>
 						</tr>
+						{% if loop.last and loop.index > 5 %}
+						<tr>
+							<td colspan="4" style="text-align:center; background-color: white;"><b>Only the first five results are shown here. <a href="/library#BorrowedBooks">View all books you are borrowing</a>.</b></td>
+						</tr>
+						{% endif %}
 						{% endfor %}
 					{% endif %}	
 				</table>
@@ -267,7 +272,7 @@
 					</thead>
 					<tbody>
 						{% for book in user.get_lent_books() %}
-						<tr>
+						<tr {% if loop.index > 5 %}style="display: none;"{% endif %}>
 							<td>
 								{{ book.display() }}
 							</td>
@@ -281,6 +286,11 @@
 								<a class="btn btn-inverse" style="width:140px" onclick="checkIn('{{ book.key.id() }}', this)">Check In</a>
 							</td>
 						</tr>
+						{% if loop.last and loop.index > 5 %}
+						<tr>
+							<td colspan="4" style="text-align:center; background-color: white;"><b>Only the first five results are shown here. <a href="/library#LendedBooks">View all books you are lending</a>.</b></td>
+						</tr>
+						{% endif %}
 						{% endfor %}
 					{% endif %}	
 				</table>
