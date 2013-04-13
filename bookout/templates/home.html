@@ -7,7 +7,15 @@
 <script type="text/javascript">
 
 	var connectModalMessage
+	
+	// Show intro modal if not logged in (modal html is within an if block)
 	$("#introModal").modal('show');
+	
+	$(function() {
+		$(".tooltip-button").tooltip({trigger: "hover"});
+		
+	});
+	
 	$(function() {
 		// If attempting to connect, set message appropriate to connection type
 		if ({{ connectType }} != 0) { // no connect type (don't show modal)
@@ -229,7 +237,11 @@
 								{{ book.due_date }}
 							</td>
 							<td style="text-align:center;">
-								<a class="btn btn-inverse" style="width:140px" onclick="requestCheckIn('{{ book.key.id() }}', this)">Check In</a>
+								<a class="btn btn-inverse tooltip-button" 
+									style="width:140px" 
+									onclick="requestCheckIn('{{ book.key.id() }}', this)"
+									data-toggle="tooltip" data-placement="right"
+									title="Report book as checked in. Requires lender verification.">Check In</a>
 							</td>
 						</tr>
 						{% endfor %}
@@ -278,7 +290,11 @@
 								{{ book.due_date }}
 							</td>
 							<td style="text-align:center;">
-								<a class="btn btn-inverse" style="width:140px" onclick="checkIn('{{ book.key.id() }}', this)">Check In</a>
+								<a class="btn btn-inverse tooltip-button" 
+									style="width:140px" 
+									onclick="checkIn('{{ book.key.id() }}', this)"
+									data-toggle="tooltip" data-placement="right"
+									title="Report book as checked in.">Check In</a>
 							</td>
 						</tr>
 						{% endfor %}
