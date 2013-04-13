@@ -72,25 +72,27 @@ app.add_url_rule('/bookinfo',view_func=views.book_info)
 
 ######################## Internal calls (to be called by ajax) ##########################
 # Get book list
+#	Returns:
+#		JSON object with the following info about each book the user owns
+#			last_update, thumbnail_link, OLKey, author, title
 app.add_url_rule('/library/mybooklist',view_func=views.get_my_book_list)
 
-# Delete User
+# Deletes the current user
 app.add_url_rule('/delete',view_func=views.delete_user,methods=['GET'])
 
 # Search for a book
-#	The attribute is what part of the book you will search with (isbn, title, auther, etc.)
-#		If you want to search for a book disregarding these use "all"
-#	The value is the value that should be used in the search
-#	The page is which page of results you want to recieve
-#	the current page of search results you are viewing is stored in a hidden form called "pageNumber" 
-#		returned by the search urls (if none is given, 0 is used)
-#	per_page is the number of books you want on each page (if none is given, 10 is used)
+#	Arguements:
+#		attribute - what part of the book you will search with (isbn, title, author, etc.)
+#			If you want to search for a book disregarding these use "all"
+#		value - the value that should be used in the search
+#	Returns:
+#		JSON object with each book found
 app.add_url_rule('/search/<value>', view_func=views.search_for_book)
 app.add_url_rule('/search/<attribute>/<value>', view_func=views.search_for_book)
 
 # Altering or accessing a user's personal library
 #	the following http types should be sent to do their corresponding functions
-#		GET - check to see if the given user has the given book
+#		GET - check to see if the current user has the given book
 #		POST - add the given book to the user's library
 #		DELETE - remove the book from the user's library
 app.add_url_rule('/library/<OLKey>', methods = ['GET', 'POST', 'DELETE'], view_func=views.library_requests)
@@ -168,11 +170,17 @@ app.add_url_rule('/confirm_notification/<notificationID>', view_func=views.confi
 app.add_url_rule('/reject_notification/<notificationID>', view_func=views.reject_notification)
 
 
-
-
-
+# Search for a book but only within the current user's network
+#	parameters:
+#		OLKey - the open library key of the book being searched for
+#	returns:
+#		JSON object with these fields for each finding (username, bookCopyID, available)
 app.add_url_rule('/search/inNetwork/<OLKey>',view_func=views.see_who_in_network_has_book)
 
+# Starts the process for the current user to borrow a book.
+#	parameters:
+#		lenderID - id of the owner of the book
+#		bookCopyID - the id of the BookCopy object being borrowed
 app.add_url_rule('/setup_book_borrow/<lenderID>/<bookCopyID>',view_func=views.setup_book_borrow_actions)
 
 ################################### Web service calls ###################################
