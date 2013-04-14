@@ -20,13 +20,13 @@
 				connectModalMessage = "The connection link you provided includes an invalid User ID. Please check the link and try again.";
 				$("#connectModalSend").hide();
 				$("#connectModalCancel").text("Close");
-			}else if ({{ connectType }} == 2) { // valid user
+			} else if ({{ connectType }} == 2) { // valid user
 				connectModalMessage = "Please confirm your intention to send a connection request to {{ connectUserName }}. Once {{ connectUserName }} accepts your request, {{ connectUserName }}'s books will appear in your network and within applicable search results.";
-			}else if ({{ connectType }} == 3) { // own self
+			} else if ({{ connectType }} == 3) { // own self
 				connectModalMessage = "You cannot connect with yourself. Please use the link you provided as an invitation to others to connect with you.";
 				$("#connectModalSend").hide();
 				$("#connectModalCancel").text("Close");
-			}else if ({{ connectType }} == 4) { // already a connection
+			} else if ({{ connectType }} == 4) { // already a connection
 				connectModalMessage = "You are attempting to connect with {{ connectUserName }}, but {{ connectUserName }} is already one of your connections. Click Network in the header to see a list of all your connections.";
 				$("#connectModalSend").hide();
 				$("#connectModalCancel").text("Close");
@@ -56,6 +56,7 @@
 	}
 	
 	function accept_request(notificationID, button) {
+		$(button).attr("disabled", "disabled");
 		$.ajax({
 			url: "/confirm_notification/" + notificationID,
 			type: 'GET',
@@ -65,12 +66,15 @@
 					$("#pending_requests").html("<tr><td colspan='3'>You have no pending requests.</td></tr>");
 				}
 			}
+		}).error(function () {
+			$(button).removeAttr("disabled");
 		});
 		
 		return false;
 	}
 	
 	function reject_request(notificationID, button) {
+		$(button).attr("disabled", "disabled");
 		$.ajax({
 			url: "/reject_notification/" + notificationID,
 			type: 'GET',
@@ -80,13 +84,16 @@
 					$("#pending_requests").html("<tr><td colspan='3'>You have no pending requests.</td></tr>");
 				}
 			}
+		}).error(function () {
+			$(button).removeAttr("disabled");
 		});
 		
 		return false;
 	}
 	
 	function requestCheckIn(bookCopyID, button) {
-	// Request to check in book user is borrowing
+		// Request to check in book user is borrowing
+		$(button).attr("disabled", "disabled");
 		$.ajax({
 			url: "/return_book/" + bookCopyID,
 			type: 'GET',
@@ -94,6 +101,9 @@
 				$(button).attr("disabled", "");
 				$(button).attr("onclick", "");
 				$(button).html("Pending Confirmation");
+			},
+			error: function() {
+				$(button).removeAttr("disabled");
 			}
 		});
 		
@@ -101,7 +111,8 @@
 	}
 	
 	function checkIn(bookCopyID, button) {
-	// Check in book user is lending
+		// Check in book user is lending
+		$(button).attr("disabled", "disabled");
 		$.ajax({
 			url: "/return_book/" + bookCopyID,
 			type: 'GET',
@@ -114,6 +125,9 @@
 				if($("#books_lending tbody tr:hidden").length == 0) {
 					$("#extraitems_lend").remove();
 				}
+			},
+			error: function() {
+				$(button).removeAttr("disabled");
 			}
 		});
 		
