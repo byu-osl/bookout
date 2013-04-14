@@ -241,29 +241,29 @@
 					</thead>
 					<tbody>
 						{% for book in user.get_borrowed_books() %}
-						<tr {% if loop.index > 5 %}style="display: none;"{% endif %}>
-							<td>
-								{{ book.display() }}
-							</td>
-							<td>
-								{{ book.get_owner() }}
-							</td>
-							<td style="text-align:center;">
-								{{ book.due_date }}
-							</td>
-							<td style="text-align:center;">
-								<a class="btn btn-inverse tooltip-button" 
-									style="width:140px" 
-									onclick="requestCheckIn('{{ book.key.id() }}', this)"
-									data-toggle="tooltip" data-placement="right"
-									title="Report book as checked in. Requires lender verification.">Check In</a>
-							</td>
-						</tr>
-						{% if loop.last and loop.index > 5 %}
-						<tr>
-							<td colspan="4" style="text-align:center; background-color: white;"><b>Only the first five results are shown here. <a href="/library#BorrowedBooks">View all books you are borrowing</a>.</b></td>
-						</tr>
-						{% endif %}
+							<tr {% if loop.index > 5 %}style="display: none;"{% endif %}>
+								<td>
+									{{ book.display() }}
+								</td>
+								<td>
+									{{ book.get_owner() }}
+								</td>
+								<td style="text-align:center;">
+									{{ book.due_date }}
+								</td>
+								<td style="text-align:center;">
+									<a class="btn btn-inverse tooltip-button" 
+										style="width:140px" 
+										onclick="requestCheckIn('{{ book.key.id() }}', this)"
+										data-toggle="tooltip" data-placement="right"
+										title="Report book as checked in. Requires lender verification.">Check In</a>
+								</td>
+							</tr>
+							{% if loop.last and loop.index > 5 %}
+								<tr>
+									<td colspan="4" style="text-align:center; background-color: white;"><b>Only the first five results are shown here. <a href="/library#BorrowedBooks">View all books you are borrowing</a>.</b></td>
+								</tr>
+							{% endif %}
 						{% endfor %}
 					{% endif %}	
 				</table>
@@ -299,29 +299,30 @@
 					</thead>
 					<tbody>
 						{% for book in user.get_lent_books() %}
-						<tr {% if loop.index > 5 %}style="display: none;"{% endif %}>
-							<td>
-								{{ book.display() }}
-							</td>
-							<td>
-								{{ book.get_borrower() }}
-							</td>
-							<td style="text-align:center;">
-								{{ book.due_date }}
-							</td>
-							<td style="text-align:center;">
-								<a class="btn btn-inverse tooltip-button" 
-									style="width:140px" 
-									onclick="checkIn('{{ book.key.id() }}', this)"
-									data-toggle="tooltip" data-placement="right"
-									title="Report book as checked in.">Check In</a>
-							</td>
-						</tr>
-						{% if loop.last and loop.index > 5 %}
-						<tr id="extraitems_lend">
-							<td colspan="4" style="text-align:center; background-color: white;"><b>Only the first five results are shown here. <a href="/library#LendedBooks">View all books you are lending</a>.</b></td>
-						</tr>
-						{% endif %}
+							<tr {% if loop.index > 5 %}style="display: none;"{% endif %}>
+								<td>
+									{{ book.display() }}
+								</td>
+								<td>
+									{{ book.get_borrower() }}
+								</td>
+								<td style="text-align:center;">
+									{{ book.due_date }}
+									<!--<input class="span2 datepicker" size="16" type="text" value="{{ book.due_date }}">-->
+								</td>
+								<td style="text-align:center;">
+									<a class="btn btn-inverse tooltip-button" 
+										style="width:140px" 
+										onclick="checkIn('{{ book.key.id() }}', this)"
+										data-toggle="tooltip" data-placement="right"
+										title="Report book as checked in.">Check In</a>
+								</td>
+							</tr>
+							{% if loop.last and loop.index > 5 %}
+								<tr id="extraitems_lend">
+									<td colspan="4" style="text-align:center; background-color: white;"><b>Only the first five results are shown here. <a href="/library#LendedBooks">View all books you are lending</a>.</b></td>
+								</tr>
+							{% endif %}
 						{% endfor %}
 					{% endif %}	
 				</table>
