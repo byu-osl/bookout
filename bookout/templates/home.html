@@ -109,13 +109,13 @@
 			url: "/return_book/" + bookCopyID,
 			type: 'GET',
 			success: function(data) {
-				if($("#books_lending tr:visible").length == 7) {
-					$(button).parent().parent().siblings(":nth-child(7)").remove();
-				}
 				$(button).parent().parent().siblings(":nth-child(6)").show();
 				$(button).parent().parent().remove();
 				if($("#books_lending tr:visible").length == 1) {
 					$("#books_lending").html("<tr><td colspan='3'>You are not lending any books.");
+				}
+				if($("#books_lending tbody tr:hidden").length == 0) {
+					$("#extraitems_lend").remove();
 				}
 			}
 		});
@@ -307,7 +307,7 @@
 							</td>
 						</tr>
 						{% if loop.last and loop.index > 5 %}
-						<tr>
+						<tr id="extraitems_lend">
 							<td colspan="4" style="text-align:center; background-color: white;"><b>Only the first five results are shown here. <a href="/library#LendedBooks">View all books you are lending</a>.</b></td>
 						</tr>
 						{% endif %}
