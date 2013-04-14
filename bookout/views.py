@@ -114,7 +114,16 @@ def network():
 	return render_response('network.html')
 	
 def discover():
-	return render_response('discover.html')
+	user = current_user()
+	booksInNetwork = {}
+	string = ""
+	for connection in user.get_connections():
+		u = UserAccount.getuser(connection.id())
+		for copy in u.get_library():
+			book = Book.query(Book.key == copy.book).get()
+			booksInNetwork[copy.OLKey] = book
+	
+	return render_response('discover.html',books=booksInNetwork)
 	
 def searchbooks():
 	booklist = {}

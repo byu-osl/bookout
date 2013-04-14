@@ -10,8 +10,23 @@
 	
 		<h3>Discover</h3>
 
-		<p>...Something will go here...</p>
-
+		<table class="table">
+			{% if books | length < 1 %}
+				<tr><td>There are no books available in your network.</td></tr>
+			{% else %}
+				{% for book in books %}
+				<tr>
+					<td><img {% if books[book].thumbnail_link == "" %}src="{{ url_for('static', filename='img/nocoverart.png') }}"
+								{% else %}src="{{ books[book].thumbnail_link }}"{% endif %} 
+								style="height:auto;width:100px;"/></td>
+					<td>
+							Title: {{ books[book].title }}<br/>
+							Author: {{ books[book].author }}
+					</td>
+				</tr>
+				{% endfor %}
+			{% endif %}
+		</table
 	</div>
 </div>
 
