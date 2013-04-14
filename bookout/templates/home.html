@@ -8,15 +8,12 @@
 
 	var connectModalMessage
 	
-	// Show intro modal if not logged in (modal html is within an if block)
-	$("#introModal").modal('show');
-	
 	$(function() {
+		// Show intro modal if not logged in (modal html is within an if block)
+		$("#introModal").modal('show');
+	
 		$(".tooltip-button").tooltip({trigger: "hover"});
 		
-	});
-	
-	$(function() {
 		// If attempting to connect, set message appropriate to connection type
 		if ({{ connectType }} != 0) { // no connect type (don't show modal)
 			if ({{ connectType }} == 1) { // invalid user

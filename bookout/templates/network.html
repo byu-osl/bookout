@@ -23,13 +23,17 @@
 		$("#removeConfirmationConnection").text(connectionName);
 	}
 	
-	function remove_connection(){
+	function remove_connection(button){
+		$(button).attr("disabled", "disabled");
 		$.ajax({
 			url:"/manage_network/" + lastRemoveID,
 			type: 'DELETE',
-			success:function(data) {
+			success: function(data) {
 				$(lastRemoveLink).parent().parent().hide();
 				$("#removeModal").modal('hide');
+			},
+			error: function() {
+				$(button).removeAttr("disabled");
 			}
 		});
 		return false;
@@ -90,17 +94,11 @@
 <br>
   <div class="row-fluid">
     <div class="tabbable tabs-left">
-      <ul class="nav nav-tabs span2">
+      <ul class="nav nav-tabs span2" style="height: 300px;">
         <li class="active"><a href="#Connections" data-toggle="tab" id="Connections_tab" onclick='add_hash("Connections")'>My Connections</a></li>
         <li><a href="#Facebook" data-toggle="tab" id="Facebook_tab" onclick='add_hash("Facebook")'>Invite by Facebook</a></li>
         <li><a href="#Gmail" data-toggle="tab" id="Gmail_tab" onclick='add_hash("Gmail")'>Invite by Gmail</a></li>
         <li><a href="#Link" data-toggle="tab" id="Link_tab" onclick='add_hash("Link")'>Invite by Link</a></li>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
       </ul>
       <div class="tab-content span9">
         <div class="tab-pane active" id="Connections">

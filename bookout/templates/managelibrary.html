@@ -28,15 +28,20 @@
 	var lastRemoveOLKey;
 
 	function remove_book(bookOLKey, bookTitle, button){
+		$(button).attr("disabled", "disabled");
 		$.ajax({
 			url:"/library/" + bookOLKey,
 			type: 'DELETE',
-			success:function(data) {
+			success: function(data) {
 				$(button).parent().parent().hide();
 				$("#undoMessage").show();
 				$("#undoMessageBook").text(bookTitle);
 				lastRemoveLink = button;
 				lastRemoveOLKey = bookOLKey;
+				$(button).removeAttr("disabled");
+			},
+			error: function() {
+				$(button).removeAttr("disabled");
 			}
 		});
 		return false;
@@ -116,7 +121,7 @@
 <div class="row" style="position: relative">
 	<div class="span6 offset3" style="position: absolute; top: 50px;">
 		<div id="undoMessage" class="alert" style="display: none;">
-			<a class="close" onclick="hide_undo_message()">×</a>
+			<a class="close" onclick="hide_undo_message()">&times;</a>
 			<span id="undoMessageBook"></span> was removed from your library.&nbsp;&nbsp;
 			<strong><a onclick="undo_remove()" class="alert-link">Undo</a></strong>
 		</div>

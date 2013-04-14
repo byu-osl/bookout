@@ -73,21 +73,24 @@
 	});
 
 	function add_book(bookOLKey, button){
-		$(button).attr("disabled", "");
+		$(button).attr("disabled", "disabled");
 		$.post("/library/" + bookOLKey, function(data) {
 			$(button).text("In Library");
 			$(button).attr("onclick", "");
 			$(button).attr("href", "\library");
 			$(button).removeClass("btn-inverse").addClass("btn-primary");
 			$(button).tooltip("destroy").attr("title", "Book is already in your library. Click to view library.").tooltip({trigger: "hover"});
+		}).error(function() {
+			$(button).removeAttr("disabled");
 		});
-		$(button).removeAttr("disabled");
 		
 		return false;
 	}
 	
-	function request_book(bookOLKey, title){
+	function request_book(bookOLKey, title, button){
+		$(button).attr("disabled", "disabled");
 		$.getJSON("/search/inNetwork/" + bookOLKey, function(data) {
+			$(button).removeAttr("disabled");
 			$('#borrowTable').empty();
 			$.each(data, function(key, val) {
 				
@@ -116,13 +119,15 @@
 				);
 			});
 			$("#borrowModal").modal('show');
+		}).error(function() {
+			$(button).removeAttr("disabled");
 		});
 		
 		return false;
 	}
 	
 	function borrow_book(bookCopyID, lenderID, button, bookTitle, lenderName) {
-		$(button).attr("disabled", "");
+		$(button).attr("disabled", "disabled");
 		$.getJSON("/setup_book_borrow/" + lenderID + "/" + bookCopyID, function(data) {
 			$("#borrowModal").modal('hide');
 			$("#messageBook").text(bookTitle);
@@ -144,7 +149,7 @@
 <div class="row" style="position: relative;">
 	<div class="span6 offset3" style="position: absolute; top: 10px;">
 		<div id="message" class="alert" style="display: none;">
-			<a class="close" onclick="hide_message()">x</a>
+			<a class="close" onclick="hide_message()">&times;</a>
 			You have requested to borrow <span id="messageBook"></span> from <span id="messageUser"></span>.
 		</div>
 	</div>
@@ -226,7 +231,7 @@
 							<a class="btn tooltip-button"
 								style="width:120px" 
 								{% if user.is_authenticated() == False %}disabled{% endif %}
-								onclick="{% if user.is_authenticated() %}request_book('{{ books[book].OLKey }}', '{{ books[book].title }}'){% endif %}"
+								onclick="{% if user.is_authenticated() %}request_book('{{ books[book].OLKey }}', '{{ books[book].title }}', this){% endif %}"
 								data-toggle="tooltip" data-placement="right"
 								title="{% if user.is_authenticated() %}Request to borrow book from one of your connections{% 
 								else %}Join or login to request to borrow books{% endif %}">Request&nbsp;to&nbsp;Borrow</a>
