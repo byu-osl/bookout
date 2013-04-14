@@ -9,6 +9,10 @@
 	.in-library-button {
 		margin-bottom: 10px;
 	}
+	
+	.notInNetwork {
+		display: none;
+	}
 </style>
 
 {% endblock %}
@@ -38,11 +42,29 @@
 				$("#searchAll").attr("checked", "true");
 		}
 		
-		if ($.cookie("{{ user.get_id() }}")) $("#show_out_of_network_books_checkbox").removeAttr("checked");
+		if ($.cookie("{{ user.get_id() }}")) {
+			$("#show_out_of_network_books_checkbox").removeAttr("checked");
+			
+			$("tr.notInNetwork").hide();
+		}
+		else {
+			$("tr.notInNetwork").show();
+		}
 		
 		$("#show_out_of_network_books_checkbox").change(function(){
-			if($.cookie("{{ user.get_id() }}")) $.removeCookie("{{ user.get_id() }}");
-			if(!$(this).is(":checked")) $.cookie("{{ user.get_id() }}", "true", {expires:365});
+			if($.cookie("{{ user.get_id() }}")) {
+				$.removeCookie("{{ user.get_id() }}");
+			}
+			
+			if(!$(this).is(":checked")) {
+				$.cookie("{{ user.get_id() }}", "true", { expires: 365 });
+				
+				$("tr.notInNetwork").hide();
+			}
+			else {
+				$("tr.notInNetwork").show();
+			}
+			
 		});
 		
 		$("input[name='refineSearch']").change(function(){
@@ -169,15 +191,15 @@
 		{% else %}
 			<table class="table">
 			{% for book in books %}
-				<tr>
-					<td><img {% if books[book].thumbnail_link == "" %}src="{{ url_for('static', filename='img/nocoverart.png') }}"
-							{% else %}src="{{ books[book].thumbnail_link }}"{% endif %} 
+				<tr {% if books[book].inNetwork == "False" %} class="notInNetwork" {% endif %}>
+					<td style="width: 100px"><img {% if books[book].thumbnail_link == "" %} src="{{ url_for('static', filename='img/nocoverart.png') }}"
+							{% else %} src="{{ books[book].thumbnail_link }}" {% endif %} 
 							style="height:auto;width:100px;"/></td>
 					<td>
 						Title: {{ books[book].title }}<br/>
 						Author: {{ books[book].author }}
 					</td>
-					<td>
+					<td style="width: 150px">
 						{% if books[book].inLibrary == "False" %}
 							<a class="btn btn-inverse tooltip-button in-library-button"
 								style="width:120px"
