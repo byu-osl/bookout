@@ -3,25 +3,150 @@
 
 {% block title %}Discover{% endblock %}
 
+{% block script %}
+
+<script src="{{ url_for('static', filename='js/jquery.cookie.js') }}"></script>
+
+<script type="text/javascript">
+	
+	$(function() {
+		$(".tooltip-button").tooltip({trigger: "hover"});
+	});
+	
+	function add_book(bookOLKey, button){
+		$(button).attr("disabled", "disabled");
+		$.post("/library/" + bookOLKey, function(data) {
+			$(button).text("In Library");
+			$(button).attr("onclick", "");
+			$(button).attr("href", "\library");
+			$(button).removeClass("btn-inverse").addClass("btn-primary");
+			$(button).tooltip("destroy").attr("title", "Book is already in your library. Click to view library.").tooltip({trigger: "hover"});
+		}).error(function() {
+			$(button).removeAttr("disabled");
+		});
+		
+		return false;
+	}
+	
+	function request_book(bookOLKey, title, button){
+		$(button).attr("disabled", "disabled");
+		$.getJSON("/search/inNetwork/" + bookOLKey, function(data) {
+			$(button).removeAttr("disabled");
+			$('#borrowTable').empty();
+			$.each(data, function(key, val) {
+				
+				var link = $('<a>', {
+					'class': 'btn btn-inverse',
+					onclick: 'borrow_book("' + val.bookCopyID + '", "' + key + '", this, "' + title + '", "' + val.username + '")',
+					html: 'Request to Borrow'
+				});
+				if(!val.available) {
+					link.attr("disabled", "");
+				}
+				
+				$('#borrowTable')
+				.append(
+					$('<tr>')
+					.append(
+						$('<td>', {
+							html: val.username
+						}))
+					.append(
+						$('<td>')
+						.append(
+							link
+						)
+					)
+				);
+			});
+			$("#borrowModal").modal('show');
+		}).error(function() {
+			$(button).removeAttr("disabled");
+		});
+		
+		return false;
+	}
+	
+	function borrow_book(bookCopyID, lenderID, button, bookTitle, lenderName) {
+		$(button).attr("disabled", "disabled");
+		$.getJSON("/setup_book_borrow/" + lenderID + "/" + bookCopyID, function(data) {
+			$("#borrowModal").modal('hide');
+			$("#messageBook").text(bookTitle);
+			$("#messageUser").text(lenderName);
+			$("#message").show();
+		});
+	}
+	
+	function hide_message() {
+		$("#message").hide();
+		return false;
+	}
+	
+</script>
+
+{% endblock %}
+		
 {% block content %}
+
+<div class="row" style="position: relative;">
+	<div class="span6 offset3" style="position: absolute; top: 10px;">
+		<div id="message" class="alert" style="display: none;">
+			<a class="close" onclick="hide_message()">&times;</a>
+			You have requested to borrow <span id="messageBook"></span> from <span id="messageUser"></span>.
+		</div>
+	</div>
+</div>
+
+<div id="borrowModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="borrowModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 id="borrowModalLabel">Users Who Have This Book</h3>
+  </div>
+  <div class="modal-body">
+    <table id="borrowTable" class="table">
+	</table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+  </div>
+</div>
 
 <div class="row">
 	<div class="span12">
-	
-		<h3>Discover</h3>
-
+		<h3>Browse Books in Your Network</h3>
+	</div>
+</div>
+<br>
+<div class="row-fluid">
+	<div class="span1">
+	</div>
+	<div class="span10">
+		
 		<table class="table">
 			{% if books | length < 1 %}
 				<tr><td>There are no books available in your network.</td></tr>
 			{% else %}
 				{% for book in books %}
 				<tr>
-					<td><img {% if books[book].thumbnail_link == "" %}src="{{ url_for('static', filename='img/nocoverart.png') }}"
+					<td style="width:100px"><img {% if books[book].thumbnail_link == "" %}src="{{ url_for('static', filename='img/nocoverart.png') }}"
 								{% else %}src="{{ books[book].thumbnail_link }}"{% endif %} 
 								style="height:auto;width:100px;"/></td>
 					<td>
 							Title: {{ books[book].title }}<br/>
 							Author: {{ books[book].author }}
+					</td>
+					<td style="width: 150px">
+						<a class="btn btn-inverse tooltip-button in-library-button"
+							style="width:120px;margin-bottom:10px"
+							onclick="add_book('{{ books[book].OLKey }}', this)" 
+							data-toggle="tooltip" data-placement="right"
+							title="Add to library and make available to your network">Add&nbsp;to&nbsp;Library</a>
+						<br/>
+						<a class="btn tooltip-button"
+							style="width:120px" 
+							onclick="request_book('{{ books[book].OLKey }}', '{{ books[book].title }}', this)"
+							data-toggle="tooltip" data-placement="right"
+							title="Request to borrow book from one of your connections">Request&nbsp;to&nbsp;Borrow</a>
 					</td>
 				</tr>
 				{% endfor %}
