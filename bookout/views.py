@@ -148,7 +148,6 @@ def searchbooks():
 			booklist = Book.search_books_by_attribute(searchterm,attr)
 			for book in booklist:
 				booklist[book] = booklist[book].to_dict()
-				
 				#Assume not in booklist or networkbooklist
 				booklist[book]["inLibrary"] = "False"
 				booklist[book]["inNetwork"] = "False"
@@ -172,7 +171,7 @@ def searchbooks():
 			booklist = Book.search_books_by_attribute(searchterm,attr)
 			for book in booklist:
 				booklist[book] = booklist[book].to_dict()
-
+				booklist[book]["escapedtitle"] = re.escape(booklist[book]["title"])
 				if booklist[book]['OLKey'] in mybooklist:
 					booklist[book]["inLibrary"] = "True"
 				else:
