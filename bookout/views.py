@@ -211,7 +211,7 @@ def profile(userID):
 	profile_user = UserAccount.get_by_id(int(userID))
 	user = current_user()
 	if not profile_user:
-		return render_response('profile.html',exists=False)
+		return render_response('invalidprofile.html')
 	if user.is_connected(profile_user):
 		library = []
 		for copy in profile_user.get_library():
@@ -223,7 +223,7 @@ def profile(userID):
 				book.available = False
 			book.copyid = copy.key.id()
 		return render_response('profile.html',profile_user=profile_user,library=library)
-	return render_response('profile.html',connected=False)
+	return render_response('invalidprofile.html')
 	
 def book_info():
 	return render_response('bookinfo.html')
