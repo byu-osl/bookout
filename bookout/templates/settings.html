@@ -129,15 +129,15 @@
     <p>If you delete your account it will be gone forever!</p>
   </div>
   <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
     <button class="btn btn-danger" onclick="delete_account()">Delete Account</button>
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
   </div>
 </div>
 
 <form id="settingsForm" method="post" action="/settings">
 
 <div class="row">
-	<div class="span12">
+	<div class="span5">
 
 		<h3>Lending Settings</h3>
 
@@ -146,11 +146,6 @@
 			<input id="lending_length" name="lendingLength" style="width:1.5em;" value="{{ user.lending_length }}" />
 			<span id="lendingLengthHelp" class="help-inline" style="display: none;">Must be between 1 and 99.</span>
 		</div>
-	</div>
-</div>
-
-<div class="row">
-	<div class="span12">
 
 		<h3>Notifications</h3>
 		<div class="control-group">
@@ -162,12 +157,7 @@
 			</select>
 			<span id="notificationSettingsHelp" class="help-inline" style="display: none;">Must be a mobile app user to select options other than Email.</span> 
 		</div>
-	</div>
-</div>
-
-<div class="row">
-	<div class="span12">
-
+		
 		<h3>User Profile</h3>
 		
 		<div class="control-group">
@@ -186,19 +176,21 @@
 		</div>
 
 	</div>
-</div>
 
-<div class="row">
-	<div class="span12">
-		<h3>Delete Account</h3>
-        <div id="deleteError" class="alert alert-error" style="display:none;">
-          <strong>Account not deleted</strong>&nbsp; Make sure all borrowed and lent books are returned.
-        </div>
-        <div id="deleteSuccess" class="alert alert-success" style="display:none;">
-          <strong>Account deleted.</strong>
-        </div>
-		Completely remove your BookOut account:&nbsp;
-		<a class="btn btn-danger" onclick="confirm_delete_account()">Delete Account</a>
+	<div class="span3">
+		<br>
+		<div class="well">
+			<h3 style="margin-top:-8px">Delete Account</h3>
+			<div id="deleteError" class="alert alert-error" style="display:none;">
+			  <strong>Account not deleted</strong>&nbsp; Make sure all borrowed and lent books are returned.
+			</div>
+			<div id="deleteSuccess" class="alert alert-success" style="display:none;">
+			  <strong>Account deleted.</strong>
+			</div>
+			Looking to delete your BookOut account? Click the button below.
+			<br>
+			<a class="btn btn-danger" style="margin-top:20px" onclick="confirm_delete_account()">Delete Account</a>
+		</div>
 	</div>
 </div>
 
