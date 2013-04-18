@@ -29,7 +29,7 @@
 
 <body>
 	<div id="wrap">
-		<div class="navbar navbar-inverse navbar-fixed-top main_nav">
+		<div class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="container">
 					<a class="brand pull-left" href="{{ url_for('index') }}">BookOut<sup style="font-size:10px;vertical-align:top;">BETA</sup></a>
@@ -86,22 +86,19 @@
 			{% block content %}
 			{% endblock %}
 			
+			<hr>
 		</div>
-		<div id="push"></div>
 	</div>
-	
-	<div id="footer">
-		<div class="container">
+	<div class="container">
+		<footer id="footer">
+			<p class="pull-right"><a href="https://github.com/byu-osl/bookout/issues/new" target="_blank">Report a Bug</a></p>
 			<div class="links">
-				<ul>
-					<li><a href="{{ url_for('mobile_app') }}">Mobile App</a></li>
-					<li><a href="http://github.com/byu-osl/bookout">GitHub Project Page</a></li>
-					<!--<li><a href="{{ url_for('donate') }}">Donate</a></li>
-					<li><a href="{{ url_for('about') }}">Terms of Use</a></li>-->
-					<li><a class="pull-right" href="https://github.com/byu-osl/bookout/issues/new" target="_blank">Report a Bug</a></li>
-				</ul>
+				<a href="{{ url_for('mobile_app') }}">Mobile App</a>
+				<a href="http://github.com/byu-osl/bookout">GitHub Project Page</a>
+				<!--<a href="{{ url_for('donate') }}">Donate</a>-->
+				<!--<a href="{{ url_for('about') }}">Terms of Use</a>-->
 			</div>
-		</div>
+		</footer>
 	</div>
 
 	<script src="http://code.jquery.com/jquery.js"></script>

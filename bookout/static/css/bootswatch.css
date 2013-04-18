@@ -124,7 +124,7 @@ section {
 }
 
 .links > a {
-	margin-right: 10px;
+	margin-right: 30px;
 }
 
 .bsa {
@@ -163,7 +163,7 @@ body .one .bsa_it_p {
 }
 
 #footer .links a {
-	margin-right: 10px;
+	margin-right: 30px;
 }
 
 @media (max-width: 480px) {
