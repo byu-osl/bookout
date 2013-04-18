@@ -128,23 +128,23 @@
 			{% else %}
 				{% for book in books %}
 				<tr>
-					<td style="width:100px"><img {% if books[book].thumbnail_link == "" %}src="{{ url_for('static', filename='img/nocoverart.png') }}"
-								{% else %}src="{{ books[book].thumbnail_link }}"{% endif %} 
+					<td style="width:100px"><img {% if book.thumbnail_link == "" %}src="{{ url_for('static', filename='img/nocoverart.png') }}"
+								{% else %}src="{{ book.thumbnail_link }}"{% endif %} 
 								style="height:auto;width:100px;"/></td>
 					<td>
-							Title: {{ books[book].title }}<br/>
-							Author: {{ books[book].author }}
+							Title: {{ book.title }}<br/>
+							Author: {{ book.author }}
 					</td>
 					<td style="width: 150px">
 						<a class="btn btn-inverse tooltip-button in-library-button"
 							style="width:120px;margin-bottom:10px"
-							onclick="add_book('{{ books[book].OLKey }}', this)" 
+							onclick="add_book('{{ book.OLKey }}', this)" 
 							data-toggle="tooltip" data-placement="right"
 							title="Add to library and make available to your network">Add&nbsp;to&nbsp;Library</a>
 						<br/>
 						<a class="btn tooltip-button"
 							style="width:120px" 
-							onclick="request_book('{{ books[book].OLKey }}', '{{ books[book].title }}', this)"
+							onclick="request_book('{{ book.OLKey }}', '{{ book.title }}', this)"
 							data-toggle="tooltip" data-placement="right"
 							title="Request to borrow book from one of your connections">Request&nbsp;to&nbsp;Borrow</a>
 					</td>

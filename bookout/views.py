@@ -108,6 +108,10 @@ def library():
 		else:
 			book.available = False
 		booklist.append(book)
+	#Sort booklist alphabetically, with title as the primary sort key and author as secondary
+	booklist.sort(key=lambda book: book.author.lower())
+	booklist.sort(key=lambda book: book.title.lower())
+		
 	return render_response('managelibrary.html', myBooks=booklist)
 	
 def network():
@@ -115,15 +119,18 @@ def network():
 	
 def discover():
 	user = current_user()
-	booksInNetwork = {}
+	booklist = []
 	string = ""
 	for connection in user.get_connections():
 		u = UserAccount.getuser(connection.id())
 		for copy in u.get_library():
 			book = Book.query(Book.key == copy.book).get()
-			booksInNetwork[copy.OLKey] = book
+			booklist.append(book)
+	#Sort booklist alphabetically, with title as the primary sort key and author as secondary
+	booklist.sort(key=lambda book: book.author.lower())
+	booklist.sort(key=lambda book: book.title.lower())
 	
-	return render_response('discover.html',books=booksInNetwork)
+	return render_response('discover.html',books=booklist)
 	
 def searchbooks():
 	booklist = {}
